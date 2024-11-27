@@ -58,7 +58,7 @@ from sklearn.metrics import (accuracy_score, confusion_matrix, classification_re
                              mean_absolute_percentage_error, brier_score_loss)
 from sklearn.base import TransformerMixin, BaseEstimator, ClassifierMixin, RegressorMixin, ClusterMixin
 from sklearn.datasets import (make_regression, make_classification, make_blobs, 
-                              load_boston, load_wine, load_diabetes, 
+                              load_wine, load_diabetes, 
                               load_breast_cancer, load_digits, load_iris)
 import joblib
 
