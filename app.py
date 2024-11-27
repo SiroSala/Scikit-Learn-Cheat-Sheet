@@ -1,6 +1,6 @@
 import streamlit as st
 
-# Custom CSS for the centered navigation bar with a logo
+# Custom CSS for the full-width navigation bar with dropdowns
 def load_css():
     st.markdown(
         """
@@ -8,69 +8,103 @@ def load_css():
         .navbar {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             background-color: #f8f9fa;
             padding: 10px 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
         .navbar-logo {
             display: flex;
             align-items: center;
-            margin-right: 20px;
         }
         .navbar-logo img {
             height: 50px;
-            margin-right: 10px;
+            margin-right: 15px;
+        }
+        .navbar-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
         }
         .navbar-links {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
+            flex-grow: 1;
+        }
+        .navbar-links > div {
+            position: relative;
+            margin: 0 15px;
         }
         .navbar-links a {
-            margin: 0 15px;
             font-size: 18px;
             font-weight: bold;
             color: #007bff;
             text-decoration: none;
+            margin: 0 10px;
             transition: color 0.3s ease;
         }
         .navbar-links a:hover {
             color: #0056b3;
-            text-decoration: underline;
         }
-        .navbar-links .active {
-            color: #0056b3;
-            text-decoration: underline;
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 35px;
+            left: 0;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .dropdown a {
+            display: block;
+            padding: 10px 15px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .dropdown a:hover {
+            background-color: #f1f1f1;
+        }
+        .navbar-links > div:hover .dropdown {
+            display: block;
         }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-# Render the navigation bar with the logo
+# Render the full-width navigation bar
 def render_navigation(selected_page):
     st.markdown(
         f"""
         <div class="navbar">
             <div class="navbar-logo">
                 <img src="https://ahammadmejbah.com/content/images/2024/10/Mejbah-Ahammad-Profile-8.png" alt="Logo">
-                <h2 style="margin: 0; font-size: 24px; color: #2c3e50;">Awesome Scikit-Learn</h2>
+                <h2 class="navbar-title">Awesome Scikit-Learn</h2>
             </div>
             <div class="navbar-links">
                 <a href="?page=home" class="{'active' if selected_page == 'Home' else ''}">Home</a>
                 <a href="?page=tutorial" class="{'active' if selected_page == 'Tutorial' else ''}">Tutorial</a>
-                <a href="?page=explore" class="{'active' if selected_page == 'Explore' else ''}">Explore</a>
-                <a href="?page=train" class="{'active' if selected_page == 'Train' else ''}">Train</a>
+                <div>
+                    <a href="#" class="nav-item">Models ▼</a>
+                    <div class="dropdown">
+                        <a href="?page=classification" class="{'active' if selected_page == 'Classification' else ''}">Classification</a>
+                        <a href="?page=regression" class="{'active' if selected_page == 'Regression' else ''}">Regression</a>
+                        <a href="?page=clustering" class="{'active' if selected_page == 'Clustering' else ''}">Clustering</a>
+                    </div>
+                </div>
+                <div>
+                    <a href="#" class="nav-item">Advanced ▼</a>
+                    <div class="dropdown">
+                        <a href="?page=pipelines" class="{'active' if selected_page == 'Pipelines' else ''}">Pipelines</a>
+                        <a href="?page=comparison" class="{'active' if selected_page == 'Comparison' else ''}">Comparison</a>
+                        <a href="?page=advanced_analysis" class="{'active' if selected_page == 'Advanced Analysis' else ''}">Advanced Analysis</a>
+                    </div>
+                </div>
                 <a href="?page=evaluate" class="{'active' if selected_page == 'Evaluate' else ''}">Evaluate</a>
-                <a href="?page=visualize" class="{'active' if selected_page == 'Visualize' else ''}">Visualize</a>
-                <a href="?page=classification" class="{'active' if selected_page == 'Classification' else ''}">Classification</a>
-                <a href="?page=regression" class="{'active' if selected_page == 'Regression' else ''}">Regression</a>
-                <a href="?page=clustering" class="{'active' if selected_page == 'Clustering' else ''}">Clustering</a>
-                <a href="?page=pipelines" class="{'active' if selected_page == 'Pipelines' else ''}">Pipelines</a>
-                <a href="?page=comparison" class="{'active' if selected_page == 'Comparison' else ''}">Comparison</a>
-                <a href="?page=advanced_analysis" class="{'active' if selected_page == 'Advanced Analysis' else ''}">Advanced Analysis</a>
-                <a href="?page=explainability" class="{'active' if selected_page == 'Explainability' else ''}">Explainability</a>
                 <a href="?page=deploy" class="{'active' if selected_page == 'Deploy' else ''}">Deploy</a>
             </div>
         </div>
@@ -80,7 +114,7 @@ def render_navigation(selected_page):
 
 # Main application logic
 def main():
-    load_css()  # Load custom CSS for styling
+    load_css()  # Load custom CSS
 
     # Get the current page from query parameters
     query_params = st.experimental_get_query_params()
@@ -96,18 +130,6 @@ def main():
     elif selected_page == "Tutorial":
         st.title("Tutorial")
         st.write("Step-by-step tutorials to learn Scikit-Learn.")
-    elif selected_page == "Explore":
-        st.title("Explore")
-        st.write("Upload and analyze datasets.")
-    elif selected_page == "Train":
-        st.title("Train")
-        st.write("Train machine learning models interactively.")
-    elif selected_page == "Evaluate":
-        st.title("Evaluate")
-        st.write("Evaluate model performance with metrics.")
-    elif selected_page == "Visualize":
-        st.title("Visualize")
-        st.write("Visualize your data and model results.")
     elif selected_page == "Classification":
         st.title("Classification")
         st.write("Learn and apply classification algorithms.")
@@ -126,9 +148,9 @@ def main():
     elif selected_page == "Advanced Analysis":
         st.title("Advanced Analysis")
         st.write("Perform advanced data and model analysis.")
-    elif selected_page == "Explainability":
-        st.title("Explainability")
-        st.write("Understand and explain model predictions.")
+    elif selected_page == "Evaluate":
+        st.title("Evaluate")
+        st.write("Evaluate model performance with metrics.")
     elif selected_page == "Deploy":
         st.title("Deploy")
         st.write("Deploy your machine learning models.")
