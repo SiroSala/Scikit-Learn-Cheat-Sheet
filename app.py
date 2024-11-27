@@ -1,840 +1,1590 @@
-import openai
 import streamlit as st
-import logging
-from PIL import Image, ImageEnhance
-import time
-import json
-import requests
 import base64
-from openai import OpenAI, OpenAIError
+import requests
+from streamlit_lottie import st_lottie
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sqlalchemy import create_engine
+import json
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Register converters to avoid warnings
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
 
-# Constants
-NUMBER_OF_MESSAGES_TO_DISPLAY = 50
-API_DOCS_URL = "https://scikit-learn.org/stable/documentation.html"
-
-# Retrieve and validate API key
-OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", None)
-if not OPENAI_API_KEY:
-    st.error("Please add your OpenAI API key to the Streamlit secrets.toml file.")
-    st.stop()
-
-# Assign OpenAI API Key
-openai.api_key = OPENAI_API_KEY
-client = openai.OpenAI()
-
-# Streamlit Page Configuration
+# Initial page configuration
 st.set_page_config(
-    page_title="SkLearnly - Your Comprehensive Scikit-learn Assistant",
-    page_icon="https://ahammadmejbah.com/content/images/2024/10/Mejbah-Ahammad-Profile-8.png",
+    page_title='📊 Comprehensive Pandas Cheat Sheet',
     layout="wide",
     initial_sidebar_state="expanded",
-    menu_items={
-        "Get help": "https://github.com/AdieLaine/SkLearnly",
-        "Report a bug": "https://github.com/AdieLaine/SkLearnly",
-        "About": """
-            ## SkLearnly Scikit-learn Assistant
-            ### Powered using GPT-4o-mini
-
-            **GitHub**: https://github.com/AdieLaine/
-
-            The AI Assistant named SkLearnly aims to provide the latest updates from Scikit-learn,
-            generate code snippets for Scikit-learn models and utilities,
-            and answer questions about Scikit-learn's latest features, issues, and more.
-            SkLearnly has been trained on the latest Scikit-learn updates and documentation.
-        """
-    }
 )
 
-# Streamlit Title with Logo
-def display_header():
-    col1, col2 = st.columns([1, 3])
-    with col1:
-        logo_image_url = "https://ahammadmejbah.com/content/images/2024/10/Mejbah-Ahammad-Profile-8.png"
-        img_base64_logo = img_to_base64(logo_image_url)
-        if img_base64_logo:
-            st.image(f"data:image/png;base64,{img_base64_logo}", width=100)
-    with col2:
-        st.title("SkLearnly - Your Comprehensive Scikit-learn Assistant")
+def main():
+    ds_sidebar()
+    ds_body()
 
-# Function to convert image to base64
-def img_to_base64(image_path):
-    """Convert image to base64."""
+# Function to convert image to base64 bytes (for logo)
+def img_to_bytes(img_url):
     try:
-        if image_path.startswith("http"):
-            response = requests.get(image_path)
-            return base64.b64encode(response.content).decode()
-        with open(image_path, "rb") as img_file:
-            return base64.b64encode(img_file.read()).decode()
-    except Exception as e:
-        logging.error(f"Error converting image to base64: {str(e)}")
+        response = requests.get(img_url)
+        img_bytes = response.content
+        encoded = base64.b64encode(img_bytes).decode()
+        return encoded
+    except:
+        return ''
+
+# Function to load Lottie animations
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
         return None
+    return r.json()
 
-# Cache long-running tasks
-@st.cache_data(show_spinner=False)
-def long_running_task(duration):
+# Sidebar content with enhanced design
+def ds_sidebar():
+    logo_url = 'https://ahammadmejbah.com/content/images/2024/10/Mejbah-Ahammad-Profile-8.png'
+    logo_encoded = img_to_bytes(logo_url)
+    
+    # Custom CSS for sidebar
+    sidebar_style = """
+    <style>
+    /* Sidebar styling */
+    .sidebar .sidebar-content {
+        background-color: #f0f2f6;
+    }
+    /* Sidebar header styling */
+    .sidebar .sidebar-content h2 {
+        color: #FF4B4B;
+    }
+    /* Sidebar links styling */
+    .sidebar .sidebar-content a {
+        color: #333333;
+        text-decoration: none;
+    }
+    .sidebar .sidebar-content a:hover {
+        color: #FF4B4B;
+    }
+    </style>
     """
-    Simulates a long-running operation.
-
-    Parameters:
-    - duration: int, duration of the task in seconds
-
-    Returns:
-    - str: Completion message
-    """
-    time.sleep(duration)
-    return "Long-running operation completed."
-
-# Load and enhance image
-@st.cache_data(show_spinner=False)
-def load_and_enhance_image(image_path, enhance=False):
-    """
-    Load and optionally enhance an image.
-
-    Parameters:
-    - image_path: str, path of the image
-    - enhance: bool, whether to enhance the image or not
-
-    Returns:
-    - img: PIL.Image.Image, (enhanced) image
-    """
-    img = Image.open(image_path)
-    if enhance:
-        enhancer = ImageEnhance.Contrast(img)
-        img = enhancer.enhance(1.8)
-    return img
-
-# Load Scikit-learn updates from JSON
-@st.cache_data(show_spinner=False)
-def load_scikit_learn_updates():
-    """Load the latest Scikit-learn updates from a local JSON file."""
-    try:
-        with open("data/scikit_learn_updates.json", "r") as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logging.error(f"Error loading JSON: {str(e)}")
-        return {}
-
-# Get Scikit-learn API version
-def get_scikit_learn_api_code_version():
-    """
-    Get the current Scikit-learn API code version from the Scikit-learn API documentation.
-
-    Returns:
-    - str: The current Scikit-learn API code version.
-    """
-    try:
-        response = requests.get(API_DOCS_URL)
-        if response.status_code == 200:
-            return "1.3.2"
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Error connecting to the Scikit-learn API documentation: {str(e)}")
-    return None
-
-# Display Scikit-learn updates
-def display_scikit_learn_updates():
-    """Display the latest updates of Scikit-learn."""
-    st.header("📢 Latest Scikit-learn Updates")
-    latest_updates = load_scikit_learn_updates()
-    formatted_message = construct_formatted_message(latest_updates)
-    st.markdown(formatted_message)
-
-# Initialize conversation history
-def initialize_conversation():
-    """
-    Initialize the conversation history with system and assistant messages.
-
-    Returns:
-    - list: Initialized conversation history.
-    """
-    assistant_message = "Hello! I am SkLearnly. How can I assist you with Scikit-learn today?"
-
-    conversation_history = [
-        {"role": "system", "content": "You are SkLearnly, a specialized AI assistant trained in Scikit-learn."},
-        {"role": "system", "content": "SkLearnly is powered by the OpenAI GPT-4o-mini model, released on July 18, 2024."},
-        {"role": "system", "content": "You are trained up to Scikit-learn Version 1.3.2, released on June 20, 2024."},
-        {"role": "system", "content": "Refer to conversation history to provide context to your response."},
-        {"role": "system", "content": "You were created by Mejbah Ahammad, an OpenAI Researcher."},
-        {"role": "assistant", "content": assistant_message}
-    ]
-    return conversation_history
-
-# Fetch latest update based on keyword
-@st.cache_data(show_spinner=False)
-def get_latest_update_from_json(keyword, latest_updates):
-    """
-    Fetch the latest Scikit-learn update based on a keyword.
-
-    Parameters:
-    - keyword (str): The keyword to search for in the Scikit-learn updates.
-    - latest_updates (dict): The latest Scikit-learn updates data.
-
-    Returns:
-    - str: The latest update related to the keyword, or a message if no update is found.
-    """
-    for section in ["Highlights", "New Features", "Improvements", "Bug Fixes"]:
-        for sub_key, sub_value in latest_updates.get(section, {}).items():
-            for key, value in sub_value.items():
-                if keyword.lower() in key.lower() or keyword.lower() in value.lower():
-                    return f"**Section:** {section}\n**Sub-Category:** {sub_key}\n**{key}:** {value}"
-    return "No updates found for the specified keyword."
-
-# Construct formatted message for updates
-def construct_formatted_message(latest_updates):
-    """
-    Construct formatted message for the latest updates.
-
-    Parameters:
-    - latest_updates (dict): The latest Scikit-learn updates data.
-
-    Returns:
-    - str: Formatted update messages.
-    """
-    formatted_message = []
-    highlights = latest_updates.get("Highlights", {})
-    version_info = highlights.get("Version 1.3.2", {})
-    if version_info:
-        description = version_info.get("Description", "No description available.")
-        formatted_message.append(f"- **Version 1.3.2**: {description}")
-
-    for category, updates in latest_updates.items():
-        if category != "Highlights":
-            formatted_message.append(f"**{category}**:")
-            for sub_key, sub_values in updates.items():
-                if sub_key != "Version 1.3.2":
-                    description = sub_values.get("Description", "No description available.")
-                    documentation = sub_values.get("Documentation", "No documentation available.")
-                    formatted_message.append(f"- **{sub_key}**: {description}")
-                    formatted_message.append(f"  - **Documentation**: {documentation}")
-    return "\n".join(formatted_message)
-
-# Handle chat submissions
-@st.cache_data(show_spinner=False)
-def on_chat_submit(chat_input, latest_updates):
-    """
-    Handle chat input submissions and interact with the OpenAI API.
-
-    Parameters:
-    - chat_input (str): The chat input from the user.
-    - latest_updates (dict): The latest Scikit-learn updates fetched from a JSON file or API.
-
-    Returns:
-    - None: Updates the chat history in Streamlit's session state.
-    """
-    user_input = chat_input.strip()
-
-    if "conversation_history" not in st.session_state:
-        st.session_state.conversation_history = initialize_conversation()
-
-    st.session_state.conversation_history.append({"role": "user", "content": user_input})
-
-    try:
-        model_engine = "gpt-4o-mini"
-        assistant_reply = ""
-
-        if "latest updates" in user_input.lower():
-            assistant_reply = "Here are the latest highlights from Scikit-learn:\n"
-            highlights = latest_updates.get("Highlights", {})
-            if highlights:
-                for version, info in highlights.items():
-                    description = info.get("Description", "No description available.")
-                    assistant_reply += f"- **{version}**: {description}\n"
-            else:
-                assistant_reply = "No highlights found."
-        else:
-            response = client.chat.completions.create(
-                model=model_engine,
-                messages=st.session_state.conversation_history
-            )
-            assistant_reply = response.choices[0].message.content
-
-        st.session_state.conversation_history.append({"role": "assistant", "content": assistant_reply})
-        st.session_state.history.append({"role": "user", "content": user_input})
-        st.session_state.history.append({"role": "assistant", "content": assistant_reply})
-
-    except OpenAIError as e:
-        logging.error(f"Error occurred: {e}")
-        st.error(f"OpenAI Error: {str(e)}")
-
-# Initialize session state
-def initialize_session_state():
-    """Initialize session state variables."""
-    if "history" not in st.session_state:
-        st.session_state.history = []
-    if 'conversation_history' not in st.session_state:
-        st.session_state.conversation_history = []
-
-# Additional Features Placeholder
-def additional_features():
-    """Include additional comprehensive features in the SkLearnly assistant."""
-    pass  # Placeholder for additional features if needed
-
-# Comprehensive SkLearnly Assistant with All Features
-def full_comprehensive_sklearnly():
-    import streamlit as st
-    import openai
-    from PIL import Image
-    import json
-    import logging
-    import requests
-    import base64
-
-    # Configure logging
-    logging.basicConfig(level=logging.INFO)
-
-    # Load OpenAI API key
-    OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", "")
-    openai.api_key = OPENAI_API_KEY
-
-    def load_conversation_history():
-        """Load conversation history from session state."""
-        if 'conversation_history' not in st.session_state:
-            st.session_state.conversation_history = []
-        return st.session_state.conversation_history
-
-    def update_conversation(role, content):
-        """Update conversation history."""
-        st.session_state.conversation_history.append({"role": role, "content": content})
-
-    def generate_response(conversation):
-        """Generate a response from OpenAI API."""
-        try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4o-mini",
-                messages=conversation
-            )
-            return response.choices[0].message.content
-        except openai.OpenAIError as e:
-            logging.error(f"OpenAI API Error: {e}")
-            return "I'm sorry, I couldn't process that. Please try again later."
-
-    def chat_interface():
-        """Handle the chat interface."""
-        st.header("🤖 Chat with SkLearnly")
-
-        if 'conversation_history' not in st.session_state:
-            initialize_conversation()
-
-        conversation = load_conversation_history()
-
-        user_input = st.text_input("You:", "")
-        if st.button("Send"):
-            if user_input:
-                update_conversation("user", user_input)
-                response = generate_response(conversation)
-                update_conversation("assistant", response)
-                st.experimental_rerun()
-
-        # Display conversation
-        for msg in conversation:
-            if msg['role'] == 'user':
-                st.markdown(f"**You:** {msg['content']}")
-            else:
-                st.markdown(f"**SkLearnly:** {msg['content']}")
-
-    def initialize_conversation():
-        """Initialize the conversation history."""
-        welcome_message = "Hello! I'm SkLearnly, your Scikit-learn assistant. How can I help you today?"
-        update_conversation("assistant", welcome_message)
-
-    def latest_updates_section():
-        """Display the latest Scikit-learn updates."""
-        st.header("📢 Latest Scikit-learn Updates")
-        try:
-            response = requests.get("https://api.scikit-learn.org/v1/updates")
-            if response.status_code == 200:
-                updates = response.json()
-                for update in updates:
-                    st.subheader(update.get("title", "No Title"))
-                    st.write(update.get("description", "No Description"))
-            else:
-                st.error("Failed to fetch the latest updates.")
-        except Exception as e:
-            logging.error(f"Error fetching updates: {e}")
-            st.error("An error occurred while fetching updates.")
-
-    def code_generation_section():
-        """Handle code generation based on user input."""
-        st.header("💻 Generate Scikit-learn Code")
-        code_prompt = st.text_area("Describe the Scikit-learn component or feature you need code for:")
-        if st.button("Generate Code"):
-            if code_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that generates code snippets."},
-                    {"role": "user", "content": code_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    code = response.choices[0].message.content
-                    st.code(code, language='python')
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to generate code. Please try again later.")
-            else:
-                st.warning("Please enter a description for code generation.")
-
-    def troubleshooting_section():
-        """Provide troubleshooting assistance."""
-        st.header("🛠️ Troubleshooting")
-        issue = st.text_area("Describe the issue you're facing with Scikit-learn:")
-        if st.button("Get Help"):
-            if issue:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that helps troubleshoot issues."},
-                    {"role": "user", "content": issue}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    solution = response.choices[0].message.content
-                    st.write(solution)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide a solution. Please try again later.")
-            else:
-                st.warning("Please describe the issue you need help with.")
-
-    def code_explanation_section():
-        """Explain provided Scikit-learn code."""
-        st.header("📖 Code Explanation")
-        code_snippet = st.text_area("Paste your Scikit-learn code here for explanation:")
-        if st.button("Explain Code"):
-            if code_snippet:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that explains code snippets."},
-                    {"role": "user", "content": f"Explain the following Scikit-learn code:\n\n{code_snippet}"}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    explanation = response.choices[0].message.content
-                    st.write(explanation)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to explain code. Please try again later.")
-            else:
-                st.warning("Please paste the code you want explained.")
-
-    def project_analysis_section():
-        """Analyze the user's Scikit-learn project."""
-        st.header("📊 Project Analysis")
-        project_description = st.text_area("Describe your Scikit-learn project:")
-        if st.button("Analyze Project"):
-            if project_description:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that analyzes and provides feedback on projects."},
-                    {"role": "user", "content": project_description}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    analysis = response.choices[0].message.content
-                    st.write(analysis)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to analyze project. Please try again later.")
-            else:
-                st.warning("Please describe your project for analysis.")
-
-    def debug_assistance_section():
-        """Assist in debugging Scikit-learn code."""
-        st.header("🐞 Debug Assistance")
-        debug_code = st.text_area("Paste your Scikit-learn code with errors:")
-        if st.button("Debug Code"):
-            if debug_code:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that helps debug code."},
-                    {"role": "user", "content": f"Debug the following Scikit-learn code:\n\n{debug_code}"}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    debug_solution = response.choices[0].message.content
-                    st.write(debug_solution)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to debug code. Please try again later.")
-            else:
-                st.warning("Please paste the code you need help debugging.")
-
-    def interactive_visualization_section():
-        """Generate interactive visualizations using Plotly."""
-        st.header("📈 Interactive Visualizations")
-        viz_prompt = st.text_area("Describe the visualization you need:")
-        if st.button("Generate Visualization"):
-            if viz_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that generates interactive Plotly visualizations."},
-                    {"role": "user", "content": viz_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    viz_code = response.choices[0].message.content
-                    st.code(viz_code, language='python')
-                    exec(viz_code, globals())
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to generate visualization. Please try again later.")
-                except Exception as e:
-                    logging.error(f"Error executing visualization code: {e}")
-                    st.error("An error occurred while generating the visualization.")
-            else:
-                st.warning("Please describe the visualization you need.")
-
-    def data_cleaning_section():
-        """Provide data cleaning techniques."""
-        st.header("🧹 Data Cleaning Techniques")
-        cleaning_prompt = st.text_area("Describe the data cleaning task you need assistance with:")
-        if st.button("Get Cleaning Tips"):
-            if cleaning_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that provides data cleaning techniques using Pandas."},
-                    {"role": "user", "content": cleaning_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    cleaning_tips = response.choices[0].message.content
-                    st.write(cleaning_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide cleaning tips. Please try again later.")
-            else:
-                st.warning("Please describe the data cleaning task you need assistance with.")
-
-    def feature_engineering_section():
-        """Assist with feature engineering."""
-        st.header("🔧 Feature Engineering")
-        feature_prompt = st.text_area("Describe the feature engineering task you need help with:")
-        if st.button("Get Feature Suggestions"):
-            if feature_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that helps with feature engineering using Pandas."},
-                    {"role": "user", "content": feature_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    feature_suggestions = response.choices[0].message.content
-                    st.write(feature_suggestions)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide feature suggestions. Please try again later.")
-            else:
-                st.warning("Please describe the feature engineering task you need help with.")
-
-    def handle_large_datasets_section():
-        """Provide techniques for handling large datasets."""
-        st.header("📂 Handling Large Datasets")
-        dataset_prompt = st.text_area("Describe the large dataset handling task you need assistance with:")
-        if st.button("Get Handling Techniques"):
-            if dataset_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that provides techniques for handling large datasets using Pandas."},
-                    {"role": "user", "content": dataset_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    handling_tips = response.choices[0].message.content
-                    st.write(handling_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide handling techniques. Please try again later.")
-            else:
-                st.warning("Please describe the large dataset handling task you need assistance with.")
-
-    def performance_optimization_section():
-        """Provide performance optimization tips."""
-        st.header("⚡ Performance Optimization")
-        optimization_prompt = st.text_area("Describe the performance optimization task you need assistance with:")
-        if st.button("Get Optimization Tips"):
-            if optimization_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that provides performance optimization tips using Pandas."},
-                    {"role": "user", "content": optimization_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    optimization_tips = response.choices[0].message.content
-                    st.write(optimization_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide optimization tips. Please try again later.")
-            else:
-                st.warning("Please describe the performance optimization task you need assistance with.")
-
-    def integration_section():
-        """Provide integration tips with other libraries."""
-        st.header("🔗 Integration with Other Libraries")
-        integration_prompt = st.text_area("Describe the integration task you need assistance with:")
-        if st.button("Get Integration Tips"):
-            if integration_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that provides integration tips with other libraries."},
-                    {"role": "user", "content": integration_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    integration_tips = response.choices[0].message.content
-                    st.write(integration_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide integration tips. Please try again later.")
-            else:
-                st.warning("Please describe the integration task you need assistance with.")
-
-    def machine_learning_pipelines_section():
-        """Assist with building machine learning pipelines."""
-        st.header("🤖 Machine Learning Pipelines")
-        ml_prompt = st.text_area("Describe the machine learning pipeline task you need assistance with:")
-        if st.button("Get ML Pipeline Tips"):
-            if ml_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that helps build machine learning pipelines using Pandas and Scikit-learn."},
-                    {"role": "user", "content": ml_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    ml_tips = response.choices[0].message.content
-                    st.write(ml_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide ML pipeline tips. Please try again later.")
-            else:
-                st.warning("Please describe the machine learning pipeline task you need assistance with.")
-
-    def export_sharing_section():
-        """Assist with exporting and sharing results."""
-        st.header("📤 Exporting and Sharing Results")
-        export_prompt = st.text_area("Describe how you want to export or share your results:")
-        if st.button("Get Export Tips"):
-            if export_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that helps with exporting and sharing results."},
-                    {"role": "user", "content": export_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    export_tips = response.choices[0].message.content
-                    st.write(export_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide export tips. Please try again later.")
-            else:
-                st.warning("Please describe how you want to export or share your results.")
-
-    def working_with_dates_section():
-        """Provide advanced datetime operations."""
-        st.header("📅 Working with Dates and Times")
-        dates_prompt = st.text_area("Describe the datetime task you need assistance with:")
-        if st.button("Get DateTime Tips"):
-            if dates_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that provides advanced datetime operations using Pandas."},
-                    {"role": "user", "content": dates_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    datetime_tips = response.choices[0].message.content
-                    st.write(datetime_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide datetime tips. Please try again later.")
-            else:
-                st.warning("Please describe the datetime task you need assistance with.")
-
-    def handling_duplicates_section():
-        """Assist with handling duplicate data."""
-        st.header("🔄 Handling Duplicates")
-        duplicates_prompt = st.text_area("Describe the duplicate data handling task you need assistance with:")
-        if st.button("Get Duplicate Handling Tips"):
-            if duplicates_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that helps handle duplicate data using Pandas."},
-                    {"role": "user", "content": duplicates_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    duplicate_tips = response.choices[0].message.content
-                    st.write(duplicate_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide duplicate handling tips. Please try again later.")
-            else:
-                st.warning("Please describe the duplicate data handling task you need assistance with.")
-
-    def data_normalization_section():
-        """Provide data normalization and scaling tips."""
-        st.header("📏 Data Normalization and Scaling")
-        normalization_prompt = st.text_area("Describe the data normalization or scaling task you need assistance with:")
-        if st.button("Get Normalization Tips"):
-            if normalization_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that provides data normalization and scaling tips using Scikit-learn."},
-                    {"role": "user", "content": normalization_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    normalization_tips = response.choices[0].message.content
-                    st.write(normalization_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide normalization tips. Please try again later.")
-            else:
-                st.warning("Please describe the data normalization or scaling task you need assistance with.")
-
-    def text_data_processing_section():
-        """Assist with handling and analyzing textual data."""
-        st.header("📝 Text Data Processing")
-        text_prompt = st.text_area("Describe the text data processing task you need assistance with:")
-        if st.button("Get Text Processing Tips"):
-            if text_prompt:
-                conversation = [
-                    {"role": "system", "content": "You are SkLearnly, a Scikit-learn assistant that helps with text data processing using Pandas."},
-                    {"role": "user", "content": text_prompt}
-                ]
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-4o-mini",
-                        messages=conversation
-                    )
-                    text_tips = response.choices[0].message.content
-                    st.write(text_tips)
-                except openai.OpenAIError as e:
-                    logging.error(f"OpenAI API Error: {e}")
-                    st.error("Failed to provide text processing tips. Please try again later.")
-            else:
-                st.warning("Please describe the text data processing task you need assistance with.")
-
-    def about_section():
-        """Display information about SkLearnly."""
-        st.header("ℹ️ About SkLearnly")
-        st.markdown("""
-        **SkLearnly** is an intelligent assistant designed to help you with all your Scikit-learn needs. Whether you're looking for the latest updates, need help generating code snippets, require assistance with troubleshooting, want to analyze your projects, or need advanced data handling techniques, SkLearnly is here to assist you.
-
-        - **Latest Updates:** Stay informed with the most recent features and changes in Scikit-learn.
-        - **Code Generation:** Quickly generate Scikit-learn code snippets for your projects.
-        - **Troubleshooting:** Get help with any issues or errors you encounter.
-        - **Code Explanation:** Understand your Scikit-learn code with detailed explanations.
-        - **Project Analysis:** Receive insights and recommendations on your Scikit-learn projects.
-        - **Debug Assistance:** Troubleshoot and fix errors in your Scikit-learn code.
-        - **Interactive Visualizations:** Generate interactive Plotly visualizations for your data.
-        - **Data Cleaning:** Learn techniques to clean and prepare your data using Pandas.
-        - **Feature Engineering:** Get suggestions for creating new features from your data.
-        - **Handling Large Datasets:** Discover methods to efficiently manage large datasets.
-        - **Performance Optimization:** Optimize your Scikit-learn models for better performance.
-        - **Integration with Other Libraries:** Learn how to integrate Scikit-learn with other Python libraries.
-        - **Machine Learning Pipelines:** Build robust machine learning pipelines using Scikit-learn.
-        - **Exporting and Sharing Results:** Learn how to export and share your Scikit-learn model results.
-        - **Working with Dates and Times:** Perform advanced datetime operations in your data.
-        - **Handling Duplicates:** Manage and remove duplicate data effectively.
-        - **Data Normalization and Scaling:** Prepare your data for machine learning models.
-        - **Text Data Processing:** Handle and analyze textual data within your Scikit-learn projects.
-        """)
-        st.image("https://ahammadmejbah.com/content/images/2024/10/Mejbah-Ahammad-Profile-8.png", width=200)
-
-    def main_full():
-        """Main function to run the comprehensive SkLearnly assistant."""
-        display_header()
-
-        menu = [
-            "Chat",
-            "Latest Updates",
-            "Generate Code",
-            "Explain Code",
-            "Analyze Project",
-            "Debug Code",
-            "Interactive Visualization",
-            "Data Cleaning",
-            "Feature Engineering",
-            "Handle Large Datasets",
-            "Performance Optimization",
-            "Integration",
-            "Machine Learning Pipelines",
-            "Exporting Results",
-            "Text Data Processing",
-            "About"
-        ]
-        choice = st.sidebar.selectbox("Menu", menu)
-
-        # Use Tabs for better layout
-        if choice == "Chat":
-            chat_interface()
-        elif choice == "Latest Updates":
-            latest_updates_section()
-        elif choice == "Generate Code":
-            code_generation_section()
-        elif choice == "Explain Code":
-            code_explanation_section()
-        elif choice == "Analyze Project":
-            project_analysis_section()
-        elif choice == "Debug Code":
-            debug_assistance_section()
-        elif choice == "Interactive Visualization":
-            interactive_visualization_section()
-        elif choice == "Data Cleaning":
-            data_cleaning_section()
-        elif choice == "Feature Engineering":
-            feature_engineering_section()
-        elif choice == "Handle Large Datasets":
-            handle_large_datasets_section()
-        elif choice == "Performance Optimization":
-            performance_optimization_section()
-        elif choice == "Integration":
-            integration_section()
-        elif choice == "Machine Learning Pipelines":
-            machine_learning_pipelines_section()
-        elif choice == "Exporting Results":
-            export_sharing_section()
-        elif choice == "Text Data Processing":
-            text_data_processing_section()
-        elif choice == "About":
-            about_section()
-
-    if __name__ == "__main__":
-        initialize_session_state()
-        main_full()
+    st.sidebar.markdown(sidebar_style, unsafe_allow_html=True)
+    
+    # Display logo
+    st.sidebar.markdown(
+        f"""
+        <div style="text-align: center;">
+            <a href="https://ahammadmejbah.com/">
+                <img src='data:image/png;base64,{logo_encoded}' class='img-fluid' width=100>
+            </a>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    st.sidebar.header('🧰 Pandas Cheat Sheet')
+    
+    st.sidebar.markdown('''
+    <small>Comprehensive summary of essential Pandas concepts, functions, and best practices.</small>
+    ''', unsafe_allow_html=True)
+    
+    st.sidebar.markdown('__🔑 Key Libraries__')
+    st.sidebar.code('''
+$ pip install pandas numpy matplotlib seaborn sqlalchemy openpyxl scikit-learn
+    ''')
+    
+    st.sidebar.markdown('__💡 Tips & Tricks__')
+    st.sidebar.code('''
+- Use virtual environments
+- Version control with Git
+- Document your code
+- Continuous learning
+- Utilize Jupyter Notebooks for exploration
+- Optimize memory usage with appropriate data types
+- Leverage vectorized operations for performance
+- Handle missing data effectively
+- Use descriptive statistics for data insights
+- Explore data with visualization tools
+- Automate repetitive tasks with functions
+- Validate data integrity before analysis
+- Use meaningful variable names
+- Modularize code for reusability
+- Keep up with the latest Pandas updates
+    ''')
+    
+    st.sidebar.markdown('''<hr>''', unsafe_allow_html=True)
+    st.sidebar.markdown('''<small>[Pandas Cheat Sheet v1.0](https://github.com/ahammadmejbah/Data-Science-Cheat-Sheet) | Nov 2024 | [Mejbah Ahammad](https://ahammadmejbah.com/)<div class="card-footer">Mejbah Ahammad © 2024</div></small>''', unsafe_allow_html=True)
+
+# Main body of cheat sheet with animations and organized layout
+def ds_body():
+    # Load Lottie animations
+    lottie_header = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_ydo1amjm.json")
+    lottie_section = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_1pxqjqps.json")
+    
+    # Header with animation
+    st.markdown(f"""
+        <div style="text-align: center; padding: 20px;">
+            <h1 style="color: #FF4B4B;">📊 Comprehensive Pandas Cheat Sheet</h1>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    if lottie_header:
+        st_lottie(lottie_header, height=200, key="header_animation")
+    
+    # Define Pandas topics and their extended code snippets
+    sections = {
+        "📦 Importing & Setup": {
+            "Importing Libraries": '''
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sqlalchemy import create_engine
+import json
+import warnings
+
+warnings.filterwarnings('ignore')
+            ''',
+            "Reading Data": '''
+# Read CSV with specific encoding
+df_csv = pd.read_csv('data.csv', encoding='utf-8')
+
+# Read Excel specifying sheet and engine
+df_excel = pd.read_excel('data.xlsx', sheet_name='Sheet1', engine='openpyxl')
+
+# Read JSON with normalization for nested structures
+df_json = pd.read_json('data.json')
+df_normalized = pd.json_normalize(json_data, 'records')
+
+# Read from SQL database
+engine = create_engine('postgresql://user:password@localhost:5432/mydatabase')
+df_sql = pd.read_sql('SELECT * FROM table_name WHERE age > 30', engine)
+
+# Read from HDF5 file
+df_hdf = pd.read_hdf('data.h5', key='df_key')
+
+# Read from Parquet file
+df_parquet = pd.read_parquet('data.parquet')
+
+# Read from Pickle file
+df_pickle = pd.read_pickle('data.pkl')
+            ''',
+            "Basic Data Inspection": '''
+# View first 5 rows
+print(df_csv.head())
+
+# View last 5 rows
+print(df_csv.tail())
+
+# Get DataFrame info
+print(df_csv.info())
+
+# Summary statistics
+print(df_csv.describe())
+
+# Check for missing values
+print(df_csv.isnull().sum())
+
+# Display data types
+print(df_csv.dtypes)
+
+# Check unique values in a column
+print(df_csv['City'].unique())
+
+# Get number of unique values
+print(df_csv['City'].nunique())
+
+# Display DataFrame shape
+print(df_csv.shape)
+
+# Display DataFrame index
+print(df_csv.index)
+
+# Display DataFrame columns
+print(df_csv.columns)
+
+# Display DataFrame memory usage
+print(df_csv.memory_usage(deep=True))
+            '''
+        },
+        "🔍 Data Exploration": {
+            "Selecting Columns": '''
+# Select single column as Series
+age_series = df_csv['Age']
+
+# Select multiple columns as DataFrame
+subset_df = df_csv[['Name', 'Age', 'Salary']]
+
+# Select columns using filter
+filtered_df = df_csv.filter(items=['Name', 'Age'])
+
+# Select columns based on data type
+numeric_df = df_csv.select_dtypes(include=['int64', 'float64'])
+
+# Select columns using regex
+regex_filtered = df_csv.filter(regex='^S', axis=1)  # Select columns starting with 'S'
+
+# Select columns using list comprehension
+selected_columns = [col for col in df_csv.columns if 'Sales' in col]
+sales_df = df_csv[selected_columns]
+            ''',
+            "Filtering Rows": '''
+# Filter rows where Age > 30
+df_over_30 = df_csv[df_csv['Age'] > 30]
+
+# Filter with multiple conditions
+df_filtered = df_csv[(df_csv['Age'] > 25) & (df_csv['Salary'] > 50000)]
+
+# Using isin for filtering specific values
+df_isin = df_csv[df_csv['City'].isin(['New York', 'Los Angeles'])]
+
+# Filtering rows with string conditions
+df_name_contains = df_csv[df_csv['Name'].str.contains('John')]
+
+# Filtering rows using query method
+df_query = df_csv.query('Age > 25 and Salary > 50000')
+
+# Filtering rows using loc
+df_loc = df_csv.loc[df_csv['Age'] > 25, ['Name', 'Age', 'Salary']]
+
+# Filtering rows using iloc
+df_iloc = df_csv.iloc[0:10, 0:3]
+            ''',
+            "Sorting Data": '''
+# Sort by single column ascending
+df_sorted = df_csv.sort_values(by='Age')
+
+# Sort by single column descending
+df_sorted_desc = df_csv.sort_values(by='Age', ascending=False)
+
+# Sort by multiple columns
+df_multi_sorted = df_csv.sort_values(by=['City', 'Age'], ascending=[True, False])
+
+# Sort using inplace
+df_csv.sort_values(by='Salary', ascending=True, inplace=True)
+
+# Sort using keys
+df_sorted_keys = df_csv.sort_values(by='Salary', key=lambda x: x % 1000)
+
+# Sort index
+df_sorted_index = df_csv.sort_index(ascending=True)
+
+# Sort index descending
+df_sorted_index_desc = df_csv.sort_index(ascending=False)
+            ''',
+            "Handling Missing Values": '''
+# Drop rows with any missing values
+df_dropped = df_csv.dropna()
+
+# Drop rows where specific columns are missing
+df_dropped_specific = df_csv.dropna(subset=['Age', 'Salary'])
+
+# Fill missing values with a constant
+df_filled = df_csv.fillna(0)
+
+# Fill missing values with mean of the column
+df_csv['Age'] = df_csv['Age'].fillna(df_csv['Age'].mean())
+
+# Forward fill
+df_ffill = df_csv.fillna(method='ffill')
+
+# Backward fill
+df_bfill = df_csv.fillna(method='bfill')
+
+# Fill missing values with interpolation
+df_interpolated = df_csv.interpolate(method='linear')
+
+# Fill missing values with different strategies for different columns
+df_csv.fillna({'Age': df_csv['Age'].mean(), 'Salary': df_csv['Salary'].median()}, inplace=True)
+
+# Using SimpleImputer from sklearn
+from sklearn.impute import SimpleImputer
+imputer = SimpleImputer(strategy='mean')
+df_csv[['Age', 'Salary']] = imputer.fit_transform(df_csv[['Age', 'Salary']])
+            '''
+        },
+        "🔄 Data Transformation": {
+            "Applying Functions": '''
+# Apply a lambda function to a column
+df_csv['Age_Plus_One'] = df_csv['Age'].apply(lambda x: x + 1)
+
+# Apply a custom function to a column
+def categorize_age(age):
+    if age < 18:
+        return 'Child'
+    elif age < 35:
+        return 'Young Adult'
+    elif age < 60:
+        return 'Adult'
+    else:
+        return 'Senior'
+
+df_csv['Age_Group'] = df_csv['Age'].apply(categorize_age)
+
+# Apply a function to entire DataFrame
+df_cleaned = df_csv.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
+# Apply multiple functions using apply
+df_grouped = df_csv.groupby('City').apply(lambda x: x.assign(Age_Squared = x['Age']**2))
+
+# Apply functions with multiple arguments
+def add_columns(row, a, b):
+    return row['A'] + row['B'] + a + b
+
+df_csv['A_plus_B'] = df_csv.apply(add_columns, args=(5, 10), axis=1)
+            ''',
+            "Vectorized Operations": '''
+# Create new column based on existing columns
+df_csv['Salary_Per_Age'] = df_csv['Salary'] / df_csv['Age']
+
+# Vectorized string operations
+df_csv['Name_Upper'] = df_csv['Name'].str.upper()
+df_csv['City_Lower'] = df_csv['City'].str.lower()
+
+# Boolean operations
+df_csv['High_Earner'] = df_csv['Salary'] > 70000
+
+# Creating multiple new columns
+df_csv[['Salary_1000s', 'Salary_100s']] = df_csv['Salary'].apply(lambda x: pd.Series([x//1000, x//100]))
+
+# Vectorized arithmetic operations
+df_csv['Bonus'] = df_csv['Salary'] * 0.10
+df_csv['Total_Compensation'] = df_csv['Salary'] + df_csv['Bonus']
+
+# Vectorized conditional operations using np.where
+import numpy as np
+df_csv['Senior'] = np.where(df_csv['Age'] > 60, 'Yes', 'No')
+            ''',
+            "Mapping Values": '''
+# Map categorical values using a dictionary
+city_mapping = {'New York': 'NY', 'Los Angeles': 'LA', 'Chicago': 'CHI'}
+df_csv['City_Abbr'] = df_csv['City'].map(city_mapping)
+
+# Replace values directly
+df_csv['Gender'].replace({'Male': 'M', 'Female': 'F'}, inplace=True)
+
+# Mapping with function
+def map_gender(gender):
+    return 'M' if gender == 'Male' else 'F'
+
+df_csv['Gender_Mapped'] = df_csv['Gender'].apply(map_gender)
+
+# Replace multiple values
+df_csv['Department'].replace({'HR': 'Human Resources', 'IT': 'Information Technology'}, inplace=True)
+
+# Mapping ordinal categories
+priority_mapping = {'Low': 1, 'Medium': 2, 'High': 3}
+df_csv['Priority_Level'] = df_csv['Priority'].map(priority_mapping)
+
+# Target encoding (mean encoding)
+city_salary_mean = df_csv.groupby('City')['Salary'].mean()
+df_csv['City_Salary_Mean'] = df_csv['City'].map(city_salary_mean)
+            '''
+        },
+        "🔗 Merging & Joining": {
+            "Merging DataFrames": '''
+# Inner join on 'Key'
+merged_inner = pd.merge(df1, df2, on='Key', how='inner')
+
+# Left join on 'Key'
+merged_left = pd.merge(df1, df2, on='Key', how='left')
+
+# Right join on 'Key'
+merged_right = pd.merge(df1, df2, on='Key', how='right')
+
+# Outer join on 'Key'
+merged_outer = pd.merge(df1, df2, on='Key', how='outer')
+
+# Merge with indicator
+merged_with_indicator = pd.merge(df1, df2, on='Key', how='outer', indicator=True)
+
+# Merge on multiple keys
+merged_multiple = pd.merge(df1, df2, on=['Key1', 'Key2'], how='inner')
+
+# Merge with suffixes to handle overlapping column names
+merged_suffix = pd.merge(df1, df2, on='Key', how='outer', suffixes=('_left', '_right'))
+
+# Merge with sort
+merged_sorted = pd.merge(df1, df2, on='Key', how='inner', sort=True)
+            ''',
+            "Concatenating DataFrames": '''
+# Concatenate vertically (stacking rows)
+concatenated_vert = pd.concat([df1, df2, df3], axis=0)
+
+# Concatenate horizontally (stacking columns)
+concatenated_horz = pd.concat([df1, df2, df3], axis=1)
+
+# Concatenate with ignore_index
+concatenated_ignore = pd.concat([df1, df2], axis=0, ignore_index=True)
+
+# Concatenate along a specific axis with keys
+concatenated_keys = pd.concat([df1, df2], axis=0, keys=['Group1', 'Group2'])
+
+# Concatenate with join
+concatenated_join = pd.concat([df1, df2], axis=1, join='inner')
+
+# Concatenate multiple DataFrames in a loop
+dfs = [df1, df2, df3, df4, df5]
+concatenated_loop = pd.concat(dfs, axis=0, ignore_index=True)
+            ''',
+            "Joining on Multiple Keys": '''
+# Merge on multiple keys 'Key1' and 'Key2'
+merged_multiple = pd.merge(df1, df2, on=['Key1', 'Key2'], how='inner')
+
+# Joining DataFrames with multiple keys and suffixes
+merged_suffix = pd.merge(df1, df2, on=['Key1', 'Key2'], how='outer', suffixes=('_left', '_right'))
+
+# Joining with different join types
+merged_inner = pd.merge(df1, df2, on=['Key1', 'Key2'], how='inner')
+merged_left = pd.merge(df1, df2, on=['Key1', 'Key2'], how='left')
+merged_right = pd.merge(df1, df2, on=['Key1', 'Key2'], how='right')
+merged_outer = pd.merge(df1, df2, on=['Key1', 'Key2'], how='outer')
+            '''
+        },
+        "📊 Grouping & Aggregation": {
+            "Group By": '''
+# Group by single column 'City'
+grouped_city = df_csv.groupby('City')
+
+# Group by multiple columns 'City' and 'Age_Group'
+grouped_multi = df_csv.groupby(['City', 'Age_Group'])
+
+# Group by with as_index=False to keep grouping columns as columns
+grouped_no_index = df_csv.groupby('City', as_index=False)
+            ''',
+            "Aggregation Functions": '''
+# Aggregate with mean
+age_mean = grouped_city['Age'].mean()
+
+# Multiple aggregations
+aggregated = grouped_city.agg({'Age': ['mean', 'sum'], 'Salary': 'median'})
+
+# Custom aggregation functions
+def range_func(x):
+    return x.max() - x.min()
+
+custom_agg = grouped_city.agg({
+    'Salary': ['mean', 'sum'],
+    'Experience': range_func
+})
+
+# Aggregating multiple columns with different functions
+aggregated_multi = df_csv.groupby('City').agg({
+    'Salary': ['mean', 'sum', 'median'],
+    'Age': ['min', 'max', 'median'],
+    'Experience': ['mean', 'std']
+})
+
+# Aggregating with named aggregation
+aggregated_named = df_csv.groupby('City').agg(
+    Mean_Salary=('Salary', 'mean'),
+    Total_Salary=('Salary', 'sum'),
+    Median_Age=('Age', 'median')
+)
+            ''',
+            "Pivot Tables": '''
+# Simple pivot table
+pivot_simple = df_csv.pivot_table(values='Sales', index='Region', columns='Product', aggfunc='sum', fill_value=0)
+
+# Pivot with multiple aggregation functions
+pivot_multi = df_csv.pivot_table(values='Sales', index='Region', columns='Product', aggfunc=['sum', 'mean'], fill_value=0)
+
+# Pivot with margins (totals)
+pivot_margins = df_csv.pivot_table(values='Sales', index='Region', columns='Product', aggfunc='sum', margins=True, fill_value=0)
+
+# Pivot with custom aggregation functions
+pivot_custom = df_csv.pivot_table(values='Sales', index='Region', columns='Product', aggfunc={'Sales': ['sum', 'mean']}, fill_value=0)
+
+# Pivot with multiple indexes
+pivot_multi_index = df_csv.pivot_table(values='Sales', index=['Region', 'City'], columns='Product', aggfunc='sum', fill_value=0)
+
+# Pivot with multiple values
+pivot_multi_values = df_csv.pivot_table(values=['Sales', 'Profit'], index='Region', columns='Product', aggfunc='sum', fill_value=0)
+            '''
+        },
+        "📈 Data Visualization": {
+            "Plotting with Pandas": '''
+# Line plot for Sales over Time
+df_csv.plot(kind='line', x='Date', y='Sales', title='Sales Over Time', figsize=(10,6), color='blue', marker='o')
+plt.xlabel('Date')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# Bar plot for Sales by City
+df_csv.plot(kind='bar', x='City', y='Sales', title='Sales by City', figsize=(10,6), color='skyblue')
+plt.xlabel('City')
+plt.ylabel('Sales')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Scatter plot for Age vs Salary
+df_csv.plot(kind='scatter', x='Age', y='Salary', title='Age vs Salary', figsize=(10,6), color='red', alpha=0.5)
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.grid(True)
+plt.show()
+
+# Histogram for Age Distribution
+df_csv['Age'].plot(kind='hist', bins=10, title='Age Distribution', figsize=(10,6), color='green', edgecolor='black')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.show()
+
+# Boxplot for Salary Distribution by City
+df_csv.boxplot(column='Salary', by='City', title='Salary Distribution by City', figsize=(10,6))
+plt.xlabel('City')
+plt.ylabel('Salary')
+plt.show()
+            ''',
+            "Advanced Visualization": '''
+# Heatmap using seaborn
+plt.figure(figsize=(10,8))
+sns.heatmap(df_csv.corr(), annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
+
+# Pairplot using seaborn
+sns.pairplot(df_csv, hue='City', markers=["o", "s", "D"], palette='Set2')
+plt.suptitle('Pairplot of DataFrame', y=1.02)
+plt.show()
+
+# Boxplot using seaborn
+plt.figure(figsize=(10,6))
+sns.boxplot(x='City', y='Salary', data=df_csv, palette='Pastel1')
+plt.title('Salary Distribution by City')
+plt.show()
+
+# Violin plot using seaborn
+plt.figure(figsize=(10,6))
+sns.violinplot(x='City', y='Salary', data=df_csv, palette='Set3')
+plt.title('Salary Distribution by City')
+plt.show()
+
+# Swarm plot using seaborn
+plt.figure(figsize=(10,6))
+sns.swarmplot(x='City', y='Salary', data=df_csv, hue='Gender', palette='Set1')
+plt.title('Salary Distribution by City and Gender')
+plt.legend(title='Gender')
+plt.show()
+
+# Jointplot using seaborn
+sns.jointplot(x='Age', y='Salary', data=df_csv, kind='scatter', color='green')
+plt.show()
+
+# KDE plot using seaborn
+sns.kdeplot(data=df_csv, x='Age', y='Salary', cmap='Blues', shade=True)
+plt.title('KDE Plot of Age vs Salary')
+plt.show()
+
+# FacetGrid using seaborn
+g = sns.FacetGrid(df_csv, col='City', hue='Gender')
+g.map(plt.scatter, 'Age', 'Salary').add_legend()
+plt.show()
+
+# Countplot using seaborn
+sns.countplot(x='City', data=df_csv, palette='Set2')
+plt.title('Count of Records by City')
+plt.show()
+
+# Stripplot using seaborn
+sns.stripplot(x='City', y='Salary', data=df_csv, jitter=True, hue='Gender', dodge=True)
+plt.title('Stripplot of Salary by City and Gender')
+plt.legend(title='Gender')
+plt.show()
+
+# Rugplot using seaborn
+sns.rugplot(x='Salary', data=df_csv, height=0.05)
+plt.title('Rugplot of Salary')
+plt.show()
+
+# Heatmap of categorical data
+category_counts = df_csv.groupby(['City', 'Gender']).size().unstack()
+sns.heatmap(category_counts, annot=True, fmt="d", cmap='YlGnBu')
+plt.title('Heatmap of City vs Gender Counts')
+plt.show()
+            '''
+        },
+        "🔧 Data Engineering": {
+            "Exporting Data": '''
+# Export DataFrame to CSV
+df_csv.to_csv('output.csv', index=False)
+
+# Export DataFrame to Excel with specific sheet name
+df_csv.to_excel('output.xlsx', index=False, sheet_name='DataSheet')
+
+# Export DataFrame to JSON
+df_csv.to_json('output.json', orient='records', lines=True)
+
+# Export DataFrame to SQL database
+engine = create_engine('postgresql://user:password@localhost:5432/mydatabase')
+df_csv.to_sql('table_name', engine, if_exists='replace', index=False)
+
+# Export DataFrame to HDF5
+df_csv.to_hdf('output.h5', key='df_key', mode='w')
+
+# Export DataFrame to Parquet
+df_csv.to_parquet('output.parquet')
+
+# Export DataFrame to Pickle
+df_csv.to_pickle('output.pkl')
+
+# Export DataFrame to Feather
+df_csv.to_feather('output.feather')
+
+# Export DataFrame to Msgpack (Deprecated in newer Pandas versions)
+# df_csv.to_msgpack('output.msgpack')  # Not recommended
+            ''',
+            "Handling Large Datasets": '''
+# Read large CSV in chunks
+chunksize = 10**6
+chunks = []
+for chunk in pd.read_csv('large_data.csv', chunksize=chunksize):
+    # Process each chunk
+    processed_chunk = chunk[chunk['Age'] > 30]
+    chunks.append(processed_chunk)
+df_large = pd.concat(chunks, axis=0)
+
+# Optimize memory usage by changing data types
+df_csv['Age'] = df_csv['Age'].astype('int16')
+df_csv['Salary'] = df_csv['Salary'].astype('float32')
+df_csv['Gender'] = df_csv['Gender'].astype('category')
+
+# Reduce memory usage by converting object types to category
+for col in df_csv.select_dtypes(include=['object']).columns:
+    df_csv[col] = df_csv[col].astype('category')
+
+# Using memory-efficient data types
+df_csv['ZipCode'] = df_csv['ZipCode'].astype('int32')
+df_csv['Income'] = df_csv['Income'].astype('float32')
+
+# Dropping unnecessary columns to save memory
+df_csv.drop(['UnnecessaryColumn1', 'UnnecessaryColumn2'], axis=1, inplace=True)
+
+# Sampling large datasets for quick analysis
+df_sample = df_csv.sample(frac=0.1, random_state=1)
+
+# Using Dask for parallel processing (if dataset is extremely large)
+# import dask.dataframe as dd
+# ddf = dd.read_csv('very_large_data.csv')
+# ddf_filtered = ddf[ddf['Age'] > 30]
+# df_filtered = ddf_filtered.compute()
+            ''',
+            "Using SQL with Pandas": '''
+# Querying SQL database and loading into DataFrame
+query = """
+SELECT Name, Age, Salary
+FROM employees
+WHERE Age > 25
+ORDER BY Salary DESC
+"""
+df_sql = pd.read_sql(query, engine)
+
+# Display the DataFrame
+print(df_sql.head())
+
+# Insert data into SQL database from DataFrame
+df_new = pd.DataFrame({
+    'Name': ['Alice', 'Bob'],
+    'Age': [28, 34],
+    'Salary': [70000, 80000]
+})
+df_new.to_sql('employees', engine, if_exists='append', index=False)
+
+# Update records in SQL database
+update_query = """
+UPDATE employees
+SET Salary = Salary * 1.10
+WHERE Age > 30
+"""
+with engine.connect() as conn:
+    conn.execute(update_query)
+
+# Delete records from SQL database
+delete_query = """
+DELETE FROM employees
+WHERE Name = 'Bob'
+"""
+with engine.connect() as conn:
+    conn.execute(delete_query)
+
+# Read from SQL database into DataFrame with parameters
+from sqlalchemy import text
+sql_query = text("SELECT * FROM employees WHERE Salary > :salary_threshold")
+df_sql_param = pd.read_sql(sql_query, engine, params={"salary_threshold": 75000})
+
+# Using SQLAlchemy ORM for more complex queries
+from sqlalchemy.orm import sessionmaker
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# Example ORM query
+result = session.execute("SELECT * FROM employees WHERE Age > 30").fetchall()
+df_orm = pd.DataFrame(result, columns=result[0].keys())
+
+# Closing the session
+session.close()
+            '''
+        },
+        "🔍 Advanced Topics": {
+            "Time Series Analysis": '''
+# Convert 'Date' column to datetime
+df_csv['Date'] = pd.to_datetime(df_csv['Date'])
+
+# Set 'Date' as index
+df_csv.set_index('Date', inplace=True)
+
+# Resample data to monthly frequency and sum Sales
+monthly_sales = df_csv['Sales'].resample('M').sum()
+
+# Plot resampled data
+monthly_sales.plot(kind='line', title='Monthly Sales', figsize=(12,6), color='purple', marker='x')
+plt.xlabel('Month')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# Rolling statistics: 12-month moving average
+df_csv['Sales_MA12'] = df_csv['Sales'].rolling(window=12).mean()
+df_csv['Sales_MA12'].plot(title='12-Month Moving Average of Sales', figsize=(12,6), color='orange')
+plt.xlabel('Date')
+plt.ylabel('Sales (MA12)')
+plt.grid(True)
+plt.show()
+
+# Decompose time series
+from statsmodels.tsa.seasonal import seasonal_decompose
+decomposition = seasonal_decompose(df_csv['Sales'], model='additive')
+fig = decomposition.plot()
+plt.show()
+
+# Stationarity tests
+from statsmodels.tsa.stattools import adfuller
+result = adfuller(df_csv['Sales'])
+print('ADF Statistic:', result[0])
+print('p-value:', result[1])
+
+# Differencing to make series stationary
+df_csv['Sales_Diff'] = df_csv['Sales'].diff()
+df_csv['Sales_Diff'].dropna().plot(title='Differenced Sales', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Sales Difference')
+plt.show()
+
+# Autocorrelation
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+plot_acf(df_csv['Sales'].dropna(), lags=40)
+plt.title('Autocorrelation of Sales')
+plt.show()
+
+plot_pacf(df_csv['Sales'].dropna(), lags=40)
+plt.title('Partial Autocorrelation of Sales')
+plt.show()
+
+# Forecasting with ARIMA (example)
+from statsmodels.tsa.arima.model import ARIMA
+model = ARIMA(df_csv['Sales'], order=(1,1,1))
+model_fit = model.fit()
+print(model_fit.summary())
+
+# Forecasting future values
+forecast = model_fit.forecast(steps=12)
+print(forecast)
+forecast.plot(title='Sales Forecast', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Forecasted Sales')
+plt.show()
+
+# Seasonal decomposition using STL
+from statsmodels.tsa.seasonal import STL
+stl = STL(df_csv['Sales'], seasonal=13)
+result = stl.fit()
+result.plot()
+plt.show()
+
+# Trend extraction
+df_csv['Trend'] = result.trend
+df_csv['Trend'].plot(title='Trend Component', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Trend')
+plt.show()
+
+# Seasonal extraction
+df_csv['Seasonal'] = result.seasonal
+df_csv['Seasonal'].plot(title='Seasonal Component', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Seasonality')
+plt.show()
+
+# Residual extraction
+df_csv['Residual'] = result.resid
+df_csv['Residual'].plot(title='Residual Component', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Residuals')
+plt.show()
+
+# Forecast with confidence intervals
+forecast_ci = model_fit.get_forecast(steps=12)
+forecast_df = forecast_ci.summary_frame()
+print(forecast_df)
+forecast_df[['mean', 'mean_ci_lower', 'mean_ci_upper']].plot(figsize=(12,6))
+plt.title('Sales Forecast with Confidence Intervals')
+plt.xlabel('Date')
+plt.ylabel('Sales')
+plt.show()
+            ''',
+            "Handling Categorical Data": '''
+# One-Hot Encoding using get_dummies
+df_encoded = pd.get_dummies(df_csv, columns=['Category'], drop_first=True)
+
+# Label Encoding using sklearn
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+df_csv['Category_Encoded'] = le.fit_transform(df_csv['Category'])
+
+# Handling ordinal categories
+ordinal_mapping = {'Low': 1, 'Medium': 2, 'High': 3}
+df_csv['Priority_Level'] = df_csv['Priority'].map(ordinal_mapping)
+
+# Creating dummy variables for multiple categorical columns
+df_dummies = pd.get_dummies(df_csv, columns=['City', 'Gender'], drop_first=True)
+
+# Encoding ordinal categories with pandas.Categorical
+df_csv['Quality'] = pd.Categorical(df_csv['Quality'], categories=['Poor', 'Average', 'Good', 'Excellent'], ordered=True)
+df_csv['Quality_Code'] = df_csv['Quality'].cat.codes
+
+# Binning continuous variables
+df_csv['Age_Binned'] = pd.cut(df_csv['Age'], bins=[0, 18, 35, 60, 100], labels=['Child', 'Young Adult', 'Adult', 'Senior'])
+
+# Mapping bin labels to numerical codes
+age_bin_mapping = {'Child': 1, 'Young Adult': 2, 'Adult': 3, 'Senior': 4}
+df_csv['Age_Bin_Code'] = df_csv['Age_Binned'].map(age_bin_mapping)
+
+# Target encoding (mean encoding)
+city_salary_mean = df_csv.groupby('City')['Salary'].mean()
+df_csv['City_Salary_Mean'] = df_csv['City'].map(city_salary_mean)
+            ''',
+            "Applying Functions with GroupBy": '''
+# Define a custom aggregation function
+def range_func(x):
+    return x.max() - x.min()
+
+# Apply custom function to 'Experience' column
+experience_range = df_csv.groupby('City')['Experience'].apply(range_func)
+print(experience_range)
+
+# Apply multiple aggregation functions
+aggregated = df_csv.groupby('City').agg({
+    'Salary': ['mean', 'sum'],
+    'Age': 'max',
+    'Experience': range_func
+})
+print(aggregated)
+
+# Applying functions to multiple columns
+aggregated_multi = df_csv.groupby('City').agg({
+    'Salary': ['mean', 'sum', 'median'],
+    'Age': ['min', 'max', 'median'],
+    'Experience': ['mean', 'std']
+})
+print(aggregated_multi)
+
+# Using transform to broadcast group results
+df_csv['Salary_Mean'] = df_csv.groupby('City')['Salary'].transform('mean')
+print(df_csv.head())
+
+# Aggregating with multiple custom functions
+def custom_sum(x):
+    return x.sum()
+
+def custom_mean(x):
+    return x.mean()
+
+aggregated_custom = df_csv.groupby('City').agg({
+    'Salary': [custom_sum, custom_mean],
+    'Age': 'mean'
+})
+print(aggregated_custom)
+
+# Aggregating with named aggregation
+aggregated_named = df_csv.groupby('City').agg(
+    Mean_Salary=('Salary', 'mean'),
+    Total_Salary=('Salary', 'sum'),
+    Median_Age=('Age', 'median')
+)
+print(aggregated_named)
+            '''
+        },
+        "📈 Data Visualization": {
+            "Plotting with Pandas": '''
+# Line plot for Sales over Time
+df_csv.plot(kind='line', x='Date', y='Sales', title='Sales Over Time', figsize=(10,6), color='blue', marker='o')
+plt.xlabel('Date')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# Bar plot for Sales by City
+df_csv.plot(kind='bar', x='City', y='Sales', title='Sales by City', figsize=(10,6), color='skyblue')
+plt.xlabel('City')
+plt.ylabel('Sales')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Scatter plot for Age vs Salary
+df_csv.plot(kind='scatter', x='Age', y='Salary', title='Age vs Salary', figsize=(10,6), color='red', alpha=0.5)
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.grid(True)
+plt.show()
+
+# Histogram for Age Distribution
+df_csv['Age'].plot(kind='hist', bins=10, title='Age Distribution', figsize=(10,6), color='green', edgecolor='black')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.show()
+
+# Boxplot for Salary Distribution by City
+df_csv.boxplot(column='Salary', by='City', title='Salary Distribution by City', figsize=(10,6))
+plt.xlabel('City')
+plt.ylabel('Salary')
+plt.show()
+            ''',
+            "Advanced Visualization": '''
+# Heatmap using seaborn
+plt.figure(figsize=(10,8))
+sns.heatmap(df_csv.corr(), annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
+
+# Pairplot using seaborn
+sns.pairplot(df_csv, hue='City', markers=["o", "s", "D"], palette='Set2')
+plt.suptitle('Pairplot of DataFrame', y=1.02)
+plt.show()
+
+# Boxplot using seaborn
+plt.figure(figsize=(10,6))
+sns.boxplot(x='City', y='Salary', data=df_csv, palette='Pastel1')
+plt.title('Salary Distribution by City')
+plt.show()
+
+# Violin plot using seaborn
+plt.figure(figsize=(10,6))
+sns.violinplot(x='City', y='Salary', data=df_csv, palette='Set3')
+plt.title('Salary Distribution by City')
+plt.show()
+
+# Swarm plot using seaborn
+plt.figure(figsize=(10,6))
+sns.swarmplot(x='City', y='Salary', data=df_csv, hue='Gender', palette='Set1')
+plt.title('Salary Distribution by City and Gender')
+plt.legend(title='Gender')
+plt.show()
+
+# Jointplot using seaborn
+sns.jointplot(x='Age', y='Salary', data=df_csv, kind='scatter', color='green')
+plt.show()
+
+# KDE plot using seaborn
+sns.kdeplot(data=df_csv, x='Age', y='Salary', cmap='Blues', shade=True)
+plt.title('KDE Plot of Age vs Salary')
+plt.show()
+
+# FacetGrid using seaborn
+g = sns.FacetGrid(df_csv, col='City', hue='Gender')
+g.map(plt.scatter, 'Age', 'Salary').add_legend()
+plt.show()
+
+# Countplot using seaborn
+sns.countplot(x='City', data=df_csv, palette='Set2')
+plt.title('Count of Records by City')
+plt.show()
+
+# Stripplot using seaborn
+sns.stripplot(x='City', y='Salary', data=df_csv, jitter=True, hue='Gender', dodge=True)
+plt.title('Stripplot of Salary by City and Gender')
+plt.legend(title='Gender')
+plt.show()
+
+# Rugplot using seaborn
+sns.rugplot(x='Salary', data=df_csv, height=0.05)
+plt.title('Rugplot of Salary')
+plt.show()
+
+# Heatmap of categorical data
+category_counts = df_csv.groupby(['City', 'Gender']).size().unstack()
+sns.heatmap(category_counts, annot=True, fmt="d", cmap='YlGnBu')
+plt.title('Heatmap of City vs Gender Counts')
+plt.show()
+            '''
+        },
+        "🔧 Data Engineering": {
+            "Exporting Data": '''
+# Export DataFrame to CSV
+df_csv.to_csv('output.csv', index=False)
+
+# Export DataFrame to Excel with specific sheet name
+df_csv.to_excel('output.xlsx', index=False, sheet_name='DataSheet')
+
+# Export DataFrame to JSON
+df_csv.to_json('output.json', orient='records', lines=True)
+
+# Export DataFrame to SQL database
+engine = create_engine('postgresql://user:password@localhost:5432/mydatabase')
+df_csv.to_sql('table_name', engine, if_exists='replace', index=False)
+
+# Export DataFrame to HDF5
+df_csv.to_hdf('output.h5', key='df_key', mode='w')
+
+# Export DataFrame to Parquet
+df_csv.to_parquet('output.parquet')
+
+# Export DataFrame to Pickle
+df_csv.to_pickle('output.pkl')
+
+# Export DataFrame to Feather
+df_csv.to_feather('output.feather')
+
+# Export DataFrame to Msgpack (Deprecated in newer Pandas versions)
+# df_csv.to_msgpack('output.msgpack')  # Not recommended
+            ''',
+            "Handling Large Datasets": '''
+# Read large CSV in chunks
+chunksize = 10**6
+chunks = []
+for chunk in pd.read_csv('large_data.csv', chunksize=chunksize):
+    # Process each chunk
+    processed_chunk = chunk[chunk['Age'] > 30]
+    chunks.append(processed_chunk)
+df_large = pd.concat(chunks, axis=0)
+
+# Optimize memory usage by changing data types
+df_csv['Age'] = df_csv['Age'].astype('int16')
+df_csv['Salary'] = df_csv['Salary'].astype('float32')
+df_csv['Gender'] = df_csv['Gender'].astype('category')
+
+# Reduce memory usage by converting object types to category
+for col in df_csv.select_dtypes(include=['object']).columns:
+    df_csv[col] = df_csv[col].astype('category')
+
+# Using memory-efficient data types
+df_csv['ZipCode'] = df_csv['ZipCode'].astype('int32')
+df_csv['Income'] = df_csv['Income'].astype('float32')
+
+# Dropping unnecessary columns to save memory
+df_csv.drop(['UnnecessaryColumn1', 'UnnecessaryColumn2'], axis=1, inplace=True)
+
+# Sampling large datasets for quick analysis
+df_sample = df_csv.sample(frac=0.1, random_state=1)
+
+# Using Dask for parallel processing (if dataset is extremely large)
+# import dask.dataframe as dd
+# ddf = dd.read_csv('very_large_data.csv')
+# ddf_filtered = ddf[ddf['Age'] > 30]
+# df_filtered = ddf_filtered.compute()
+            ''',
+            "Using SQL with Pandas": '''
+# Querying SQL database and loading into DataFrame
+query = """
+SELECT Name, Age, Salary
+FROM employees
+WHERE Age > 25
+ORDER BY Salary DESC
+"""
+df_sql = pd.read_sql(query, engine)
+
+# Display the DataFrame
+print(df_sql.head())
+
+# Insert data into SQL database from DataFrame
+df_new = pd.DataFrame({
+    'Name': ['Alice', 'Bob'],
+    'Age': [28, 34],
+    'Salary': [70000, 80000]
+})
+df_new.to_sql('employees', engine, if_exists='append', index=False)
+
+# Update records in SQL database
+update_query = """
+UPDATE employees
+SET Salary = Salary * 1.10
+WHERE Age > 30
+"""
+with engine.connect() as conn:
+    conn.execute(update_query)
+
+# Delete records from SQL database
+delete_query = """
+DELETE FROM employees
+WHERE Name = 'Bob'
+"""
+with engine.connect() as conn:
+    conn.execute(delete_query)
+
+# Read from SQL database into DataFrame with parameters
+from sqlalchemy import text
+sql_query = text("SELECT * FROM employees WHERE Salary > :salary_threshold")
+df_sql_param = pd.read_sql(sql_query, engine, params={"salary_threshold": 75000})
+
+# Using SQLAlchemy ORM for more complex queries
+from sqlalchemy.orm import sessionmaker
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# Example ORM query
+result = session.execute("SELECT * FROM employees WHERE Age > 30").fetchall()
+df_orm = pd.DataFrame(result, columns=result[0].keys())
+
+# Closing the session
+session.close()
+            '''
+        },
+        "🔍 Advanced Topics": {
+            "Time Series Analysis": '''
+# Convert 'Date' column to datetime
+df_csv['Date'] = pd.to_datetime(df_csv['Date'])
+
+# Set 'Date' as index
+df_csv.set_index('Date', inplace=True)
+
+# Resample data to monthly frequency and sum Sales
+monthly_sales = df_csv['Sales'].resample('M').sum()
+
+# Plot resampled data
+monthly_sales.plot(kind='line', title='Monthly Sales', figsize=(12,6), color='purple', marker='x')
+plt.xlabel('Month')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# Rolling statistics: 12-month moving average
+df_csv['Sales_MA12'] = df_csv['Sales'].rolling(window=12).mean()
+df_csv['Sales_MA12'].plot(title='12-Month Moving Average of Sales', figsize=(12,6), color='orange')
+plt.xlabel('Date')
+plt.ylabel('Sales (MA12)')
+plt.grid(True)
+plt.show()
+
+# Decompose time series
+from statsmodels.tsa.seasonal import seasonal_decompose
+decomposition = seasonal_decompose(df_csv['Sales'], model='additive')
+fig = decomposition.plot()
+plt.show()
+
+# Stationarity tests
+from statsmodels.tsa.stattools import adfuller
+result = adfuller(df_csv['Sales'])
+print('ADF Statistic:', result[0])
+print('p-value:', result[1])
+
+# Differencing to make series stationary
+df_csv['Sales_Diff'] = df_csv['Sales'].diff()
+df_csv['Sales_Diff'].dropna().plot(title='Differenced Sales', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Sales Difference')
+plt.show()
+
+# Autocorrelation
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+plot_acf(df_csv['Sales'].dropna(), lags=40)
+plt.title('Autocorrelation of Sales')
+plt.show()
+
+plot_pacf(df_csv['Sales'].dropna(), lags=40)
+plt.title('Partial Autocorrelation of Sales')
+plt.show()
+
+# Forecasting with ARIMA (example)
+from statsmodels.tsa.arima.model import ARIMA
+model = ARIMA(df_csv['Sales'], order=(1,1,1))
+model_fit = model.fit()
+print(model_fit.summary())
+
+# Forecasting future values
+forecast = model_fit.forecast(steps=12)
+print(forecast)
+forecast.plot(title='Sales Forecast', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Forecasted Sales')
+plt.show()
+
+# Seasonal decomposition using STL
+from statsmodels.tsa.seasonal import STL
+stl = STL(df_csv['Sales'], seasonal=13)
+result = stl.fit()
+result.plot()
+plt.show()
+
+# Trend extraction
+df_csv['Trend'] = result.trend
+df_csv['Trend'].plot(title='Trend Component', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Trend')
+plt.show()
+
+# Seasonal extraction
+df_csv['Seasonal'] = result.seasonal
+df_csv['Seasonal'].plot(title='Seasonal Component', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Seasonality')
+plt.show()
+
+# Residual extraction
+df_csv['Residual'] = result.resid
+df_csv['Residual'].plot(title='Residual Component', figsize=(12,6))
+plt.xlabel('Date')
+plt.ylabel('Residuals')
+plt.show()
+
+# Forecast with confidence intervals
+forecast_ci = model_fit.get_forecast(steps=12)
+forecast_df = forecast_ci.summary_frame()
+print(forecast_df)
+forecast_df[['mean', 'mean_ci_lower', 'mean_ci_upper']].plot(figsize=(12,6))
+plt.title('Sales Forecast with Confidence Intervals')
+plt.xlabel('Date')
+plt.ylabel('Sales')
+plt.show()
+            ''',
+            "Handling Categorical Data": '''
+# One-Hot Encoding using get_dummies
+df_encoded = pd.get_dummies(df_csv, columns=['Category'], drop_first=True)
+
+# Label Encoding using sklearn
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+df_csv['Category_Encoded'] = le.fit_transform(df_csv['Category'])
+
+# Handling ordinal categories
+ordinal_mapping = {'Low': 1, 'Medium': 2, 'High': 3}
+df_csv['Priority_Level'] = df_csv['Priority'].map(ordinal_mapping)
+
+# Creating dummy variables for multiple categorical columns
+df_dummies = pd.get_dummies(df_csv, columns=['City', 'Gender'], drop_first=True)
+
+# Encoding ordinal categories with pandas.Categorical
+df_csv['Quality'] = pd.Categorical(df_csv['Quality'], categories=['Poor', 'Average', 'Good', 'Excellent'], ordered=True)
+df_csv['Quality_Code'] = df_csv['Quality'].cat.codes
+
+# Binning continuous variables
+df_csv['Age_Binned'] = pd.cut(df_csv['Age'], bins=[0, 18, 35, 60, 100], labels=['Child', 'Young Adult', 'Adult', 'Senior'])
+
+# Mapping bin labels to numerical codes
+age_bin_mapping = {'Child': 1, 'Young Adult': 2, 'Adult': 3, 'Senior': 4}
+df_csv['Age_Bin_Code'] = df_csv['Age_Binned'].map(age_bin_mapping)
+
+# Target encoding (mean encoding)
+city_salary_mean = df_csv.groupby('City')['Salary'].mean()
+df_csv['City_Salary_Mean'] = df_csv['City'].map(city_salary_mean)
+            ''',
+            "Applying Functions with GroupBy": '''
+# Define a custom aggregation function
+def range_func(x):
+    return x.max() - x.min()
+
+# Apply custom function to 'Experience' column
+experience_range = df_csv.groupby('City')['Experience'].apply(range_func)
+print(experience_range)
+
+# Apply multiple aggregation functions
+aggregated = df_csv.groupby('City').agg({
+    'Salary': ['mean', 'sum'],
+    'Age': 'max',
+    'Experience': range_func
+})
+print(aggregated)
+
+# Applying functions to multiple columns
+aggregated_multi = df_csv.groupby('City').agg({
+    'Salary': ['mean', 'sum', 'median'],
+    'Age': ['min', 'max', 'median'],
+    'Experience': ['mean', 'std']
+})
+print(aggregated_multi)
+
+# Using transform to broadcast group results
+df_csv['Salary_Mean'] = df_csv.groupby('City')['Salary'].transform('mean')
+print(df_csv.head())
+
+# Aggregating with multiple custom functions
+def custom_sum(x):
+    return x.sum()
+
+def custom_mean(x):
+    return x.mean()
+
+aggregated_custom = df_csv.groupby('City').agg({
+    'Salary': [custom_sum, custom_mean],
+    'Age': 'mean'
+})
+print(aggregated_custom)
+
+# Aggregating with named aggregation
+aggregated_named = df_csv.groupby('City').agg(
+    Mean_Salary=('Salary', 'mean'),
+    Total_Salary=('Salary', 'sum'),
+    Median_Age=('Age', 'median')
+)
+print(aggregated_named)
+            '''
+        },
+        "📈 Data Visualization": {
+            "Plotting with Pandas": '''
+# Line plot for Sales over Time
+df_csv.plot(kind='line', x='Date', y='Sales', title='Sales Over Time', figsize=(10,6), color='blue', marker='o')
+plt.xlabel('Date')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# Bar plot for Sales by City
+df_csv.plot(kind='bar', x='City', y='Sales', title='Sales by City', figsize=(10,6), color='skyblue')
+plt.xlabel('City')
+plt.ylabel('Sales')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Scatter plot for Age vs Salary
+df_csv.plot(kind='scatter', x='Age', y='Salary', title='Age vs Salary', figsize=(10,6), color='red', alpha=0.5)
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.grid(True)
+plt.show()
+
+# Histogram for Age Distribution
+df_csv['Age'].plot(kind='hist', bins=10, title='Age Distribution', figsize=(10,6), color='green', edgecolor='black')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.show()
+
+# Boxplot for Salary Distribution by City
+df_csv.boxplot(column='Salary', by='City', title='Salary Distribution by City', figsize=(10,6))
+plt.xlabel('City')
+plt.ylabel('Salary')
+plt.show()
+            ''',
+            "Advanced Visualization": '''
+# Heatmap using seaborn
+plt.figure(figsize=(10,8))
+sns.heatmap(df_csv.corr(), annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
+
+# Pairplot using seaborn
+sns.pairplot(df_csv, hue='City', markers=["o", "s", "D"], palette='Set2')
+plt.suptitle('Pairplot of DataFrame', y=1.02)
+plt.show()
+
+# Boxplot using seaborn
+plt.figure(figsize=(10,6))
+sns.boxplot(x='City', y='Salary', data=df_csv, palette='Pastel1')
+plt.title('Salary Distribution by City')
+plt.show()
+
+# Violin plot using seaborn
+plt.figure(figsize=(10,6))
+sns.violinplot(x='City', y='Salary', data=df_csv, palette='Set3')
+plt.title('Salary Distribution by City')
+plt.show()
+
+# Swarm plot using seaborn
+plt.figure(figsize=(10,6))
+sns.swarmplot(x='City', y='Salary', data=df_csv, hue='Gender', palette='Set1')
+plt.title('Salary Distribution by City and Gender')
+plt.legend(title='Gender')
+plt.show()
+
+# Jointplot using seaborn
+sns.jointplot(x='Age', y='Salary', data=df_csv, kind='scatter', color='green')
+plt.show()
+
+# KDE plot using seaborn
+sns.kdeplot(data=df_csv, x='Age', y='Salary', cmap='Blues', shade=True)
+plt.title('KDE Plot of Age vs Salary')
+plt.show()
+
+# FacetGrid using seaborn
+g = sns.FacetGrid(df_csv, col='City', hue='Gender')
+g.map(plt.scatter, 'Age', 'Salary').add_legend()
+plt.show()
+
+# Countplot using seaborn
+sns.countplot(x='City', data=df_csv, palette='Set2')
+plt.title('Count of Records by City')
+plt.show()
+
+# Stripplot using seaborn
+sns.stripplot(x='City', y='Salary', data=df_csv, jitter=True, hue='Gender', dodge=True)
+plt.title('Stripplot of Salary by City and Gender')
+plt.legend(title='Gender')
+plt.show()
+
+# Rugplot using seaborn
+sns.rugplot(x='Salary', data=df_csv, height=0.05)
+plt.title('Rugplot of Salary')
+plt.show()
+
+# Heatmap of categorical data
+category_counts = df_csv.groupby(['City', 'Gender']).size().unstack()
+sns.heatmap(category_counts, annot=True, fmt="d", cmap='YlGnBu')
+plt.title('Heatmap of City vs Gender Counts')
+plt.show()
+            '''
+        },
+        "🔧 Data Engineering": {
+            "Exporting Data": '''
+# Export DataFrame to CSV
+df_csv.to_csv('output.csv', index=False)
+
+# Export DataFrame to Excel with specific sheet name
+df_csv.to_excel('output.xlsx', index=False, sheet_name='DataSheet')
+
+# Export DataFrame to JSON
+df_csv.to_json('output.json', orient='records', lines=True)
+
+# Export DataFrame to SQL database
+engine = create_engine('postgresql://user:password@localhost:5432/mydatabase')
+df_csv.to_sql('table_name', engine, if_exists='replace', index=False)
+
+# Export DataFrame to HDF5
+df_csv.to_hdf('output.h5', key='df_key', mode='w')
+
+# Export DataFrame to Parquet
+df_csv.to_parquet('output.parquet')
+
+# Export DataFrame to Pickle
+df_csv.to_pickle('output.pkl')
+
+# Export DataFrame to Feather
+df_csv.to_feather('output.feather')
+
+# Export DataFrame to Msgpack (Deprecated in newer Pandas versions)
+# df_csv.to_msgpack('output.msgpack')  # Not recommended
+            ''',
+            "Handling Large Datasets": '''
+# Read large CSV in chunks
+chunksize = 10**6
+chunks = []
+for chunk in pd.read_csv('large_data.csv', chunksize=chunksize):
+    # Process each chunk
+    processed_chunk = chunk[chunk['Age'] > 30]
+    chunks.append(processed_chunk)
+df_large = pd.concat(chunks, axis=0)
+
+# Optimize memory usage by changing data types
+df_csv['Age'] = df_csv['Age'].astype('int16')
+df_csv['Salary'] = df_csv['Salary'].astype('float32')
+df_csv['Gender'] = df_csv['Gender'].astype('category')
+
+# Reduce memory usage by converting object types to category
+for col in df_csv.select_dtypes(include=['object']).columns:
+    df_csv[col] = df_csv[col].astype('category')
+
+# Using memory-efficient data types
+df_csv['ZipCode'] = df_csv['ZipCode'].astype('int32')
+df_csv['Income'] = df_csv['Income'].astype('float32')
+
+# Dropping unnecessary columns to save memory
+df_csv.drop(['UnnecessaryColumn1', 'UnnecessaryColumn2'], axis=1, inplace=True)
+
+# Sampling large datasets for quick analysis
+df_sample = df_csv.sample(frac=0.1, random_state=1)
+
+# Using Dask for parallel processing (if dataset is extremely large)
+# import dask.dataframe as dd
+# ddf = dd.read_csv('very_large_data.csv')
+# ddf_filtered = ddf[ddf['Age'] > 30]
+# df_filtered = ddf_filtered.compute()
+            ''',
+            "Using SQL with Pandas": '''
+# Querying SQL database and loading into DataFrame
+query = """
+SELECT Name, Age, Salary
+FROM employees
+WHERE Age > 25
+ORDER BY Salary DESC
+"""
+df_sql = pd.read_sql(query, engine)
+
+# Display the DataFrame
+print(df_sql.head())
+
+# Insert data into SQL database from DataFrame
+df_new = pd.DataFrame({
+    'Name': ['Alice', 'Bob'],
+    'Age': [28, 34],
+    'Salary': [70000, 80000]
+})
+df_new.to_sql('employees', engine, if_exists='append', index=False)
+
+# Update records in SQL database
+update_query = """
+UPDATE employees
+SET Salary = Salary * 1.10
+WHERE Age > 30
+"""
+with engine.connect() as conn:
+    conn.execute(update_query)
+
+# Delete records from SQL database
+delete_query = """
+DELETE FROM employees
+WHERE Name = 'Bob'
+"""
+with engine.connect() as conn:
+    conn.execute(delete_query)
+
+# Read from SQL database into DataFrame with parameters
+from sqlalchemy import text
+sql_query = text("SELECT * FROM employees WHERE Salary > :salary_threshold")
+df_sql_param = pd.read_sql(sql_query, engine, params={"salary_threshold": 75000})
+
+# Using SQLAlchemy ORM for more complex queries
+from sqlalchemy.orm import sessionmaker
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# Example ORM query
+result = session.execute("SELECT * FROM employees WHERE Age > 30").fetchall()
+df_orm = pd.DataFrame(result, columns=result[0].keys())
+
+# Closing the session
+session.close()
+            '''
+        },
+        "🔍 Advanced Topics": {
+            "Time Series Analysis": '''
+# Convert 'Date' column to datetime
+df_csv['Date'] = pd.to_datetime(df_csv['Date'])
+
+# Set 'Date' as index
+df_csv.set_index('Date', inplace=True)
+
+# Resample data to monthly frequency and sum Sales
+monthly_sales = df_csv['Sales'].resample('M').sum()
+
+# Plot resampled data
+monthly_sales.plot(kind='line', title='Monthly Sales', figsize=(12,6), color='purple', marker='x')
+plt.xlabel('Month')
+plt.ylabel('Sales')
+plt.grid(True)
+plt.show()
+
+# Rolling statistics: 12-month moving average
+df_csv['Sales_MA12'] = df_csv['Sales'].rolling(window=12).mean()
+df_csv['Sales_MA12'].plot(title='12-Month Moving Average of Sales', figsize=(12,6), color='orange')
+plt.xlabel('Date')
+plt.ylabel('Sales (MA12)')
+plt.grid(True)
+plt.show()
+
+# Decompose time series
+from statsmodels.tsa.seasonal import seasonal_decompose
+decomposition = seasonal_decompose(df_csv['Sales'], model='additive')
+fig = decomposition.plot()
+plt.show()
+
+# Stationarity tests
+from statsmodels.tsa.stattools import adfull
