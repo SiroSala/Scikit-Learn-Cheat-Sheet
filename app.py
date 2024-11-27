@@ -7,10 +7,16 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 import numpy as np
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.cluster import KMeans
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
 # Set page configuration
 st.set_page_config(
-    page_title='📊 Pandas Cheat Sheet by Mejbah Ahammad',
+    page_title='🤖 Scikit-Learn Cheat Sheet by Mejbah Ahammad',
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -34,13 +40,24 @@ def img_to_bytes(img_url):
         return ''
 
 def main():
-    ds_sidebar()
-    ds_body()
+    st.markdown(
+        """
+        <style>
+        .sidebar .sidebar-content {
+            background-image: linear-gradient(#2e7bcf,#2e7bcf);
+            color: white;
+        }
+        .main {
+            background-color: #f5f5f5;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-def ds_sidebar():
+    # Sidebar design
     logo_url = 'https://ahammadmejbah.com/content/images/2024/10/Mejbah-Ahammad-Profile-8.png'
     logo_encoded = img_to_bytes(logo_url)
-    
     st.sidebar.markdown(
         f"""
         <a href="https://ahammadmejbah.com/">
@@ -49,1868 +66,429 @@ def ds_sidebar():
         """,
         unsafe_allow_html=True
     )
-    st.sidebar.header('🧰 Pandas Cheat Sheet')
-    
+    st.sidebar.header('🧰 Scikit-Learn Cheat Sheet')
     st.sidebar.markdown('''
-    <small>Essential Pandas commands, functions, and workflows for efficient data manipulation and analysis.</small>
+    <small>Essential Scikit-Learn commands, functions, and workflows for efficient machine learning and data analysis.</small>
     ''', unsafe_allow_html=True)
-    
+
     st.sidebar.markdown('__🔑 Key Libraries__')
     st.sidebar.code('''
-$ pip install pandas numpy matplotlib seaborn plotly
+$ pip install scikit-learn pandas numpy matplotlib seaborn plotly
     ''')
-    
+
     st.sidebar.markdown('__💡 Tips & Tricks__')
     st.sidebar.code('''
-- Always check data types with `df.dtypes`
-- Use vectorized operations for efficiency
-- Handle missing data with `df.isnull()` and `df.fillna()`
-- Utilize `groupby` for aggregation
+- Always standardize features before training
+- Use train_test_split for splitting data
+- Cross-validation for model evaluation
+- Utilize pipelines for streamlined workflows
     ''')
-    
-    st.sidebar.markdown('''<hr>''', unsafe_allow_html=True)
-    st.sidebar.markdown('''<small>[Pandas Cheat Sheet v1.0](https://github.com/ahammadmejbah/Pandas-Cheat-Sheet) | Nov 2024 | [Mejbah Ahammad](https://ahammadmejbah.com/)<div class="card-footer">Mejbah Ahammad © 2024</div></small>''', unsafe_allow_html=True)
 
-def ds_body():
+    st.sidebar.markdown('''<hr>''', unsafe_allow_html=True)
+    st.sidebar.markdown('''<small>[Scikit-Learn Cheat Sheet v1.0](https://github.com/ahammadmejbah/Scikit-Learn-Cheat-Sheet) | Nov 2024 | [Mejbah Ahammad](https://ahammadmejbah.com/)</small>''', unsafe_allow_html=True)
+
     # Load Lottie animations
-    lottie_header = load_lottieurl("https://assets8.lottiefiles.com/packages/lf20_jcikwtux.json")
-    lottie_intro = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_tfb3estd.json")
+    lottie_header = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_49rdyysj.json")
     lottie_footer = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_b8onqq.json")
-    lottie_section = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_puciaact.json")
-    
+
     # Header with animation
     col1, col2 = st.columns([3,1])
     with col1:
         st.markdown(f"""
             <div style="text-align: left; padding: 10px;">
-                <h1 style="color: #1f77b4;">📊 Pandas Cheat Sheet</h1>
+                <h1 style="color: #1f77b4;">🤖 Scikit-Learn Cheat Sheet</h1>
                 <h3 style="color: #333333;">By Mejbah Ahammad</h3>
             </div>
         """, unsafe_allow_html=True)
     with col2:
         st_lottie(lottie_header, height=150, key="header_animation")
-    
+
     st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Introduction Section with animation
-    st.markdown("## Introduction to Pandas")
-    col_intro1, col_intro2 = st.columns([2,1])
-    with col_intro1:
+
+    # Tabs for navigation
+    tabs = ["Introduction", "Importing Data", "Preprocessing", "Regression", "Classification", "Clustering", "Model Evaluation", "Model Selection", "Dimensionality Reduction", "Advanced Topics"]
+    tab_icons = ["📖", "📥", "🧹", "📈", "🔍", "🌀", "📊", "🔗", "📉", "🚀"]
+    tab_items = [f"{icon} {name}" for icon, name in zip(tab_icons, tabs)]
+    selected_tab = st.selectbox("Navigate", tab_items)
+
+    if selected_tab == tab_items[0]:
+        st.markdown("## Introduction to Scikit-Learn")
         st.markdown("""
-        **Pandas** is a powerful Python library for data manipulation and analysis. It provides data structures like **DataFrame** and **Series** to work with structured data seamlessly.
+        **Scikit-Learn** is a powerful Python library for machine learning. It provides a range of supervised and unsupervised learning algorithms via a consistent interface.
         """)
-    with col_intro2:
-        st_lottie(lottie_intro, height=150, key="intro_animation")
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Pandas Basics
-    st.markdown("## 📁 Pandas Basics")
-    st.markdown("### Importing Pandas")
-    st.code("""
-import pandas as pd
-    """, language='python')
-    
-    st.markdown("### Creating DataFrames")
-    st.code("""
-# From a dictionary
-data = {
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [25, 30, 35],
-    'City': ['New York', 'Los Angeles', 'Chicago']
-}
-df = pd.DataFrame(data)
+        st.markdown("""
+        <img src="https://scikit-learn.org/stable/_static/scikit-learn-logo-small.png" alt="Scikit-Learn Logo" width="200">
+        """, unsafe_allow_html=True)
+        st.markdown("### Key Features")
+        st.markdown("""
+        - Simple and efficient tools for predictive data analysis
+        - Accessible to everybody, and reusable in various contexts
+        - Built on NumPy, SciPy, and matplotlib
+        - Open source, commercially usable - BSD license
+        """)
+        st.markdown("### Basic Workflow")
+        st.markdown("""
+        1. Import the required modules and classes
+        2. Load your data and split into training and testing sets
+        3. Preprocess your data (scaling, normalization, etc.)
+        4. Choose a model and train it
+        5. Evaluate the model
+        6. Fine-tune your model (hyperparameter tuning)
+        """)
 
-# From a CSV file
-df = pd.read_csv('data.csv')
-    """, language='python')
-    
-    st.markdown("### Viewing Data")
-    st.code("""
-# View first few rows
-df.head()
+    elif selected_tab == tab_items[1]:
+        st.markdown("## 📥 Importing Data")
+        st.markdown("### Loading Datasets")
+        st.code("""
+from sklearn import datasets
 
-# View last few rows
-df.tail()
+# Load built-in datasets
+iris = datasets.load_iris()
+digits = datasets.load_digits()
+        """, language='python')
+        st.markdown("### Creating Datasets")
+        st.code("""
+from sklearn.datasets import make_regression, make_classification
 
-# DataFrame info
-df.info()
+# Regression dataset
+X_reg, y_reg = make_regression(n_samples=100, n_features=1, noise=0.1)
 
-# Summary statistics
-df.describe()
-    """, language='python')
-    
-    st.markdown("### DataFrame Structure")
-    st.code("""
-# Columns
-df.columns
-
-# Index
-df.index
-
-# Shape
-df.shape
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Data Selection
-    st.markdown("## 🔍 Data Selection")
-    st.markdown("### Selecting Columns")
-    st.code("""
-# Single column
-df['Age']
-
-# Multiple columns
-df[['Name', 'Age']]
-    """, language='python')
-    
-    st.markdown("### Selecting Rows")
-    st.code("""
-# By index
-df.iloc[0:5]
-
-# By condition
-df[df['Age'] > 30]
-
-# Using loc
-df.loc[df['City'] == 'New York']
-
-# Using iloc
-df.iloc[[0, 2, 4]]
-    """, language='python')
-    
-    st.markdown("### Selecting Rows and Columns")
-    st.code("""
-# Select specific rows and columns
-df.loc[0:5, ['Name', 'Age']]
-
-# Select by position
-df.iloc[0:5, 0:2]
-    """, language='python')
-    
-    st.markdown("### Conditional Selection")
-    st.code("""
-# Select rows where Age > 25 and City is New York
-df[(df['Age'] > 25) & (df['City'] == 'New York')]
-    """, language='python')
-    
-    st.markdown("### Using isin for Multiple Conditions")
-    st.code("""
-# Select rows where City is either New York or Los Angeles
-df[df['City'].isin(['New York', 'Los Angeles'])]
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Data Cleaning
-    st.markdown("## 🧹 Data Cleaning")
-    st.markdown("### Handling Missing Values")
-    st.code("""
-# Drop missing values
-df.dropna(inplace=True)
-
-# Fill missing values
-df.fillna(value=0, inplace=True)
-    """, language='python')
-    
-    st.markdown("### Removing Duplicates")
-    st.code("""
-df.drop_duplicates(inplace=True)
-    """, language='python')
-    
-    st.markdown("### Data Type Conversion")
-    st.code("""
-df['Age'] = df['Age'].astype(int)
-    """, language='python')
-    
-    st.markdown("### Renaming Columns")
-    st.code("""
-df.rename(columns={'Name': 'Full Name'}, inplace=True)
-    """, language='python')
-    
-    st.markdown("### Replacing Values")
-    st.code("""
-df['City'].replace({'New York': 'NY', 'Los Angeles': 'LA'}, inplace=True)
-    """, language='python')
-    
-    st.markdown("### Filtering Outliers")
-    st.code("""
-df = df[df['Salary'] < df['Salary'].quantile(0.95)]
-    """, language='python')
-    
-    st.markdown("### Handling Text Data")
-    st.code("""
-# Convert to lowercase
-df['Name'] = df['Name'].str.lower()
-
-# Remove leading/trailing spaces
-df['City'] = df['City'].str.strip()
-
-# Extract substrings
-df['City_Code'] = df['City'].str[:2]
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Data Transformation
-    st.markdown("## 🔄 Data Transformation")
-    st.markdown("### Applying Functions")
-    st.code("""
-# Apply a function to a column
-df['Age'] = df['Age'].apply(lambda x: x + 1)
-    """, language='python')
-    
-    st.markdown("### Vectorized Operations")
-    st.code("""
-df['Salary'] = df['Salary'] * 1.1
-    """, language='python')
-    
-    st.markdown("### Mapping Values")
-    st.code("""
-mapping = {'NY': 'New York', 'LA': 'Los Angeles', 'CHI': 'Chicago'}
-df['City_Full'] = df['City'].map(mapping)
-    """, language='python')
-    
-    st.markdown("### Binning")
-    st.code("""
-df['Age Group'] = pd.cut(df['Age'], bins=[0, 18, 35, 60, 100], labels=['Child', 'Young Adult', 'Adult', 'Senior'])
-    """, language='python')
-    
-    st.markdown("### Creating New Columns")
-    st.code("""
-df['Salary_Per_Age'] = df['Salary'] / df['Age']
-    """, language='python')
-    
-    st.markdown("### String Operations")
-    st.code("""
-df['Name'] = df['Name'].str.upper()
-    """, language='python')
-    
-    st.markdown("### Handling Dates")
-    st.code("""
-# Convert to datetime
-df['Join_Date'] = pd.to_datetime(df['Join_Date'])
-
-# Extract year, month, day
-df['Join_Year'] = df['Join_Date'].dt.year
-df['Join_Month'] = df['Join_Date'].dt.month
-df['Join_Day'] = df['Join_Date'].dt.day
-
-# Calculate tenure
-df['Tenure'] = pd.to_datetime('today') - df['Join_Date']
-df['Tenure'] = df['Tenure'].dt.days // 365
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Merging & Joining
-    st.markdown("## 🔗 Merging & Joining")
-    st.markdown("### Merging DataFrames")
-    st.code("""
-merged_df = pd.merge(df1, df2, on='Key', how='inner')
-    """, language='python')
-    
-    st.markdown("### Concatenating DataFrames")
-    st.code("""
-concatenated_df = pd.concat([df1, df2], axis=0)
-    """, language='python')
-    
-    st.markdown("### Joining DataFrames")
-    st.code("""
-joined_df = df1.join(df2, how='inner')
-    """, language='python')
-    
-    st.markdown("### Merging on Multiple Keys")
-    st.code("""
-merged_df = pd.merge(df1, df2, on=['Key1', 'Key2'], how='outer')
-    """, language='python')
-    
-    st.markdown("### Merge with Indicator")
-    st.code("""
-merged_df = pd.merge(df1, df2, on='Key', how='outer', indicator=True)
-    """, language='python')
-    
-    st.markdown("### Handling Suffixes")
-    st.code("""
-merged_df = pd.merge(df1, df2, on='Key', how='left', suffixes=('_left', '_right'))
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Grouping & Aggregation
-    st.markdown("## 📊 Grouping & Aggregation")
-    st.markdown("### Group By")
-    st.code("""
-grouped = df.groupby('City')
-
-# Aggregation
-grouped['Age'].mean()
-    """, language='python')
-    
-    st.markdown("### Multiple Aggregations")
-    st.code("""
-grouped.agg({'Age': ['mean', 'sum'], 'Salary': 'median'})
-    """, language='python')
-    
-    st.markdown("### Group By with Multiple Columns")
-    st.code("""
-grouped = df.groupby(['City', 'Age Group'])
-    """, language='python')
-    
-    st.markdown("### Aggregation with Custom Functions")
-    st.code("""
-grouped.agg({
-    'Salary': ['mean', 'sum'],
-    'Experience': lambda x: x.max() - x.min()
-})
-    """, language='python')
-    
-    st.markdown("### Transform vs Aggregate")
-    st.code("""
-# Aggregate
-df.groupby('City').agg({'Salary': 'mean'})
-
-# Transform
-df['Salary_Mean'] = df.groupby('City')['Salary'].transform('mean')
-    """, language='python')
-    
-    st.markdown("### Size and Count")
-    st.code("""
-# Size of groups
-grouped.size()
-
-# Count non-NA cells
-grouped.count()
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Pivot Tables
-    st.markdown("## 📈 Pivot Tables")
-    st.markdown("### Creating a Pivot Table")
-    st.code("""
-pivot = df.pivot_table(values='Sales', index='Region', columns='Product', aggfunc='sum', fill_value=0)
-    """, language='python')
-    
-    st.markdown("### Multiple Aggregation Functions in Pivot Tables")
-    st.code("""
-pivot = df.pivot_table(values='Sales', index='Region', columns='Product', aggfunc=['sum', 'mean'], fill_value=0)
-    """, language='python')
-    
-    st.markdown("### Adding Margins to Pivot Tables")
-    st.code("""
-pivot = df.pivot_table(values='Sales', index='Region', columns='Product', aggfunc='sum', margins=True, fill_value=0)
-    """, language='python')
-    
-    st.markdown("### Pivot Table with Multiple Indexes")
-    st.code("""
-pivot = df.pivot_table(values='Sales', index=['Region', 'City'], columns='Product', aggfunc='sum', fill_value=0)
-    """, language='python')
-    
-    st.markdown("### Unstacking Pivot Tables")
-    st.code("""
-unstacked = pivot.unstack(level=0)
-    """, language='python')
-    
-    st.markdown("### Cross Tabulation")
-    st.code("""
-# Cross Tabulation
-crosstab = pd.crosstab(df['City'], df['Category'], margins=True)
-    """, language='python')
-    
-    st.markdown("### Melt and Pivot")
-    st.code("""
-# Melt
-melted = pd.melt(df, id_vars=['Name', 'Age'], value_vars=['Sales', 'Expenses'], var_name='Metric', value_name='Value')
-
-# Pivot
-pivoted = melted.pivot_table(index=['Name', 'Age'], columns='Metric', values='Value', aggfunc='sum')
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Data Visualization
-    st.markdown("## 📊 Data Visualization")
-    st.markdown("### Matplotlib")
-    st.code("""
-import matplotlib.pyplot as plt
-
-# Line Plot
-plt.figure(figsize=(10,5))
-plt.plot(x, y, label='Line')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
-plt.title('Line Plot')
-plt.legend()
-plt.grid(True)
-plt.show()
-
-# Bar Chart
-plt.figure(figsize=(10,5))
-plt.bar(categories, values, color='skyblue')
-plt.xlabel('Categories')
-plt.ylabel('Values')
-plt.title('Bar Chart')
-plt.show()
-
-# Scatter Plot
-plt.figure(figsize=(10,5))
-plt.scatter(x, y, color='red')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
-plt.title('Scatter Plot')
-plt.show()
-
-# Histogram
-plt.figure(figsize=(10,5))
-plt.hist(data, bins=10, color='green', edgecolor='black')
-plt.xlabel('Value')
-plt.ylabel('Frequency')
-plt.title('Histogram')
-plt.show()
-
-# Pie Chart
-plt.figure(figsize=(8,8))
-plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
-plt.title('Pie Chart')
-plt.axis('equal')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Seaborn")
-    st.code("""
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-# Scatter Plot with Regression Line
-sns.lmplot(x='Age', y='Salary', data=df, aspect=1.5)
-plt.title('Age vs Salary with Regression Line')
-plt.show()
-
-# Heatmap
-plt.figure(figsize=(10,8))
-corr = df.corr()
-sns.heatmap(corr, annot=True, cmap='coolwarm', linewidths=.5)
-plt.title('Correlation Heatmap')
-plt.show()
-
-# Boxplot
-plt.figure(figsize=(10,6))
-sns.boxplot(x='City', y='Salary', data=df)
-plt.title('Salary Distribution by City')
-plt.show()
-
-# Pairplot
-sns.pairplot(df, hue='City')
-plt.show()
-
-# Violin Plot
-plt.figure(figsize=(10,6))
-sns.violinplot(x='City', y='Salary', data=df)
-plt.title('Salary Distribution by City')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Plotly")
-    st.code("""
-import plotly.express as px
-
-# Scatter Plot
-fig = px.scatter(df, x='Age', y='Salary', color='City', title='Age vs Salary by City')
-fig.show()
-
-# Bar Chart
-fig = px.bar(df, x='City', y='Sales', color='City', barmode='group', title='Sales by City')
-fig.show()
-
-# Line Chart
-fig = px.line(df, x='Date', y='Sales', title='Sales Over Time')
-fig.show()
-
-# Histogram
-fig = px.histogram(df, x='Age', nbins=10, title='Age Distribution')
-fig.show()
-
-# Pie Chart
-fig = px.pie(df, names='Product', values='Sales', title='Sales Distribution by Product')
-fig.show()
-    """, language='python')
-    
-    st.markdown("### Plotly Express Example")
-    st.code("""
-# Interactive Scatter Plot
-fig = px.scatter(df, x='Age', y='Salary', color='City', hover_data=['Name'], title='Interactive Age vs Salary')
-st.plotly_chart(fig)
-
-# Interactive Bar Chart
-fig = px.bar(df, x='Category', y='Sales', color='Category', barmode='group', title='Interactive Sales by Category')
-st.plotly_chart(fig)
-
-# Interactive Line Chart
-fig = px.line(df, x='Date', y='Sales', title='Interactive Sales Over Time')
-st.plotly_chart(fig)
-
-# Interactive Histogram
-fig = px.histogram(df, x='Age', nbins=10, title='Interactive Age Distribution')
-st.plotly_chart(fig)
-
-# Interactive Pie Chart
-fig = px.pie(df, names='Product', values='Sales', title='Interactive Sales Distribution by Product')
-st.plotly_chart(fig)
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Advanced Pandas
-    st.markdown("## 🚀 Advanced Pandas")
-    
-    st.markdown("### Time Series Handling")
-    st.code("""
-# Convert to datetime
-df['Date'] = pd.to_datetime(df['Date'])
-
-# Set index
-df.set_index('Date', inplace=True)
-
-# Resample data
-monthly = df.resample('M').mean()
-
-# Rolling window
-df['Rolling_Mean'] = df['Sales'].rolling(window=3).mean()
-    """, language='python')
-    
-    st.markdown("### Performance Optimization")
-    st.code("""
-# Use categorical data types
-df['Category'] = df['Category'].astype('category')
-
-# Vectorized operations instead of apply
-df['Salary'] = df['Salary'] * 1.1
-
-# Avoid loops by using apply or map
-df['New_Column'] = df['Existing_Column'].map(lambda x: x * 2)
-    """, language='python')
-    
-    st.markdown("### Working with Large Datasets")
-    st.code("""
-# Read large CSV in chunks
-chunks = pd.read_csv('large_data.csv', chunksize=10000)
-for chunk in chunks:
-    process(chunk)
-
-# Using Dask for parallel processing
-import dask.dataframe as dd
-ddf = dd.read_csv('large_data.csv')
-result = ddf.groupby('Category').mean().compute()
-    """, language='python')
-    
-    st.markdown("### MultiIndex")
-    st.code("""
-# Creating MultiIndex
-arrays = [
-    ['bar', 'bar', 'baz', 'baz', 'foo', 'foo', 'qux', 'qux'],
-    ['one', 'two', 'one', 'two', 'one', 'two', 'one', 'two'],
-]
-tuples = list(zip(*arrays))
-index = pd.MultiIndex.from_tuples(tuples, names=['first', 'second'])
-df = pd.DataFrame({'A': range(8), 'B': range(8)}, index=index)
-
-# Accessing data
-df.loc['bar', 'one']
-df.xs('one', level='second')
-    """, language='python')
-    
-    st.markdown("### Pivot Table Enhancements")
-    st.code("""
-# Adding margins
-pivot = df.pivot_table(values='Sales', index='Region', columns='Product', aggfunc='sum', margins=True, fill_value=0)
-
-# Flatten MultiIndex columns
-pivot.columns = ['_'.join(col).strip() for col in pivot.columns.values]
-pivot.reset_index(inplace=True)
-    """, language='python')
-    
-    st.markdown("### Cross Tabulation")
-    st.code("""
-# Cross Tabulation
-crosstab = pd.crosstab(df['City'], df['Category'], margins=True)
-    """, language='python')
-    
-    st.markdown("### Melt and Pivot")
-    st.code("""
-# Melt
-melted = pd.melt(df, id_vars=['Name', 'Age'], value_vars=['Sales', 'Expenses'], var_name='Metric', value_name='Value')
-
-# Pivot
-pivoted = melted.pivot_table(index=['Name', 'Age'], columns='Metric', values='Value', aggfunc='sum')
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Data Visualization with Pandas
-    st.markdown("## 📊 Data Visualization with Pandas")
-    
-    st.markdown("### Line Plot")
-    st.code("""
-# Line Plot
-df['Sales'].plot(kind='line', figsize=(10,5), title='Sales Over Time')
-plt.xlabel('Date')
-plt.ylabel('Sales')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Bar Chart")
-    st.code("""
-# Bar Chart
-df.groupby('Category')['Sales'].sum().plot(kind='bar', color='skyblue', figsize=(10,5), title='Sales by Category')
-plt.xlabel('Category')
-plt.ylabel('Total Sales')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Scatter Plot")
-    st.code("""
-# Scatter Plot
-df.plot(kind='scatter', x='Age', y='Salary', color='red', figsize=(10,5), title='Age vs Salary')
-plt.xlabel('Age')
-plt.ylabel('Salary')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Histogram")
-    st.code("""
-# Histogram
-df['Age'].plot(kind='hist', bins=10, color='green', edgecolor='black', figsize=(10,5), title='Age Distribution')
-plt.xlabel('Age')
-plt.ylabel('Frequency')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Pie Chart")
-    st.code("""
-# Pie Chart
-df.groupby('Category')['Sales'].sum().plot(kind='pie', autopct='%1.1f%%', figsize=(8,8), title='Sales Distribution by Category')
-plt.ylabel('')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Seaborn Integration")
-    st.code("""
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-# Heatmap
-plt.figure(figsize=(10,8))
-sns.heatmap(df.corr(), annot=True, cmap='coolwarm', linewidths=.5)
-plt.title('Correlation Heatmap')
-plt.show()
-
-# Boxplot
-plt.figure(figsize=(10,6))
-sns.boxplot(x='Category', y='Sales', data=df)
-plt.title('Sales Distribution by Category')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Advanced Plot Customization")
-    st.code("""
-# Customizing plots
-plt.figure(figsize=(12,6))
-sns.barplot(x='Category', y='Sales', data=df, palette='viridis')
-plt.title('Sales by Category')
-plt.xlabel('Category')
-plt.ylabel('Sales')
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Interactive Visualization
-    st.markdown("## 🎨 Interactive Visualization")
-    st.markdown("### Plotly Express in Streamlit")
-    st.code("""
-# Interactive Scatter Plot
-fig = px.scatter(df, x='Age', y='Salary', color='City', hover_data=['Name'], title='Interactive Age vs Salary')
-st.plotly_chart(fig)
-
-# Interactive Bar Chart
-fig = px.bar(df, x='Category', y='Sales', color='Category', barmode='group', title='Interactive Sales by Category')
-st.plotly_chart(fig)
-
-# Interactive Line Chart
-fig = px.line(df, x='Date', y='Sales', title='Interactive Sales Over Time')
-st.plotly_chart(fig)
-
-# Interactive Histogram
-fig = px.histogram(df, x='Age', nbins=10, title='Interactive Age Distribution')
-st.plotly_chart(fig)
-
-# Interactive Pie Chart
-fig = px.pie(df, names='Product', values='Sales', title='Interactive Sales Distribution by Product')
-st.plotly_chart(fig)
-    """, language='python')
-    
-    st.markdown("### Interactive Widgets")
-    st.code("""
-# Interactive DataFrame display
-import streamlit as st
+# Classification dataset
+X_clf, y_clf = make_classification(n_samples=100, n_features=4, n_classes=2)
+        """, language='python')
+        st.markdown("### Loading from CSV")
+        st.code("""
 import pandas as pd
 
-# Load data
 df = pd.read_csv('data.csv')
+X = df.drop('target', axis=1)
+y = df['target']
+        """, language='python')
+        st.markdown("### Splitting Data")
+        st.code("""
+from sklearn.model_selection import train_test_split
+
+# For features X and target y
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        """, language='python')
+
+    elif selected_tab == tab_items[2]:
+        st.markdown("## 🧹 Preprocessing")
+        st.markdown("### Scaling Features")
+        st.code("""
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+        """, language='python')
+        st.markdown("### Encoding Categorical Variables")
+        st.code("""
+from sklearn.preprocessing import OneHotEncoder
+
+encoder = OneHotEncoder()
+X_encoded = encoder.fit_transform(X_categorical)
+        """, language='python')
+        st.markdown("### Imputing Missing Values")
+        st.code("""
+from sklearn.impute import SimpleImputer
+
+imputer = SimpleImputer(strategy='mean')
+X_imputed = imputer.fit_transform(X)
+        """, language='python')
+        st.markdown("### Pipeline for Preprocessing")
+        st.code("""
+from sklearn.pipeline import Pipeline
+
+pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('scaler', StandardScaler()),
+])
+
+X_processed = pipeline.fit_transform(X)
+        """, language='python')
+
+    elif selected_tab == tab_items[3]:
+        st.markdown("## 📈 Regression")
+        st.markdown("### Linear Regression")
+        st.code("""
+from sklearn.linear_model import LinearRegression
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+        """, language='python')
+        st.markdown("### Evaluating Regression Models")
+        st.code("""
+from sklearn.metrics import mean_squared_error, r2_score
+
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+        """, language='python')
+        st.markdown("### Regularized Regression")
+        st.code("""
+from sklearn.linear_model import Ridge, Lasso
+
+# Ridge Regression
+ridge = Ridge(alpha=1.0)
+ridge.fit(X_train, y_train)
+
+# Lasso Regression
+lasso = Lasso(alpha=0.1)
+lasso.fit(X_train, y_train)
+        """, language='python')
+        st.markdown("### Polynomial Regression")
+        st.code("""
+from sklearn.preprocessing import PolynomialFeatures
+
+poly = PolynomialFeatures(degree=2)
+X_poly = poly.fit_transform(X)
+
+model = LinearRegression()
+model.fit(X_poly, y)
+        """, language='python')
+
+    elif selected_tab == tab_items[4]:
+        st.markdown("## 🔍 Classification")
+        st.markdown("### Logistic Regression")
+        st.code("""
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+        """, language='python')
+        st.markdown("### Evaluating Classification Models")
+        st.code("""
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+accuracy = accuracy_score(y_test, y_pred)
+cm = confusion_matrix(y_test, y_pred)
+report = classification_report(y_test, y_pred)
+        """, language='python')
+        st.markdown("### Decision Trees")
+        st.code("""
+from sklearn.tree import DecisionTreeClassifier
+
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+        """, language='python')
+        st.markdown("### Random Forest")
+        st.code("""
+from sklearn.ensemble import RandomForestClassifier
+
+model = RandomForestClassifier(n_estimators=100)
+model.fit(X_train, y_train)
+        """, language='python')
+        st.markdown("### Support Vector Machines")
+        st.code("""
+from sklearn.svm import SVC
+
+model = SVC(kernel='rbf')
+model.fit(X_train, y_train)
+        """, language='python')
+
+    elif selected_tab == tab_items[5]:
+        st.markdown("## 🌀 Clustering")
+        st.markdown("### K-Means Clustering")
+        st.code("""
+from sklearn.cluster import KMeans
+
+kmeans = KMeans(n_clusters=3)
+kmeans.fit(X)
+
+labels = kmeans.labels_
+centers = kmeans.cluster_centers_
+        """, language='python')
+        st.markdown("### Hierarchical Clustering")
+        st.code("""
+from sklearn.cluster import AgglomerativeClustering
+
+agglo = AgglomerativeClustering(n_clusters=3)
+labels = agglo.fit_predict(X)
+        """, language='python')
+        st.markdown("### DBSCAN Clustering")
+        st.code("""
+from sklearn.cluster import DBSCAN
+
+dbscan = DBSCAN(eps=0.5, min_samples=5)
+labels = dbscan.fit_predict(X)
+        """, language='python')
+        st.markdown("### Evaluating Clustering")
+        st.code("""
+from sklearn.metrics import silhouette_score
+
+score = silhouette_score(X, labels)
+        """, language='python')
+
+    elif selected_tab == tab_items[6]:
+        st.markdown("## 📊 Model Evaluation")
+        st.markdown("### Cross-Validation")
+        st.code("""
+from sklearn.model_selection import cross_val_score
+
+scores = cross_val_score(model, X, y, cv=5)
+        """, language='python')
+        st.markdown("### Grid Search")
+        st.code("""
+from sklearn.model_selection import GridSearchCV
+
+param_grid = {'C': [0.1, 1, 10], 'kernel': ['linear', 'rbf']}
+grid = GridSearchCV(SVC(), param_grid, cv=5)
+grid.fit(X_train, y_train)
+
+best_params = grid.best_params_
+best_score = grid.best_score_
+        """, language='python')
+        st.markdown("### Learning Curves")
+        st.code("""
+from sklearn.model_selection import learning_curve
+
+train_sizes, train_scores, test_scores = learning_curve(model, X, y, cv=5)
+        """, language='python')
+        st.markdown("### ROC Curve")
+        st.code("""
+from sklearn.metrics import roc_curve, auc
+
+probs = model.predict_proba(X_test)
+fpr, tpr, thresholds = roc_curve(y_test, probs[:,1])
+roc_auc = auc(fpr, tpr)
+        """, language='python')
+
+    elif selected_tab == tab_items[7]:
+        st.markdown("## 🔗 Model Selection")
+        st.markdown("### Pipeline")
+        st.code("""
+from sklearn.pipeline import make_pipeline
+
+pipeline = make_pipeline(StandardScaler(), SVC())
+pipeline.fit(X_train, y_train)
+        """, language='python')
+        st.markdown("### Feature Selection")
+        st.code("""
+from sklearn.feature_selection import SelectKBest, chi2
+
+selector = SelectKBest(chi2, k=10)
+X_new = selector.fit_transform(X, y)
+        """, language='python')
+        st.markdown("### Recursive Feature Elimination")
+        st.code("""
+from sklearn.feature_selection import RFE
+
+rfe = RFE(estimator=LogisticRegression(), n_features_to_select=5)
+X_rfe = rfe.fit_transform(X, y)
+        """, language='python')
+        st.markdown("### Ensemble Methods")
+        st.code("""
+from sklearn.ensemble import VotingClassifier
+
+model1 = LogisticRegression()
+model2 = DecisionTreeClassifier()
+model3 = SVC(probability=True)
+
+ensemble = VotingClassifier(estimators=[
+    ('lr', model1), ('dt', model2), ('svc', model3)
+], voting='soft')
+
+ensemble.fit(X_train, y_train)
+        """, language='python')
+
+    elif selected_tab == tab_items[8]:
+        st.markdown("## 📉 Dimensionality Reduction")
+        st.markdown("### Principal Component Analysis (PCA)")
+        st.code("""
+from sklearn.decomposition import PCA
+
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
+        """, language='python')
+        st.markdown("### t-SNE")
+        st.code("""
+from sklearn.manifold import TSNE
+
+tsne = TSNE(n_components=2)
+X_tsne = tsne.fit_transform(X)
+        """, language='python')
+        st.markdown("### LDA")
+        st.code("""
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+
+lda = LinearDiscriminantAnalysis(n_components=2)
+X_lda = lda.fit_transform(X, y)
+        """, language='python')
+        st.markdown("### Isomap")
+        st.code("""
+from sklearn.manifold import Isomap
+
+isomap = Isomap(n_components=2)
+X_iso = isomap.fit_transform(X)
+        """, language='python')
+
+    elif selected_tab == tab_items[9]:
+        st.markdown("## 🚀 Advanced Topics")
+        st.markdown("### Hyperparameter Tuning")
+        st.code("""
+from sklearn.model_selection import RandomizedSearchCV
+
+param_distributions = {'C': [0.1, 1, 10], 'kernel': ['linear', 'rbf']}
+random_search = RandomizedSearchCV(SVC(), param_distributions, cv=5)
+random_search.fit(X_train, y_train)
+        """, language='python')
+        st.markdown("### Handling Imbalanced Data")
+        st.code("""
+from imblearn.over_sampling import SMOTE
+
+smote = SMOTE()
+X_resampled, y_resampled = smote.fit_resample(X, y)
+        """, language='python')
+        st.markdown("### Custom Transformers")
+        st.code("""
+from sklearn.base import TransformerMixin, BaseEstimator
+
+class CustomTransformer(TransformerMixin, BaseEstimator):
+    def __init__(self, param=1):
+        self.param = param
+
+    def fit(self, X, y=None):
+        # Fit logic
+        return self
+
+    def transform(self, X):
+        # Transform logic
+        return X_transformed
+
+# Use in pipeline
+pipeline = Pipeline([
+    ('custom', CustomTransformer(param=2)),
+    ('model', LogisticRegression())
+])
+        """, language='python')
+        st.markdown("### Saving and Loading Models")
+        st.code("""
+import joblib
+
+# Save model
+joblib.dump(model, 'model.pkl')
+
+# Load model
+model = joblib.load('model.pkl')
+        """, language='python')
+        st.markdown("### Working with Large Datasets")
+        st.code("""
+from sklearn.utils import shuffle
+
+# Partial fitting
+from sklearn.linear_model import SGDClassifier
+
+model = SGDClassifier()
+for X_batch, y_batch in get_data_in_batches():
+    model.partial_fit(X_batch, y_batch, classes=np.unique(y))
+        """, language='python')
 
-# Sidebar filters
-category = st.sidebar.multiselect('Select Category', df['Category'].unique())
-city = st.sidebar.multiselect('Select City', df['City'].unique())
-
-# Apply filters
-filtered_df = df[
-    (df['Category'].isin(category)) &
-    (df['City'].isin(city))
-]
-
-# Display DataFrame
-st.dataframe(filtered_df)
-    """, language='python')
-    
-    st.markdown("### Dynamic Plotting")
-    st.code("""
-# Dynamic plotting based on user selection
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# User selects plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# User selects columns
-x_col = st.selectbox('Select X-axis', df.columns)
-y_col = st.selectbox('Select Y-axis', df.columns)
-
-# Plot based on selection
-if plot_type == 'Line':
-    df.plot(kind='line', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Line Plot of {y_col} over {x_col}')
-    plt.show()
-elif plot_type == 'Bar':
-    df.plot(kind='bar', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Bar Chart of {y_col} by {x_col}')
-    plt.show()
-elif plot_type == 'Scatter':
-    df.plot(kind='scatter', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Scatter Plot of {y_col} vs {x_col}')
-    plt.show()
-elif plot_type == 'Histogram':
-    df[y_col].plot(kind='hist', bins=10, figsize=(10,5))
-    plt.title(f'Histogram of {y_col}')
-    plt.xlabel(y_col)
-    plt.ylabel('Frequency')
-    plt.show()
-    """, language='python')
-    
-    st.markdown("### Interactive Filters and Plots")
-    st.code("""
-# Interactive filters and plots
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# Select categories
-categories = st.multiselect('Select Categories', df['Category'].unique(), default=df['Category'].unique())
-
-# Filter data
-filtered_df = df[df['Category'].isin(categories)]
-
-# Select plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# Plot
-if plot_type == 'Line':
-    plt.figure(figsize=(10,5))
-    for category in categories:
-        subset = filtered_df[filtered_df['Category'] == category]
-        plt.plot(subset['Date'], subset['Sales'], label=category)
-    plt.title('Sales Over Time')
-    plt.xlabel('Date')
-    plt.ylabel('Sales')
-    plt.legend()
-    st.pyplot(plt)
-elif plot_type == 'Bar':
-    plt.figure(figsize=(10,5))
-    sns.barplot(x='Category', y='Sales', data=filtered_df, palette='viridis')
-    plt.title('Sales by Category')
-    st.pyplot(plt)
-elif plot_type == 'Scatter':
-    plt.figure(figsize=(10,5))
-    sns.scatterplot(x='Age', y='Salary', hue='Category', data=filtered_df)
-    plt.title('Age vs Salary by Category')
-    st.pyplot(plt)
-elif plot_type == 'Histogram':
-    plt.figure(figsize=(10,5))
-    sns.histplot(filtered_df['Age'], bins=10, kde=True, color='blue')
-    plt.title('Age Distribution')
-    st.pyplot(plt)
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Advanced Data Manipulation
-    st.markdown("## 🧠 Advanced Data Manipulation")
-    
-    st.markdown("### Advanced Filtering")
-    st.code("""
-# Filtering with multiple conditions
-df_filtered = df[(df['Age'] > 25) & (df['Salary'] > 50000)]
-
-# Using isin for filtering
-df_filtered = df[df['City'].isin(['NY', 'LA'])]
-    """, language='python')
-    
-    st.markdown("### Applying Custom Functions")
-    st.code("""
-# Define a custom function
-def categorize_age(age):
-    if age < 18:
-        return 'Child'
-    elif age < 35:
-        return 'Young Adult'
-    elif age < 60:
-        return 'Adult'
-    else:
-        return 'Senior'
-
-# Apply the function
-df['Age_Category'] = df['Age'].apply(categorize_age)
-    """, language='python')
-    
-    st.markdown("### Lambda Functions and Map")
-    st.code("""
-# Using lambda with apply
-df['Salary_Adjusted'] = df['Salary'].apply(lambda x: x * 1.05)
-
-# Using map for categorical encoding
-df['City_Code'] = df['City'].map({'NY':1, 'LA':2, 'CHI':3})
-    """, language='python')
-    
-    st.markdown("### Chaining Methods")
-    st.code("""
-# Chaining methods for concise code
-result = (df
-          .dropna()
-          .query('Age > 30')
-          .groupby('City')
-          .agg({'Salary': 'mean'})
-          .reset_index())
-    """, language='python')
-    
-    st.markdown("### Using Query for Filtering")
-    st.code("""
-# Using query for filtering
-df_filtered = df.query('Age > 25 and Salary < 70000')
-    """, language='python')
-    
-    st.markdown("### Pivot and Melt")
-    st.code("""
-# Pivot
-pivot = df.pivot(index='Name', columns='City', values='Salary')
-
-# Melt
-melted = pd.melt(df, id_vars=['Name', 'Age'], value_vars=['Salary', 'Expenses'], var_name='Metric', value_name='Value')
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Advanced Visualization
-    st.markdown("## 🎨 Advanced Visualization")
-    
-    st.markdown("### Pairplot with Seaborn")
-    st.code("""
-# Pairplot
-sns.pairplot(df, hue='Category')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Jointplot with Seaborn")
-    st.code("""
-# Jointplot
-sns.jointplot(x='Age', y='Salary', data=df, kind='scatter')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### FacetGrid with Seaborn")
-    st.code("""
-# FacetGrid
-g = sns.FacetGrid(df, col="Category", hue="City")
-g.map(plt.scatter, "Age", "Salary").add_legend()
-plt.show()
-    """, language='python')
-    
-    st.markdown("### PairGrid with Seaborn")
-    st.code("""
-# PairGrid
-g = sns.PairGrid(df, hue="Category")
-g.map_diag(plt.hist)
-g.map_offdiag(sns.scatterplot)
-g.add_legend()
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Heatmap with Seaborn")
-    st.code("""
-# Heatmap
-plt.figure(figsize=(10,8))
-sns.heatmap(df.corr(), annot=True, cmap='coolwarm', linewidths=.5)
-plt.title('Correlation Heatmap')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Advanced Plot Customization")
-    st.code("""
-# Customizing plots
-plt.figure(figsize=(12,6))
-sns.barplot(x='Category', y='Sales', data=df, palette='viridis')
-plt.title('Sales by Category')
-plt.xlabel('Category')
-plt.ylabel('Sales')
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Interactive Visualization
-    st.markdown("## 🎨 Interactive Visualization")
-    st.markdown("### Plotly Express in Streamlit")
-    st.code("""
-# Interactive Scatter Plot
-fig = px.scatter(df, x='Age', y='Salary', color='City', hover_data=['Name'], title='Interactive Age vs Salary')
-st.plotly_chart(fig)
-
-# Interactive Bar Chart
-fig = px.bar(df, x='Category', y='Sales', color='Category', barmode='group', title='Interactive Sales by Category')
-st.plotly_chart(fig)
-
-# Interactive Line Chart
-fig = px.line(df, x='Date', y='Sales', title='Interactive Sales Over Time')
-st.plotly_chart(fig)
-
-# Interactive Histogram
-fig = px.histogram(df, x='Age', nbins=10, title='Interactive Age Distribution')
-st.plotly_chart(fig)
-
-# Interactive Pie Chart
-fig = px.pie(df, names='Product', values='Sales', title='Interactive Sales Distribution by Product')
-st.plotly_chart(fig)
-    """, language='python')
-    
-    st.markdown("### Interactive Widgets")
-    st.code("""
-# Interactive DataFrame display
-import streamlit as st
-import pandas as pd
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# Sidebar filters
-category = st.sidebar.multiselect('Select Category', df['Category'].unique())
-city = st.sidebar.multiselect('Select City', df['City'].unique())
-
-# Apply filters
-filtered_df = df[
-    (df['Category'].isin(category)) &
-    (df['City'].isin(city))
-]
-
-# Display DataFrame
-st.dataframe(filtered_df)
-    """, language='python')
-    
-    st.markdown("### Dynamic Plotting")
-    st.code("""
-# Dynamic plotting based on user selection
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# User selects plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# User selects columns
-x_col = st.selectbox('Select X-axis', df.columns)
-y_col = st.selectbox('Select Y-axis', df.columns)
-
-# Plot based on selection
-if plot_type == 'Line':
-    df.plot(kind='line', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Line Plot of {y_col} over {x_col}')
-    plt.show()
-elif plot_type == 'Bar':
-    df.plot(kind='bar', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Bar Chart of {y_col} by {x_col}')
-    plt.show()
-elif plot_type == 'Scatter':
-    df.plot(kind='scatter', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Scatter Plot of {y_col} vs {x_col}')
-    plt.show()
-elif plot_type == 'Histogram':
-    df[y_col].plot(kind='hist', bins=10, figsize=(10,5))
-    plt.title(f'Histogram of {y_col}')
-    plt.xlabel(y_col)
-    plt.ylabel('Frequency')
-    plt.show()
-    """, language='python')
-    
-    st.markdown("### Interactive Filters and Plots")
-    st.code("""
-# Interactive filters and plots
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# Select categories
-categories = st.multiselect('Select Categories', df['Category'].unique(), default=df['Category'].unique())
-
-# Filter data
-filtered_df = df[df['Category'].isin(categories)]
-
-# Select plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# Plot
-if plot_type == 'Line':
-    plt.figure(figsize=(10,5))
-    for category in categories:
-        subset = filtered_df[filtered_df['Category'] == category]
-        plt.plot(subset['Date'], subset['Sales'], label=category)
-    plt.title('Sales Over Time')
-    plt.xlabel('Date')
-    plt.ylabel('Sales')
-    plt.legend()
-    st.pyplot(plt)
-elif plot_type == 'Bar':
-    plt.figure(figsize=(10,5))
-    sns.barplot(x='Category', y='Sales', data=filtered_df, palette='viridis')
-    plt.title('Sales by Category')
-    st.pyplot(plt)
-elif plot_type == 'Scatter':
-    plt.figure(figsize=(10,5))
-    sns.scatterplot(x='Age', y='Salary', hue='Category', data=filtered_df)
-    plt.title('Age vs Salary by Category')
-    st.pyplot(plt)
-elif plot_type == 'Histogram':
-    plt.figure(figsize=(10,5))
-    sns.histplot(filtered_df['Age'], bins=10, kde=True, color='blue')
-    plt.title('Age Distribution')
-    st.pyplot(plt)
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Advanced Data Manipulation
-    st.markdown("## 🧠 Advanced Data Manipulation")
-    
-    st.markdown("### Advanced Filtering")
-    st.code("""
-# Filtering with multiple conditions
-df_filtered = df[(df['Age'] > 25) & (df['Salary'] > 50000)]
-
-# Using isin for filtering
-df_filtered = df[df['City'].isin(['NY', 'LA'])]
-    """, language='python')
-    
-    st.markdown("### Applying Custom Functions")
-    st.code("""
-# Define a custom function
-def categorize_age(age):
-    if age < 18:
-        return 'Child'
-    elif age < 35:
-        return 'Young Adult'
-    elif age < 60:
-        return 'Adult'
-    else:
-        return 'Senior'
-
-# Apply the function
-df['Age_Category'] = df['Age'].apply(categorize_age)
-    """, language='python')
-    
-    st.markdown("### Lambda Functions and Map")
-    st.code("""
-# Using lambda with apply
-df['Salary_Adjusted'] = df['Salary'].apply(lambda x: x * 1.05)
-
-# Using map for categorical encoding
-df['City_Code'] = df['City'].map({'NY':1, 'LA':2, 'CHI':3})
-    """, language='python')
-    
-    st.markdown("### Chaining Methods")
-    st.code("""
-# Chaining methods for concise code
-result = (df
-          .dropna()
-          .query('Age > 30')
-          .groupby('City')
-          .agg({'Salary': 'mean'})
-          .reset_index())
-    """, language='python')
-    
-    st.markdown("### Using Query for Filtering")
-    st.code("""
-# Using query for filtering
-df_filtered = df.query('Age > 25 and Salary < 70000')
-    """, language='python')
-    
-    st.markdown("### Pivot and Melt")
-    st.code("""
-# Pivot
-pivot = df.pivot(index='Name', columns='City', values='Salary')
-
-# Melt
-melted = pd.melt(df, id_vars=['Name', 'Age'], value_vars=['Salary', 'Expenses'], var_name='Metric', value_name='Value')
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Advanced Visualization
-    st.markdown("## 🎨 Advanced Visualization")
-    
-    st.markdown("### Pairplot with Seaborn")
-    st.code("""
-# Pairplot
-sns.pairplot(df, hue='Category')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Jointplot with Seaborn")
-    st.code("""
-# Jointplot
-sns.jointplot(x='Age', y='Salary', data=df, kind='scatter')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### FacetGrid with Seaborn")
-    st.code("""
-# FacetGrid
-g = sns.FacetGrid(df, col="Category", hue="City")
-g.map(plt.scatter, "Age", "Salary").add_legend()
-plt.show()
-    """, language='python')
-    
-    st.markdown("### PairGrid with Seaborn")
-    st.code("""
-# PairGrid
-g = sns.PairGrid(df, hue="Category")
-g.map_diag(plt.hist)
-g.map_offdiag(sns.scatterplot)
-g.add_legend()
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Heatmap with Seaborn")
-    st.code("""
-# Heatmap
-plt.figure(figsize=(10,8))
-sns.heatmap(df.corr(), annot=True, cmap='coolwarm', linewidths=.5)
-plt.title('Correlation Heatmap')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Advanced Plot Customization")
-    st.code("""
-# Customizing plots
-plt.figure(figsize=(12,6))
-sns.barplot(x='Category', y='Sales', data=df, palette='viridis')
-plt.title('Sales by Category')
-plt.xlabel('Category')
-plt.ylabel('Sales')
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Interactive Visualization
-    st.markdown("## 🎨 Interactive Visualization")
-    st.markdown("### Plotly Express in Streamlit")
-    st.code("""
-# Interactive Scatter Plot
-fig = px.scatter(df, x='Age', y='Salary', color='City', hover_data=['Name'], title='Interactive Age vs Salary')
-st.plotly_chart(fig)
-
-# Interactive Bar Chart
-fig = px.bar(df, x='Category', y='Sales', color='Category', barmode='group', title='Interactive Sales by Category')
-st.plotly_chart(fig)
-
-# Interactive Line Chart
-fig = px.line(df, x='Date', y='Sales', title='Interactive Sales Over Time')
-st.plotly_chart(fig)
-
-# Interactive Histogram
-fig = px.histogram(df, x='Age', nbins=10, title='Interactive Age Distribution')
-st.plotly_chart(fig)
-
-# Interactive Pie Chart
-fig = px.pie(df, names='Product', values='Sales', title='Interactive Sales Distribution by Product')
-st.plotly_chart(fig)
-    """, language='python')
-    
-    st.markdown("### Interactive Widgets")
-    st.code("""
-# Interactive DataFrame display
-import streamlit as st
-import pandas as pd
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# Sidebar filters
-category = st.sidebar.multiselect('Select Category', df['Category'].unique())
-city = st.sidebar.multiselect('Select City', df['City'].unique())
-
-# Apply filters
-filtered_df = df[
-    (df['Category'].isin(category)) &
-    (df['City'].isin(city))
-]
-
-# Display DataFrame
-st.dataframe(filtered_df)
-    """, language='python')
-    
-    st.markdown("### Dynamic Plotting")
-    st.code("""
-# Dynamic plotting based on user selection
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# User selects plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# User selects columns
-x_col = st.selectbox('Select X-axis', df.columns)
-y_col = st.selectbox('Select Y-axis', df.columns)
-
-# Plot based on selection
-if plot_type == 'Line':
-    df.plot(kind='line', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Line Plot of {y_col} over {x_col}')
-    plt.show()
-elif plot_type == 'Bar':
-    df.plot(kind='bar', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Bar Chart of {y_col} by {x_col}')
-    plt.show()
-elif plot_type == 'Scatter':
-    df.plot(kind='scatter', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Scatter Plot of {y_col} vs {x_col}')
-    plt.show()
-elif plot_type == 'Histogram':
-    df[y_col].plot(kind='hist', bins=10, figsize=(10,5))
-    plt.title(f'Histogram of {y_col}')
-    plt.xlabel(y_col)
-    plt.ylabel('Frequency')
-    plt.show()
-    """, language='python')
-    
-    st.markdown("### Interactive Filters and Plots")
-    st.code("""
-# Interactive filters and plots
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# Select categories
-categories = st.multiselect('Select Categories', df['Category'].unique(), default=df['Category'].unique())
-
-# Filter data
-filtered_df = df[df['Category'].isin(categories)]
-
-# Select plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# Plot
-if plot_type == 'Line':
-    plt.figure(figsize=(10,5))
-    for category in categories:
-        subset = filtered_df[filtered_df['Category'] == category]
-        plt.plot(subset['Date'], subset['Sales'], label=category)
-    plt.title('Sales Over Time')
-    plt.xlabel('Date')
-    plt.ylabel('Sales')
-    plt.legend()
-    st.pyplot(plt)
-elif plot_type == 'Bar':
-    plt.figure(figsize=(10,5))
-    sns.barplot(x='Category', y='Sales', data=filtered_df, palette='viridis')
-    plt.title('Sales by Category')
-    st.pyplot(plt)
-elif plot_type == 'Scatter':
-    plt.figure(figsize=(10,5))
-    sns.scatterplot(x='Age', y='Salary', hue='Category', data=filtered_df)
-    plt.title('Age vs Salary by Category')
-    st.pyplot(plt)
-elif plot_type == 'Histogram':
-    plt.figure(figsize=(10,5))
-    sns.histplot(filtered_df['Age'], bins=10, kde=True, color='blue')
-    plt.title('Age Distribution')
-    st.pyplot(plt)
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Advanced Data Manipulation
-    st.markdown("## 🧠 Advanced Data Manipulation")
-    
-    st.markdown("### Advanced Filtering")
-    st.code("""
-# Filtering with multiple conditions
-df_filtered = df[(df['Age'] > 25) & (df['Salary'] > 50000)]
-
-# Using isin for filtering
-df_filtered = df[df['City'].isin(['NY', 'LA'])]
-    """, language='python')
-    
-    st.markdown("### Applying Custom Functions")
-    st.code("""
-# Define a custom function
-def categorize_age(age):
-    if age < 18:
-        return 'Child'
-    elif age < 35:
-        return 'Young Adult'
-    elif age < 60:
-        return 'Adult'
-    else:
-        return 'Senior'
-
-# Apply the function
-df['Age_Category'] = df['Age'].apply(categorize_age)
-    """, language='python')
-    
-    st.markdown("### Lambda Functions and Map")
-    st.code("""
-# Using lambda with apply
-df['Salary_Adjusted'] = df['Salary'].apply(lambda x: x * 1.05)
-
-# Using map for categorical encoding
-df['City_Code'] = df['City'].map({'NY':1, 'LA':2, 'CHI':3})
-    """, language='python')
-    
-    st.markdown("### Chaining Methods")
-    st.code("""
-# Chaining methods for concise code
-result = (df
-          .dropna()
-          .query('Age > 30')
-          .groupby('City')
-          .agg({'Salary': 'mean'})
-          .reset_index())
-    """, language='python')
-    
-    st.markdown("### Using Query for Filtering")
-    st.code("""
-# Using query for filtering
-df_filtered = df.query('Age > 25 and Salary < 70000')
-    """, language='python')
-    
-    st.markdown("### Pivot and Melt")
-    st.code("""
-# Pivot
-pivot = df.pivot(index='Name', columns='City', values='Salary')
-
-# Melt
-melted = pd.melt(df, id_vars=['Name', 'Age'], value_vars=['Salary', 'Expenses'], var_name='Metric', value_name='Value')
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Advanced Visualization
-    st.markdown("## 🎨 Advanced Visualization")
-    
-    st.markdown("### Pairplot with Seaborn")
-    st.code("""
-# Pairplot
-sns.pairplot(df, hue='Category')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Jointplot with Seaborn")
-    st.code("""
-# Jointplot
-sns.jointplot(x='Age', y='Salary', data=df, kind='scatter')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### FacetGrid with Seaborn")
-    st.code("""
-# FacetGrid
-g = sns.FacetGrid(df, col="Category", hue="City")
-g.map(plt.scatter, "Age", "Salary").add_legend()
-plt.show()
-    """, language='python')
-    
-    st.markdown("### PairGrid with Seaborn")
-    st.code("""
-# PairGrid
-g = sns.PairGrid(df, hue="Category")
-g.map_diag(plt.hist)
-g.map_offdiag(sns.scatterplot)
-g.add_legend()
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Heatmap with Seaborn")
-    st.code("""
-# Heatmap
-plt.figure(figsize=(10,8))
-sns.heatmap(df.corr(), annot=True, cmap='coolwarm', linewidths=.5)
-plt.title('Correlation Heatmap')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Advanced Plot Customization")
-    st.code("""
-# Customizing plots
-plt.figure(figsize=(12,6))
-sns.barplot(x='Category', y='Sales', data=df, palette='viridis')
-plt.title('Sales by Category')
-plt.xlabel('Category')
-plt.ylabel('Sales')
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Interactive Visualization
-    st.markdown("## 🎨 Interactive Visualization")
-    st.markdown("### Plotly Express in Streamlit")
-    st.code("""
-# Interactive Scatter Plot
-fig = px.scatter(df, x='Age', y='Salary', color='City', hover_data=['Name'], title='Interactive Age vs Salary')
-st.plotly_chart(fig)
-
-# Interactive Bar Chart
-fig = px.bar(df, x='Category', y='Sales', color='Category', barmode='group', title='Interactive Sales by Category')
-st.plotly_chart(fig)
-
-# Interactive Line Chart
-fig = px.line(df, x='Date', y='Sales', title='Interactive Sales Over Time')
-st.plotly_chart(fig)
-
-# Interactive Histogram
-fig = px.histogram(df, x='Age', nbins=10, title='Interactive Age Distribution')
-st.plotly_chart(fig)
-
-# Interactive Pie Chart
-fig = px.pie(df, names='Product', values='Sales', title='Interactive Sales Distribution by Product')
-st.plotly_chart(fig)
-    """, language='python')
-    
-    st.markdown("### Interactive Widgets")
-    st.code("""
-# Interactive DataFrame display
-import streamlit as st
-import pandas as pd
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# Sidebar filters
-category = st.sidebar.multiselect('Select Category', df['Category'].unique())
-city = st.sidebar.multiselect('Select City', df['City'].unique())
-
-# Apply filters
-filtered_df = df[
-    (df['Category'].isin(category)) &
-    (df['City'].isin(city))
-]
-
-# Display DataFrame
-st.dataframe(filtered_df)
-    """, language='python')
-    
-    st.markdown("### Dynamic Plotting")
-    st.code("""
-# Dynamic plotting based on user selection
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# User selects plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# User selects columns
-x_col = st.selectbox('Select X-axis', df.columns)
-y_col = st.selectbox('Select Y-axis', df.columns)
-
-# Plot based on selection
-if plot_type == 'Line':
-    df.plot(kind='line', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Line Plot of {y_col} over {x_col}')
-    plt.show()
-elif plot_type == 'Bar':
-    df.plot(kind='bar', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Bar Chart of {y_col} by {x_col}')
-    plt.show()
-elif plot_type == 'Scatter':
-    df.plot(kind='scatter', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Scatter Plot of {y_col} vs {x_col}')
-    plt.show()
-elif plot_type == 'Histogram':
-    df[y_col].plot(kind='hist', bins=10, figsize=(10,5))
-    plt.title(f'Histogram of {y_col}')
-    plt.xlabel(y_col)
-    plt.ylabel('Frequency')
-    plt.show()
-    """, language='python')
-    
-    st.markdown("### Interactive Filters and Plots")
-    st.code("""
-# Interactive filters and plots
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# Select categories
-categories = st.multiselect('Select Categories', df['Category'].unique(), default=df['Category'].unique())
-
-# Filter data
-filtered_df = df[df['Category'].isin(categories)]
-
-# Select plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# Plot
-if plot_type == 'Line':
-    plt.figure(figsize=(10,5))
-    for category in categories:
-        subset = filtered_df[filtered_df['Category'] == category]
-        plt.plot(subset['Date'], subset['Sales'], label=category)
-    plt.title('Sales Over Time')
-    plt.xlabel('Date')
-    plt.ylabel('Sales')
-    plt.legend()
-    st.pyplot(plt)
-elif plot_type == 'Bar':
-    plt.figure(figsize=(10,5))
-    sns.barplot(x='Category', y='Sales', data=filtered_df, palette='viridis')
-    plt.title('Sales by Category')
-    st.pyplot(plt)
-elif plot_type == 'Scatter':
-    plt.figure(figsize=(10,5))
-    sns.scatterplot(x='Age', y='Salary', hue='Category', data=filtered_df)
-    plt.title('Age vs Salary by Category')
-    plt.show()
-    st.pyplot(plt)
-elif plot_type == 'Histogram':
-    plt.figure(figsize=(10,5))
-    sns.histplot(filtered_df['Age'], bins=10, kde=True, color='blue')
-    plt.title('Age Distribution')
-    st.pyplot(plt)
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Advanced Data Manipulation
-    st.markdown("## 🧠 Advanced Data Manipulation")
-    
-    st.markdown("### Advanced Filtering")
-    st.code("""
-# Filtering with multiple conditions
-df_filtered = df[(df['Age'] > 25) & (df['Salary'] > 50000)]
-
-# Using isin for filtering
-df_filtered = df[df['City'].isin(['NY', 'LA'])]
-    """, language='python')
-    
-    st.markdown("### Applying Custom Functions")
-    st.code("""
-# Define a custom function
-def categorize_age(age):
-    if age < 18:
-        return 'Child'
-    elif age < 35:
-        return 'Young Adult'
-    elif age < 60:
-        return 'Adult'
-    else:
-        return 'Senior'
-
-# Apply the function
-df['Age_Category'] = df['Age'].apply(categorize_age)
-    """, language='python')
-    
-    st.markdown("### Lambda Functions and Map")
-    st.code("""
-# Using lambda with apply
-df['Salary_Adjusted'] = df['Salary'].apply(lambda x: x * 1.05)
-
-# Using map for categorical encoding
-df['City_Code'] = df['City'].map({'NY':1, 'LA':2, 'CHI':3})
-    """, language='python')
-    
-    st.markdown("### Chaining Methods")
-    st.code("""
-# Chaining methods for concise code
-result = (df
-          .dropna()
-          .query('Age > 30')
-          .groupby('City')
-          .agg({'Salary': 'mean'})
-          .reset_index())
-    """, language='python')
-    
-    st.markdown("### Using Query for Filtering")
-    st.code("""
-# Using query for filtering
-df_filtered = df.query('Age > 25 and Salary < 70000')
-    """, language='python')
-    
-    st.markdown("### Pivot and Melt")
-    st.code("""
-# Pivot
-pivot = df.pivot(index='Name', columns='City', values='Salary')
-
-# Melt
-melted = pd.melt(df, id_vars=['Name', 'Age'], value_vars=['Salary', 'Expenses'], var_name='Metric', value_name='Value')
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Advanced Visualization
-    st.markdown("## 🎨 Advanced Visualization")
-    
-    st.markdown("### Pairplot with Seaborn")
-    st.code("""
-# Pairplot
-sns.pairplot(df, hue='Category')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Jointplot with Seaborn")
-    st.code("""
-# Jointplot
-sns.jointplot(x='Age', y='Salary', data=df, kind='scatter')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### FacetGrid with Seaborn")
-    st.code("""
-# FacetGrid
-g = sns.FacetGrid(df, col="Category", hue="City")
-g.map(plt.scatter, "Age", "Salary").add_legend()
-plt.show()
-    """, language='python')
-    
-    st.markdown("### PairGrid with Seaborn")
-    st.code("""
-# PairGrid
-g = sns.PairGrid(df, hue="Category")
-g.map_diag(plt.hist)
-g.map_offdiag(sns.scatterplot)
-g.add_legend()
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Heatmap with Seaborn")
-    st.code("""
-# Heatmap
-plt.figure(figsize=(10,8))
-sns.heatmap(df.corr(), annot=True, cmap='coolwarm', linewidths=.5)
-plt.title('Correlation Heatmap')
-plt.show()
-    """, language='python')
-    
-    st.markdown("### Advanced Plot Customization")
-    st.code("""
-# Customizing plots
-plt.figure(figsize=(12,6))
-sns.barplot(x='Category', y='Sales', data=df, palette='viridis')
-plt.title('Sales by Category')
-plt.xlabel('Category')
-plt.ylabel('Sales')
-plt.xticks(rotation=45)
-plt.tight_layout()
-plt.show()
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Interactive Visualization
-    st.markdown("## 🎨 Interactive Visualization")
-    st.markdown("### Plotly Express in Streamlit")
-    st.code("""
-# Interactive Scatter Plot
-fig = px.scatter(df, x='Age', y='Salary', color='City', hover_data=['Name'], title='Interactive Age vs Salary')
-st.plotly_chart(fig)
-
-# Interactive Bar Chart
-fig = px.bar(df, x='Category', y='Sales', color='Category', barmode='group', title='Interactive Sales by Category')
-st.plotly_chart(fig)
-
-# Interactive Line Chart
-fig = px.line(df, x='Date', y='Sales', title='Interactive Sales Over Time')
-st.plotly_chart(fig)
-
-# Interactive Histogram
-fig = px.histogram(df, x='Age', nbins=10, title='Interactive Age Distribution')
-st.plotly_chart(fig)
-
-# Interactive Pie Chart
-fig = px.pie(df, names='Product', values='Sales', title='Interactive Sales Distribution by Product')
-st.plotly_chart(fig)
-    """, language='python')
-    
-    st.markdown("### Interactive Widgets")
-    st.code("""
-# Interactive DataFrame display
-import streamlit as st
-import pandas as pd
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# Sidebar filters
-category = st.sidebar.multiselect('Select Category', df['Category'].unique())
-city = st.sidebar.multiselect('Select City', df['City'].unique())
-
-# Apply filters
-filtered_df = df[
-    (df['Category'].isin(category)) &
-    (df['City'].isin(city))
-]
-
-# Display DataFrame
-st.dataframe(filtered_df)
-    """, language='python')
-    
-    st.markdown("### Dynamic Plotting")
-    st.code("""
-# Dynamic plotting based on user selection
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# User selects plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# User selects columns
-x_col = st.selectbox('Select X-axis', df.columns)
-y_col = st.selectbox('Select Y-axis', df.columns)
-
-# Plot based on selection
-if plot_type == 'Line':
-    df.plot(kind='line', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Line Plot of {y_col} over {x_col}')
-    plt.show()
-elif plot_type == 'Bar':
-    df.plot(kind='bar', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Bar Chart of {y_col} by {x_col}')
-    plt.show()
-elif plot_type == 'Scatter':
-    df.plot(kind='scatter', x=x_col, y=y_col, figsize=(10,5))
-    plt.title(f'Scatter Plot of {y_col} vs {x_col}')
-    plt.show()
-elif plot_type == 'Histogram':
-    df[y_col].plot(kind='hist', bins=10, figsize=(10,5))
-    plt.title(f'Histogram of {y_col}')
-    plt.xlabel(y_col)
-    plt.ylabel('Frequency')
-    plt.show()
-    """, language='python')
-    
-    st.markdown("### Interactive Filters and Plots")
-    st.code("""
-# Interactive filters and plots
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Load data
-df = pd.read_csv('data.csv')
-
-# Select categories
-categories = st.multiselect('Select Categories', df['Category'].unique(), default=df['Category'].unique())
-
-# Filter data
-filtered_df = df[df['Category'].isin(categories)]
-
-# Select plot type
-plot_type = st.selectbox('Select Plot Type', ['Line', 'Bar', 'Scatter', 'Histogram'])
-
-# Plot
-if plot_type == 'Line':
-    plt.figure(figsize=(10,5))
-    for category in categories:
-        subset = filtered_df[filtered_df['Category'] == category]
-        plt.plot(subset['Date'], subset['Sales'], label=category)
-    plt.title('Sales Over Time')
-    plt.xlabel('Date')
-    plt.ylabel('Sales')
-    plt.legend()
-    st.pyplot(plt)
-elif plot_type == 'Bar':
-    plt.figure(figsize=(10,5))
-    sns.barplot(x='Category', y='Sales', data=filtered_df, palette='viridis')
-    plt.title('Sales by Category')
-    st.pyplot(plt)
-elif plot_type == 'Scatter':
-    plt.figure(figsize=(10,5))
-    sns.scatterplot(x='Age', y='Salary', hue='Category', data=filtered_df)
-    plt.title('Age vs Salary by Category')
-    plt.show()
-    st.pyplot(plt)
-elif plot_type == 'Histogram':
-    plt.figure(figsize=(10,5))
-    sns.histplot(filtered_df['Age'], bins=10, kde=True, color='blue')
-    plt.title('Age Distribution')
-    st.pyplot(plt)
-    """, language='python')
-    
-    st.markdown("<hr>", unsafe_allow_html=True)
-    
-    # Footer with Social Media Links and Animation
     st.markdown("<hr>", unsafe_allow_html=True)
     col_footer1, col_footer2 = st.columns([2,1])
     with col_footer1:
@@ -1932,14 +510,12 @@ elif plot_type == 'Histogram':
                     </a>
                 </div>
                 <br>
-                <small>Data Science Cheat Sheet v1.0 | Nov 2024 | <a href="https://ahammadmejbah.com/" style="color: #1f77b4;">Mejbah Ahammad</a></small>
+                <small>Scikit-Learn Cheat Sheet v1.0 | Nov 2024 | <a href="https://ahammadmejbah.com/" style="color: #1f77b4;">Mejbah Ahammad</a></small>
                 <div class="card-footer">Mejbah Ahammad © 2024</div>
             </div>
         """, unsafe_allow_html=True)
     with col_footer2:
         st_lottie(lottie_footer, height=150, key="footer_animation")
-    
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
