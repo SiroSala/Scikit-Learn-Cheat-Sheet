@@ -1,5 +1,5 @@
 import streamlit as st
-from navbar import navigation_component
+from components.navbar import navigation_component
 
 def main():
     # Call the navigation component
