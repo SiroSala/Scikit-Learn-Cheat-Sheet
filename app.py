@@ -1,81 +1,70 @@
 import streamlit as st
 
-# Custom CSS for the horizontal navigation bar
-def load_css():
-    st.markdown(
-        """
-        <style>
-        .nav-container {
-            background-color: #f8f9fa;
-            padding: 10px;
-            text-align: center;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .nav-item {
-            display: inline-block;
-            margin: 0 15px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .nav-item:hover {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-        .active {
-            color: #0056b3;
-            text-decoration: underline;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-# Function to render navigation
-def render_navigation():
-    st.markdown(
-        """
-        <div class="nav-container">
-            <a href="/" class="nav-item">Home</a>
-            <a href="?page=tutorial" class="nav-item">Tutorial</a>
-            <a href="?page=explore" class="nav-item">Explore</a>
-            <a href="?page=train" class="nav-item">Train</a>
-            <a href="?page=evaluate" class="nav-item">Evaluate</a>
-            <a href="?page=visualize" class="nav-item">Visualize</a>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
 # Main logic for Streamlit
 def main():
-    load_css()
-    render_navigation()
+    # Sidebar Navigation
+    st.sidebar.title("Navigation")
+    menu_options = [
+        "Home",
+        "Tutorial",
+        "Explore",
+        "Train",
+        "Evaluate",
+        "Visualize",
+        "Classification",
+        "Regression",
+        "Clustering",
+        "Pipelines",
+        "Comparison",
+        "Advanced Analysis",
+        "Explainability",
+        "Deploy"
+    ]
+    selected_page = st.sidebar.radio("Go to", menu_options)
 
-    # Determine which page to render
-    query_params = st.experimental_get_query_params()
-    page = query_params.get("page", ["home"])[0]
-
-    if page == "home":
+    # Page Content Based on Selection
+    if selected_page == "Home":
         st.title("Welcome to Awesome Scikit-Learn")
         st.write("Explore, learn, and build with Scikit-Learn.")
-    elif page == "tutorial":
+    elif selected_page == "Tutorial":
         st.title("Tutorial")
         st.write("Step-by-step tutorials to learn Scikit-Learn.")
-    elif page == "explore":
+    elif selected_page == "Explore":
         st.title("Explore")
         st.write("Upload and analyze datasets.")
-    elif page == "train":
+    elif selected_page == "Train":
         st.title("Train")
         st.write("Train machine learning models interactively.")
-    elif page == "evaluate":
+    elif selected_page == "Evaluate":
         st.title("Evaluate")
         st.write("Evaluate model performance with metrics.")
-    elif page == "visualize":
+    elif selected_page == "Visualize":
         st.title("Visualize")
         st.write("Visualize your data and model results.")
+    elif selected_page == "Classification":
+        st.title("Classification")
+        st.write("Learn and apply classification algorithms.")
+    elif selected_page == "Regression":
+        st.title("Regression")
+        st.write("Learn and apply regression algorithms.")
+    elif selected_page == "Clustering":
+        st.title("Clustering")
+        st.write("Learn and apply clustering algorithms.")
+    elif selected_page == "Pipelines":
+        st.title("Pipelines")
+        st.write("Create and manage machine learning pipelines.")
+    elif selected_page == "Comparison":
+        st.title("Comparison")
+        st.write("Compare performance of multiple models.")
+    elif selected_page == "Advanced Analysis":
+        st.title("Advanced Analysis")
+        st.write("Perform advanced data and model analysis.")
+    elif selected_page == "Explainability":
+        st.title("Explainability")
+        st.write("Understand and explain model predictions.")
+    elif selected_page == "Deploy":
+        st.title("Deploy")
+        st.write("Deploy your machine learning models.")
     else:
         st.title("404")
         st.write("Page not found.")
