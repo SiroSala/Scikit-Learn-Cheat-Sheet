@@ -6,3 +6,4 @@ streamlit_lottie
 matplotlib
 seaborn
 plotly
+scikit-learn
