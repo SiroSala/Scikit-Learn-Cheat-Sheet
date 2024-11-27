@@ -5,4 +5,4 @@ requests
 streamlit_lottie
 matplotlib
 seaborn
-plotlys
+plotly
