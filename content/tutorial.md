@@ -209,13 +209,3 @@ Have suggestions or want to report an issue? We’d love to hear from you! Click
 
 Thank you for exploring the **Data Science Cheat Sheet**. Let’s build something amazing together! 🚀
 """
-
-# Create the content directory if it doesn't exist
-os.makedirs("content", exist_ok=True)
-
-# Write the tutorial content to a Markdown file
-file_path = os.path.join("content", "tutorial.md")
-with open(file_path, "w", encoding="utf-8") as file:
-    file.write(tutorial_content)
-
-print(f"tutorial.md has been successfully created at {file_path}")
