@@ -8,6 +8,31 @@ def load_markdown_file(path):
 
 def pagination_buttons(position):
     """Create centered pagination buttons with unique keys based on position (top or bottom)."""
+    # Apply custom styles to the buttons
+    button_style = """
+    <style>
+        .stButton>button {
+            border: 2px solid #4CAF50;
+            color: white;
+            background-color: #4CAF50;
+            padding: 10px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .stButton>button:hover {
+            background-color: white;
+            color: black;
+        }
+    </style>
+    """
+    st.markdown(button_style, unsafe_allow_html=True)
+
     col1, col2, col3 = st.columns([1, 2, 1])
     with col1:
         if st.session_state['selected_topic_index'] > 0:
