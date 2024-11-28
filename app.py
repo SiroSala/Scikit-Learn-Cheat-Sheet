@@ -26,7 +26,7 @@ with st.container():
 if selected_page == "Home":
     home.layout()
 elif selected_page == "Tutorial":
-    tutorial.layout()
+    tutorial.main()
 elif selected_page == "Explore":
     explore.layout()
 elif selected_page == "Train":
