@@ -23,7 +23,6 @@ def load_css():
         }
 
         /* Navigation Links and Buttons */
-        .navigation a,
         .navigation button {
             text-decoration: none;
             font-size: 16px;
@@ -38,7 +37,6 @@ def load_css():
         }
 
         /* Hover Effects */
-        .navigation a:hover,
         .navigation button:hover {
             color: #1f2937;
             border-bottom: 2px solid #1f2937;
@@ -58,10 +56,6 @@ def load_css():
             padding: 5px 0;
             z-index: 1000;
             min-width: 150px;
-        }
-
-        .dropdown li {
-            padding: 0;
         }
 
         .dropdown button {
@@ -87,7 +81,6 @@ def load_css():
         .navigation > li:hover .dropdown {
             display: block;
         }
-
         </style>
         """,
         unsafe_allow_html=True,
@@ -98,39 +91,32 @@ def render_navigation():
         """
         <div class="navigator-container">
             <ul class="navigation">
-                <li><button onclick="setPage('home')">Home</button></li>
+                <li><button id="home" class="nav-btn">Home</button></li>
                 <li>
-                    <button>Models ▼</button>
+                    <button class="nav-btn">Models ▼</button>
                     <ul class="dropdown">
-                        <li><button onclick="setPage('classification')">Classification</button></li>
-                        <li><button onclick="setPage('regression')">Regression</button></li>
-                        <li><button onclick="setPage('clustering')">Clustering</button></li>
+                        <li><button id="classification" class="nav-btn">Classification</button></li>
+                        <li><button id="regression" class="nav-btn">Regression</button></li>
+                        <li><button id="clustering" class="nav-btn">Clustering</button></li>
                     </ul>
                 </li>
                 <li>
-                    <button>Advanced ▼</button>
+                    <button class="nav-btn">Advanced ▼</button>
                     <ul class="dropdown">
-                        <li><button onclick="setPage('pipelines')">Pipelines</button></li>
-                        <li><button onclick="setPage('comparison')">Comparison</button></li>
-                        <li><button onclick="setPage('advanced-analysis')">Advanced Analysis</button></li>
-                        <li><button onclick="setPage('explainability')">Explainability</button></li>
+                        <li><button id="pipelines" class="nav-btn">Pipelines</button></li>
+                        <li><button id="comparison" class="nav-btn">Comparison</button></li>
+                        <li><button id="advanced-analysis" class="nav-btn">Advanced Analysis</button></li>
+                        <li><button id="explainability" class="nav-btn">Explainability</button></li>
                     </ul>
                 </li>
-                <li><button onclick="setPage('explore')">Explore</button></li>
-                <li><button onclick="setPage('train')">Train</button></li>
-                <li><button onclick="setPage('evaluate')">Evaluate</button></li>
-                <li><button onclick="setPage('deploy')">Deploy</button></li>
-                <li><button onclick="setPage('visualize')">Visualize</button></li>
-                <li><button onclick="setPage('tutorial')">Tutorial</button></li>
+                <li><button id="explore" class="nav-btn">Explore</button></li>
+                <li><button id="train" class="nav-btn">Train</button></li>
+                <li><button id="evaluate" class="nav-btn">Evaluate</button></li>
+                <li><button id="deploy" class="nav-btn">Deploy</button></li>
+                <li><button id="visualize" class="nav-btn">Visualize</button></li>
+                <li><button id="tutorial" class="nav-btn">Tutorial</button></li>
             </ul>
         </div>
-        <script>
-            function setPage(page) {
-                const queryString = new URLSearchParams(window.location.search);
-                queryString.set("page", page);
-                window.location.search = queryString.toString();
-            }
-        </script>
         """,
         unsafe_allow_html=True,
     )
