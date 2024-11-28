@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_lottie import st_lottie
 import requests
-from footer import display_footer
+from components.footer import display_footer
 
 # Function to load Lottie animations from a URL
 def load_lottie_url(url: str):
