@@ -1,9 +1,8 @@
 import streamlit as st
 
 def display_footer():
-    # Footer with social media links and copyright information
     st.markdown(
-        f"""
+        """
         <div style="
             background-color: #FFFFFF; 
             color: black; 
