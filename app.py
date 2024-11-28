@@ -1,5 +1,5 @@
 import streamlit as st
-from navbar import sidebar_navigation
+from components.navbar import sidebar_navigation
 
 # Set page configuration to remove the default Streamlit sidebar and footer
 st.set_page_config(
