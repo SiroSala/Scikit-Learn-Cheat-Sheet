@@ -6,19 +6,21 @@ def load_markdown_file(path):
     with open(path, "r", encoding="utf-8") as file:
         return file.read()
 
-def pagination_buttons():
-    """Create centered pagination buttons."""
+def pagination_buttons(position):
+    """Create centered pagination buttons with unique keys based on position (top or bottom)."""
     col1, col2, col3 = st.columns([1, 2, 1])
     with col1:
         if st.session_state['selected_topic_index'] > 0:
-            if st.button('← Previous'):
+            if st.button('← Previous', key=f'prev_{position}'):
                 st.session_state['selected_topic_index'] -= 1
-                st.experimental_rerun()
+                # Force rerun by manipulating session state
+                st.session_state['rerun'] = not st.session_state.get('rerun', False)
     with col3:
         if st.session_state['selected_topic_index'] < len(topics) - 1:
-            if st.button('Next →'):
+            if st.button('Next →', key=f'next_{position}'):
                 st.session_state['selected_topic_index'] += 1
-                st.experimental_rerun()
+                # Force rerun by manipulating session state
+                st.session_state['rerun'] = not st.session_state.get('rerun', False)
 
 def layout():
     """Loads and displays the content of the Markdown file within the Streamlit app."""
@@ -34,7 +36,7 @@ def layout():
     topics = [f"Day{i}_Topic.md" for i in range(1, 91)]  # Adjust range as needed for your files
 
     # Display top pagination buttons
-    pagination_buttons()
+    pagination_buttons('top')
 
     # Load and display the markdown after potential state change
     markdown_path = os.path.join(base_path, topics[st.session_state['selected_topic_index']])
@@ -45,5 +47,5 @@ def layout():
         st.error("Error: Tutorial content file not found.")
 
     # Display bottom pagination buttons
-    pagination_buttons()
+    pagination_buttons('bottom')
 
