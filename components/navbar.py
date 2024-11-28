@@ -64,30 +64,7 @@ def load_sidebar_css():
     )
 
 def render_sidebar():
-    st.markdown(
-        """
-        <div class="sidebar-container">
-            <div class="sidebar">
-                <div class="sidebar-header">Navigation</div>
-                <a href="?page=home" class="active">Home</a>
-                <a href="?page=classification">Classification</a>
-                <a href="?page=regression">Regression</a>
-                <a href="?page=clustering">Clustering</a>
-                <a href="?page=pipelines">Pipelines</a>
-                <a href="?page=comparison">Comparison</a>
-                <a href="?page=advanced-analysis">Advanced Analysis</a>
-                <a href="?page=explainability">Explainability</a>
-                <a href="?page=explore">Explore</a>
-                <a href="?page=train">Train</a>
-                <a href="?page=evaluate">Evaluate</a>
-                <a href="?page=deploy">Deploy</a>
-                <a href="?page=visualize">Visualize</a>
-                <a href="?page=tutorial">Tutorial</a>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    st.sidebar.title("Navigation")
 
 def sidebar_component():
     load_sidebar_css()
