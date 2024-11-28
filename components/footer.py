@@ -30,7 +30,7 @@ def render_footer():
                 Scikit Learn Cheat Sheet v1.0 | Nov 2024 | 
                 <a href="https://ahammadmejbah.com/" style="color: #000000; text-decoration: none;">Mejbah Ahammad</a>
             </p>
-            <p style="font-size: 14px; color: #666666;">
+            <p style="font-size: 20px; color: #FF0000;">
                 All content is © 2024 Scikit-Learn and Mejbah Ahammad. Unauthorized reproduction, distribution, or modification is strictly prohibited.
             </p>
         </div>
