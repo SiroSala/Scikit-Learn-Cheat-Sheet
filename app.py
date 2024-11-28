@@ -1,5 +1,5 @@
 import streamlit as st
-from navbar import sidebar_component
+from components.navbar import sidebar_component
 
 def main():
     # Render the sidebar
