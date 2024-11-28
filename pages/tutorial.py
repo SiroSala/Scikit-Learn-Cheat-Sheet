@@ -9,7 +9,7 @@ def load_markdown_file(path):
 def layout():
     """Loads and displays the content of the Markdown file within the Streamlit app."""
     # Define the base path to the Markdown files directory
-    base_path = "content"
+    base_path = "content/90days"
     
     # Generate list of topics based on file naming convention
     topics = [f"Day{i}_Topic.md" for i in range(1, 91)]  # Adjust range as needed for your files
