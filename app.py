@@ -38,7 +38,7 @@ elif selected_page == "Evaluate":
 
 
 
-from footer import display_footer
+from components.footer import display_footer
 
 # Render the footer at the bottom of all pages
 display_footer()
