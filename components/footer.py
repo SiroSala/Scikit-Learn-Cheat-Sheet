@@ -3,7 +3,7 @@ import streamlit as st
 def render_footer():
     st.markdown(
         """
-        <div style="background-color: #FFFFFF; color: black; text-align: center; padding: 20px; margin-top: 50px; border-top: 2px solid #000000; font-family: Arial, sans-serif;">
+        <div style="background-color: #FFFFFF; color: black; text-align: center; padding: 20px; margin-top: 50px; border-top: 2px solid #000000; font-family: Georgia, serif;">
             <p style="font-size: 18px; font-weight: bold;">Connect with me:</p>
             <div style="display: flex; justify-content: center; gap: 20px; padding-bottom: 10px;">
                 <a href="https://facebook.com/ahammadmejbah" target="_blank">
@@ -25,7 +25,7 @@ def render_footer():
                 <a href="https://ahammadmejbah.com/" style="color: #000000; text-decoration: none;">Mejbah Ahammad</a>
             </p>
             <p style="font-size: 14px; color: #666666;">
-                All content is © 2024 Scikit-Learn Streamlit and Mejbah Ahammad. Unauthorized reproduction, distribution, or modification is strictly prohibited.
+                All content is © 2024 Scikit-Learn and Mejbah Ahammad. Unauthorized reproduction, distribution, or modification is strictly prohibited.
             </p>
         </div>
         """,
