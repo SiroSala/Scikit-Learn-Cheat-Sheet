@@ -8,8 +8,22 @@ def load_markdown_file(path):
 
 def layout():
     """Loads and displays the content of the Markdown file within the Streamlit app."""
-    # Define the path to the Markdown file
-    markdown_path = "content/tutorial.md"
+    # Define the base path to the Markdown files directory
+    base_path = "content"
+    
+    # Generate list of topics based on file naming convention
+    topics = [f"Day{i}_Topic.md" for i in range(1, 91)]  # Adjust range as needed for your files
+
+    # Dropdown to select a topic
+    selected_topic = st.selectbox(
+        "Select a topic",
+        topics,
+        index=0,  # Default to the first file
+        format_func=lambda x: x.replace('_', ' ').replace('.md', '')  # Clean up file names for display
+    )
+
+    # Define the path to the selected Markdown file
+    markdown_path = os.path.join(base_path, selected_topic)
     
     # Check if the file exists and display it; otherwise, show an error message
     if os.path.exists(markdown_path):
