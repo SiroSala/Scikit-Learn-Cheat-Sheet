@@ -44,5 +44,5 @@ def display_footer():
             </p>
         </div>
         """,
-        unsafe_allow_html=True,
+        unsafe_allow_html=True,  # Ensure this parameter is set to True
     )
