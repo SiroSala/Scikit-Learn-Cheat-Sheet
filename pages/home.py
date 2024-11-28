@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_lottie import st_lottie
 import requests
+from footer import display_footer
 
 # Function to load Lottie animations from a URL
 def load_lottie_url(url: str):
@@ -133,3 +134,6 @@ print("Accuracy:", accuracy_score(y_test, predictions))
         Use the navigation bar above to explore features, tutorials, and datasets. Let's build something awesome together!
         """
     )
+
+
+display_footer()
