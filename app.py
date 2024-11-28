@@ -1,4 +1,5 @@
 import streamlit as st
+from pages import home
 from streamlit_option_menu import option_menu
 
 # Import custom pages
