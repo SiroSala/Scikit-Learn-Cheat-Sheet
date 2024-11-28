@@ -1,14 +1,14 @@
+# Ensure set_page_config is the very first Streamlit command
 import streamlit as st
-from streamlit_lottie import st_lottie
-import requests
-from components.footer import display_footer  # Import the footer module
-
-# Ensure this is the first command
 st.set_page_config(
     page_title="Awesome Scikit-Learn",
     page_icon="🔍",
     layout="wide"
 )
+
+from streamlit_lottie import st_lottie
+import requests
+from components.footer import display_footer  # Import footer module
 
 # Function to load Lottie animations from a URL
 def load_lottie_url(url: str):
@@ -23,7 +23,7 @@ documentation_animation = load_lottie_url("https://assets2.lottiefiles.com/packa
 tutorial_animation = load_lottie_url("https://assets2.lottiefiles.com/packages/lf20_1a8dx7zj.json")
 community_animation = load_lottie_url("https://assets2.lottiefiles.com/packages/lf20_8wREpI.json")
 
-# Define layout for Home Page
+# Define the layout for Home Page
 def layout():
     # Title and Welcome Animation
     st.title("Welcome to Awesome Scikit-Learn")
@@ -36,7 +36,7 @@ def layout():
     st.markdown(
         """
         ### 🚀 Empower Your Machine Learning Projects
-        Welcome to the **ultimate platform** for exploring, training, and visualizing machine learning models using **Scikit-Learn**. 
+        Welcome to the **ultimate platform** for exploring, training, and visualizing machine learning models using **Scikit-Learn**.
         """
     )
 
