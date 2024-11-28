@@ -6,72 +6,106 @@ def load_css():
         <style>
         /* Main Navigation Container */
         .navigator-container {
-            position: relative;
             width: 100%;
-            background-color: #f8f9fa;
-            padding: 10px 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff; /* White background for modern look */
+            padding: 15px 30px; /* Increased padding for better spacing */
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
             display: flex;
             justify-content: center;
             align-items: center;
+            position: sticky; /* Fix navigation bar at the top */
+            top: 0;
+            z-index: 1000;
         }
+
+        /* Navigation List */
         .navigation {
             list-style: none;
             display: flex;
             margin: 0;
             padding: 0;
-            gap: 20px;
+            gap: 25px; /* Increased gap for better link separation */
         }
-        .navigation > li {
-            position: relative;
-        }
+
+        /* Navigation Links and Buttons */
         .navigation a,
         .navigation button {
             text-decoration: none;
-            font-size: 16px;
-            font-weight: 600;
-            color: #4a5568;
-            padding: 8px 12px;
-            border-radius: 5px;
+            font-size: 16px; /* Standard font size */
+            font-weight: 600; /* Bold text for emphasis */
+            color: #374151; /* Neutral gray color for text */
+            padding: 10px 15px; /* Comfortable padding for click/tap targets */
+            border-radius: 6px; /* Slight rounding for modern design */
             background: none;
             border: none;
             cursor: pointer;
+            transition: all 0.3s ease; /* Smooth hover effect */
         }
+
+        /* Hover Effects */
         .navigation a:hover,
         .navigation button:hover {
-            background-color: #edf2f7;
-            color: #2d3748;
+            background-color: #f3f4f6; /* Light gray hover background */
+            color: #1f2937; /* Darker text color on hover */
         }
+
+        /* Dropdown Menu */
         .dropdown {
             position: absolute;
-            top: 100%;
+            top: 110%; /* Dropdown below the link */
             left: 0;
             display: none;
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
+            background-color: #ffffff; /* White background for dropdown */
+            border: 1px solid #e5e7eb; /* Light gray border */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            border-radius: 6px; /* Rounded dropdown corners */
             list-style: none;
-            padding: 5px 0;
-            z-index: 10;
+            padding: 10px 0;
+            z-index: 1000;
+            width: 200px; /* Standard dropdown width */
         }
+
         .dropdown li {
             padding: 0;
         }
+
         .dropdown a {
             display: block;
-            padding: 8px 15px;
-            font-size: 14px;
+            padding: 8px 15px; /* Padding inside dropdown items */
+            font-size: 14px; /* Slightly smaller font for dropdown */
             font-weight: 500;
-            color: #4a5568;
+            color: #374151; /* Neutral gray for dropdown links */
             text-decoration: none;
+            transition: all 0.2s ease; /* Smooth hover effect */
         }
+
         .dropdown a:hover {
-            background-color: #e2e8f0;
-            color: #2d3748;
+            background-color: #f9fafb; /* Slightly lighter gray hover */
+            color: #111827; /* Dark text on hover */
         }
+
+        /* Show Dropdown on Hover */
         .navigation > li:hover .dropdown {
             display: block;
+        }
+
+        /* Responsiveness for Smaller Screens */
+        @media (max-width: 768px) {
+            .navigator-container {
+                padding: 10px 20px;
+            }
+            .navigation {
+                flex-wrap: wrap; /* Stack navigation items if necessary */
+                gap: 15px; /* Smaller gap on smaller screens */
+            }
+            .navigation a,
+            .navigation button {
+                font-size: 14px; /* Smaller font for smaller screens */
+                padding: 8px 10px; /* Adjust padding for smaller targets */
+            }
+            .dropdown {
+                width: 180px; /* Slightly smaller dropdown width */
+            }
         }
         </style>
         """,
