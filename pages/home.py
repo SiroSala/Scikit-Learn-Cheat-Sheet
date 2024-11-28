@@ -18,7 +18,7 @@ community_animation = load_lottie_url("https://assets2.lottiefiles.com/packages/
 # Define layout for Home Page
 def layout():
     # Title and Welcome Animation
-    st.title("Welcome to Awesome Scikit-Learn")
+    st.title("Welcome to Becoming Scikit Learn Boss")
     if welcome_animation:
         st_lottie(welcome_animation, height=300, key="welcome")
     else:

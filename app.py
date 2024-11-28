@@ -6,7 +6,7 @@ from pages import home, tutorial, explore, train, evaluate
 
 # Set Streamlit page configuration
 st.set_page_config(
-    page_title="Awesome Scikit-Learn",
+    page_title="Becoming Scikit Learn Boss",
     layout="wide",
     initial_sidebar_state="collapsed"  # Ensure the sidebar starts collapsed
 )
