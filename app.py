@@ -1,10 +1,10 @@
 import streamlit as st
 from components.navbar import sidebar_navigation
 
-# Configure the page to disable the default sidebar
+# Disable the default sidebar by collapsing it and removing any extra Streamlit elements
 st.set_page_config(
-    page_title="Scikit-Learn Navigator",
-    layout="wide",  # Use wide layout for full content display
+    page_title="Custom Streamlit App",
+    layout="wide",  # Use a wide layout for better content display
     initial_sidebar_state="collapsed",  # Collapse the default sidebar
     menu_items={
         "Report a bug": None,
@@ -14,13 +14,13 @@ st.set_page_config(
 )
 
 def main():
-    # Render the custom sidebar navigation
+    # Render the custom sidebar navigation (Yes Section)
     selected_page = sidebar_navigation()
 
     # Display content based on the selected page
     if selected_page == "Home":
         st.title("Home")
-        st.write("Welcome to the Scikit-Learn Navigator Home!")
+        st.write("Welcome to the custom Streamlit application!")
     elif selected_page == "Classification":
         st.title("Classification")
         st.write("Learn and apply classification techniques.")
