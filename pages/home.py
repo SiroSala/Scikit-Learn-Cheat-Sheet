@@ -6,15 +6,14 @@ import requests
 def load_lottie_url(url: str):
     response = requests.get(url)
     if response.status_code != 200:
-        st.error(f"Failed to load animation from {url}")
         return None
     return response.json()
 
 # Load animations
 welcome_animation = load_lottie_url("https://assets10.lottiefiles.com/packages/lf20_puciaact.json")  # Welcome Animation
-documentation_animation = load_lottie_url("https://assets9.lottiefiles.com/packages/lf20_hz0zyjyz.json")  # Documentation Animation
-tutorial_animation = load_lottie_url("https://assets1.lottiefiles.com/packages/lf20_vf4pwnr6.json")  # Tutorial Animation
-community_animation = load_lottie_url("https://assets6.lottiefiles.com/packages/lf20_hihsvl5o.json")  # Community Animation
+documentation_animation = load_lottie_url("https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json")  # Documentation Animation
+tutorial_animation = load_lottie_url("https://assets2.lottiefiles.com/packages/lf20_1a8dx7zj.json")  # Tutorial Animation
+community_animation = load_lottie_url("https://assets2.lottiefiles.com/packages/lf20_8wREpI.json")  # Community Animation
 
 # Define layout for Home Page
 def layout():
