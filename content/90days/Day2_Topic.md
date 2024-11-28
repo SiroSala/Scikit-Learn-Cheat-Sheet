@@ -1,4 +1,3 @@
-```markdown
 # Day 2: Data Cleaning, Advanced Pandas, NumPy, and Exploratory Data Analysis 📊🧹🔍
 
 Welcome to Day 2 of our Data Science series! Today, we'll delve deeper into the essential steps of data science: data cleaning and preprocessing, advanced data manipulation with Pandas, numerical computations with NumPy, and Exploratory Data Analysis (EDA). We'll also introduce the basics of machine learning using scikit-learn. By the end of this day, you'll have a solid understanding of how to prepare and analyze data effectively.
@@ -470,5 +469,3 @@ Keep up the great work, and see you tomorrow for more exciting lessons!
 This structured approach ensures that you build a strong foundation, preparing you for more advanced topics in the upcoming days. Keep experimenting with the code examples, and don't hesitate to explore additional resources to deepen your understanding.
 
 Happy Learning! 🎉
-
-```
