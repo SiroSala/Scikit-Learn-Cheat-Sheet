@@ -136,4 +136,4 @@ print("Accuracy:", accuracy_score(y_test, predictions))
     )
 
 
-    display_footer()
+display_footer()
