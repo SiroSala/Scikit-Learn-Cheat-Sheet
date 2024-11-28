@@ -1,21 +1,30 @@
 import streamlit as st
-from streamlit_option_menu import option_menu
+from streamlit_lottie import st_lottie
+from footer import display_footer  # Import footer module
+from pages import home, tutorial, explore, train, evaluate  # Import your pages
+import requests
 
-# Import custom pages
-from pages import home, tutorial, explore, train, evaluate
+# Ensure this is the first command
+st.set_page_config(
+    page_title="Awesome Scikit-Learn",
+    page_icon="🔍",
+    layout="wide"
+)
+
+# Function to load Lottie animations from a URL (optional for app-wide animations)
+def load_lottie_url(url: str):
+    response = requests.get(url)
+    if response.status_code != 200:
+        return None
+    return response.json()
 
 # Add horizontal navigation menu
-with st.container():
-    selected_page = option_menu(
-        menu_title=None,  # No title for the menu
-        options=["Home", "Tutorial", "Explore", "Train", "Evaluate"],  # Pages
-        icons=["house", "book", "search", "tools", "bar-chart-line"],  # Page icons
-        menu_icon="cast",  # Main menu icon
-        default_index=0,  # Default selected page
-        orientation="horizontal",  # Horizontal navigation
-    )
+selected_page = st.sidebar.selectbox(
+    "Navigation",
+    ["Home", "Tutorial", "Explore", "Train", "Evaluate"],
+)
 
-# Dynamically load pages based on the selection
+# Render the selected page
 if selected_page == "Home":
     home.layout()
 elif selected_page == "Tutorial":
@@ -26,3 +35,6 @@ elif selected_page == "Train":
     train.layout()
 elif selected_page == "Evaluate":
     evaluate.layout()
+
+# Add Footer
+display_footer()
