@@ -1,25 +1,28 @@
 import streamlit as st
-from pages import home
 from streamlit_option_menu import option_menu
 
 # Import custom pages
 from pages import home, tutorial, explore, train, evaluate
 
 # Set Streamlit page configuration
-st.set_page_config(page_title="Awesome Scikit-Learn", layout="wide")
+st.set_page_config(
+    page_title="Awesome Scikit-Learn",
+    layout="wide",
+    initial_sidebar_state="collapsed"  # Ensure the sidebar starts collapsed
+)
 
-# Add horizontal navigation
+# Add horizontal navigation menu
 with st.container():
     selected_page = option_menu(
-        menu_title=None,  # Title for the menu (None means no title)
-        options=["Home", "Tutorial", "Explore", "Train", "Evaluate"],  # Menu options
-        icons=["house", "book", "search", "tools", "bar-chart-line"],  # Icons for each page
-        menu_icon="cast",  # Icon for the menu
-        default_index=0,  # Default active menu option
+        menu_title=None,  # No title for the menu
+        options=["Home", "Tutorial", "Explore", "Train", "Evaluate"],  # Pages
+        icons=["house", "book", "search", "tools", "bar-chart-line"],  # Page icons
+        menu_icon="cast",  # Main menu icon
+        default_index=0,  # Default selected page
         orientation="horizontal",  # Horizontal navigation
     )
 
-# Dynamically load the selected page
+# Dynamically load pages based on the selection
 if selected_page == "Home":
     home.layout()
 elif selected_page == "Tutorial":
