@@ -1,129 +1,94 @@
 import streamlit as st
 
-def load_css():
+def load_sidebar_css():
     st.markdown(
         """
         <style>
-        /* Main Navigation Bar */
-        .navigator-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px 0;
+        /* Sidebar container */
+        .sidebar-container {
+            height: 100%;
+            width: 250px; /* Width of the sidebar */
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2d3748; /* Dark background for the sidebar */
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-x: hidden;
+            z-index: 1000;
         }
 
-        /* Navigation List */
-        .navigation {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Navigation Links and Buttons */
-        .navigation a {
+        /* Sidebar navigation links */
+        .sidebar a {
+            padding: 10px 20px;
             text-decoration: none;
             font-size: 16px;
             font-weight: 500;
-            color: #374151;
-            padding: 8px 12px;
-            border: none;
-            background: none;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
+            color: #cbd5e0; /* Light text color */
+            display: block;
             transition: all 0.3s ease;
         }
 
-        /* Hover Effects */
-        .navigation a:hover {
-            color: #1f2937;
-            border-bottom: 2px solid #1f2937;
+        /* Hover effects for links */
+        .sidebar a:hover {
+            background-color: #4a5568; /* Slightly lighter background on hover */
+            color: #ffffff; /* White text on hover */
+            border-left: 4px solid #63b3ed; /* Highlight with blue border */
         }
 
-        /* Dropdown Menu */
-        .dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            display: none;
-            background-color: #ffffff;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 6px;
-            list-style: none;
-            padding: 5px 0;
-            z-index: 1000;
-            min-width: 150px;
+        /* Active link styling */
+        .sidebar a.active {
+            background-color: #1a202c; /* Highlight active link */
+            color: #ffffff;
+            border-left: 4px solid #63b3ed;
         }
 
-        .dropdown li {
-            padding: 0;
+        /* Sidebar header */
+        .sidebar-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        .dropdown a {
-            display: block;
-            padding: 8px 15px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #374151;
-            text-decoration: none;
-            text-align: left;
+        /* Content container to adjust for sidebar */
+        .content {
+            margin-left: 260px; /* Same as the sidebar width + margin */
+            padding: 20px;
         }
 
-        /* Hover Effects for Dropdown */
-        .dropdown a:hover {
-            background-color: #f9fafb;
-            color: #111827;
-        }
-
-        /* Show Dropdown on Hover */
-        .navigation > li:hover .dropdown {
-            display: block;
-        }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-def render_navigation():
-    # Build the navigation with Streamlit query parameters
+def render_sidebar():
     st.markdown(
         """
-        <div class="navigator-container">
-            <ul class="navigation">
-                <li><a href="?page=home">Home</a></li>
-                <li>
-                    <a href="#">Models ▼</a>
-                    <ul class="dropdown">
-                        <li><a href="?page=classification">Classification</a></li>
-                        <li><a href="?page=regression">Regression</a></li>
-                        <li><a href="?page=clustering">Clustering</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Advanced ▼</a>
-                    <ul class="dropdown">
-                        <li><a href="?page=pipelines">Pipelines</a></li>
-                        <li><a href="?page=comparison">Comparison</a></li>
-                        <li><a href="?page=advanced-analysis">Advanced Analysis</a></li>
-                        <li><a href="?page=explainability">Explainability</a></li>
-                    </ul>
-                </li>
-                <li><a href="?page=explore">Explore</a></li>
-                <li><a href="?page=train">Train</a></li>
-                <li><a href="?page=evaluate">Evaluate</a></li>
-                <li><a href="?page=deploy">Deploy</a></li>
-                <li><a href="?page=visualize">Visualize</a></li>
-                <li><a href="?page=tutorial">Tutorial</a></li>
-            </ul>
+        <div class="sidebar-container">
+            <div class="sidebar">
+                <div class="sidebar-header">Navigation</div>
+                <a href="?page=home" class="active">Home</a>
+                <a href="?page=classification">Classification</a>
+                <a href="?page=regression">Regression</a>
+                <a href="?page=clustering">Clustering</a>
+                <a href="?page=pipelines">Pipelines</a>
+                <a href="?page=comparison">Comparison</a>
+                <a href="?page=advanced-analysis">Advanced Analysis</a>
+                <a href="?page=explainability">Explainability</a>
+                <a href="?page=explore">Explore</a>
+                <a href="?page=train">Train</a>
+                <a href="?page=evaluate">Evaluate</a>
+                <a href="?page=deploy">Deploy</a>
+                <a href="?page=visualize">Visualize</a>
+                <a href="?page=tutorial">Tutorial</a>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-# Main function to call navigation
-def navigation_component():
-    load_css()
-    render_navigation()
+def sidebar_component():
+    load_sidebar_css()
+    render_sidebar()

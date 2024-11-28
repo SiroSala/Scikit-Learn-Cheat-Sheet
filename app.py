@@ -1,18 +1,26 @@
 import streamlit as st
-from components.navbar import navigation_component
+from navbar import sidebar_component
 
 def main():
-    # Render the navigation component
-    navigation_component()
+    # Render the sidebar
+    sidebar_component()
 
-    # Retrieve the current page from query parameters
+    # Get the current page from query parameters
     query_params = st.experimental_get_query_params()
-    page = query_params.get("page", ["home"])[0]  # Default to "home" if no page is specified
+    page = query_params.get("page", ["home"])[0]  # Default to "home" if no page is selected
 
-    # Display content based on the current page
+    # Content area next to the sidebar
+    st.markdown(
+        """
+        <div class="content">
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Page-specific content
     if page == "home":
-        st.title("Welcome to Scikit-Learn Navigator")
-        st.write("This is the Home Page.")
+        st.title("Home")
+        st.write("Welcome to the Scikit-Learn Navigator Home!")
     elif page == "classification":
         st.title("Classification")
         st.write("Learn and apply classification techniques.")
@@ -56,7 +64,13 @@ def main():
         st.title("404 - Page Not Found")
         st.write("The page you are looking for does not exist.")
 
+    # Close the content div
+    st.markdown(
+        """
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 if __name__ == "__main__":
     main()
-
-print("HI")
