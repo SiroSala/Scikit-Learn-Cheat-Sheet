@@ -29,22 +29,22 @@ Follow these steps to set up the application:
 
 ### 1. Clone the Repository
 
-\`\`\`bash
+```bash
 git clone https://github.com/ahammadmejbah/Data-Science-Cheat-Sheet
 cd Data-Science-Cheat-Sheet
-\`\`\`
+```
 
 ### 2. Install Dependencies
 
-\`\`\`bash
+```bash
 pip install -r requirements.txt
-\`\`\`
+```
 
 ### 3. Run the Application
 
-\`\`\`bash
+```bash
 streamlit run app.py
-\`\`\`
+```
 
 ---
 
@@ -103,7 +103,7 @@ Here's how to navigate through the application:
 
 ### Example 1: Linear Regression with Scikit-Learn
 
-\`\`\`python
+```python
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
@@ -122,11 +122,11 @@ model.fit(X_train, y_train)
 # Predict and evaluate
 predictions = model.predict(X_test)
 print("MSE:", mean_squared_error(y_test, predictions))
-\`\`\`
+```
 
 ### Example 2: Visualizing Data with Matplotlib
 
-\`\`\`python
+```python
 import matplotlib.pyplot as plt
 
 # Sample data
@@ -142,7 +142,7 @@ plt.ylabel("Y-axis")
 plt.legend()
 plt.grid()
 plt.show()
-\`\`\`
+```
 
 ---
 
@@ -151,14 +151,14 @@ plt.show()
 ### 1. Deploy with Streamlit
 Streamlit makes it easy to deploy this application locally or on cloud platforms.
 
-\`\`\`bash
+```bash
 streamlit run app.py
-\`\`\`
+```
 
 ### 2. Dockerize the Application
 Create a `Dockerfile` to containerize the app.
 
-\`\`\`dockerfile
+```dockerfile
 FROM python:3.8
 
 WORKDIR /app
@@ -170,7 +170,7 @@ COPY . .
 
 EXPOSE 8501
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
-\`\`\`
+```
 
 ---
 
