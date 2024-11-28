@@ -1,7 +1,10 @@
 import streamlit as st
 
 def sidebar_navigation():
-    st.sidebar.title("Navigation")  # Sidebar title
+    # Add a title to the sidebar
+    st.sidebar.title("Navigation")
+
+    # Define menu options
     menu = [
         "Home",
         "Classification",
