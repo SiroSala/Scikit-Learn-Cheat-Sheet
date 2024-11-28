@@ -9,3 +9,4 @@ plotly
 jinja2
 streamlit_option_menu
 streamlit_lottie
+requests
