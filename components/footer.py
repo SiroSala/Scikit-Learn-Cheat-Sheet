@@ -21,7 +21,7 @@ def render_footer():
             </div>
             <br>
             <p style="font-size: 16px; font-weight: 500;">
-                Data Science Cheat Sheet v1.0 | Nov 2024 | 
+                Scikit Learn Cheat Sheet v1.0 | Nov 2024 | 
                 <a href="https://ahammadmejbah.com/" style="color: #000000; text-decoration: none;">Mejbah Ahammad</a>
             </p>
             <p style="font-size: 14px; color: #666666;">
