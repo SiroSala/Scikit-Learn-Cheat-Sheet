@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_lottie import st_lottie
-from footer import display_footer  # Import footer module
+from components.footer import display_footer  # Import footer module
 from pages import home, tutorial, explore, train, evaluate  # Import your pages
 import requests
 
