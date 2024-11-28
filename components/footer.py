@@ -44,5 +44,8 @@ def display_footer():
             </p>
         </div>
         """,
-        unsafe_allow_html=True,  # Ensure this parameter is set to True
+        unsafe_allow_html=True,  # Enable HTML rendering
     )
+
+    # Optional: Add spacing at the bottom
+    st.markdown("<br><br>", unsafe_allow_html=True)
