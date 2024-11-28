@@ -1,7 +1,7 @@
 import streamlit as st
 
 def sidebar_navigation():
-    # Add a title to the sidebar
+    # Add a title to the custom sidebar
     st.sidebar.title("Navigation")
 
     # Define menu options
@@ -22,7 +22,7 @@ def sidebar_navigation():
         "Tutorial",
     ]
 
-    # Add a radio button to navigate between pages
+    # Use radio buttons for navigation
     selected_page = st.sidebar.radio("Go to", menu)
 
     return selected_page

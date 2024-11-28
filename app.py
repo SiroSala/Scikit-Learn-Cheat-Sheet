@@ -1,11 +1,11 @@
 import streamlit as st
 from components.navbar import sidebar_navigation
 
-# Set page configuration to remove the default Streamlit sidebar and footer
+# Configure the page to disable the default sidebar
 st.set_page_config(
     page_title="Scikit-Learn Navigator",
-    layout="wide",
-    initial_sidebar_state="expanded",  # This will expand the custom sidebar
+    layout="wide",  # Use wide layout for full content display
+    initial_sidebar_state="collapsed",  # Collapse the default sidebar
     menu_items={
         "Report a bug": None,
         "Get help": None,
@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 def main():
-    # Render the sidebar and get the selected page
+    # Render the custom sidebar navigation
     selected_page = sidebar_navigation()
 
     # Display content based on the selected page
