@@ -1,13 +1,3 @@
-import os
-
-# Define the content for tutorial.md
-tutorial_content = """
-# 📖 Data Science Cheat Sheet Tutorial
-
-Welcome to the **Data Science Cheat Sheet**! This tutorial will guide you step-by-step on how to use this application effectively and get the most out of it.
-
----
-
 ## 📋 Table of Contents
 
 1. [Introduction](#introduction)
