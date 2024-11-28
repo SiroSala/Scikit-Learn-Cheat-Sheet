@@ -1,5 +1,5 @@
 import streamlit as st
-from navbar import sidebar_navigation
+from components.navbar import sidebar_navigation
 
 def main():
     # Render the sidebar and get the selected page
