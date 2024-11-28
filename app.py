@@ -37,8 +37,35 @@ elif selected_page == "Evaluate":
 
 
 
+# Footer with social media links
+def render_footer():
+    st.markdown(
+        """
+        <div style="background-color: #FFFFFF; color: black; text-align: center; padding: 20px; margin-top: 50px; border-top: 2px solid #000000;">
+            <p>Connect with me:</p>
+            <div style="display: flex; justify-content: center; gap: 20px;">
+                <a href="https://facebook.com/ahammadmejbah" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="30" style="transition: transform 0.2s;">
+                </a>
+                <a href="https://instagram.com/ahammadmejbah" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" width="30" style="transition: transform 0.2s;">
+                </a>
+                <a href="https://github.com/ahammadmejbah" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub" width="30" style="transition: transform 0.2s;">
+                </a>
+                <a href="https://ahammadmejbah.com/" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/919/919827.png" alt="Portfolio" width="30" style="transition: transform 0.2s;">
+                </a>
+            </div>
+            <br>
+            Data Science Cheat Sheet v1.0 | Nov 2024 | 
+            <a href="https://ahammadmejbah.com/" style="color: #000000;">Mejbah Ahammad</a>
+            <div class="card-footer">Mejbah Ahammad © 2024</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
-from components.footer import display_footer
 
-# Render the footer at the bottom of all pages
-display_footer()
+render_footer()
