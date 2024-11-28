@@ -4,13 +4,6 @@ from streamlit_option_menu import option_menu
 # Import custom pages
 from pages import home, tutorial, explore, train, evaluate
 
-# Set Streamlit page configuration
-st.set_page_config(
-    page_title="Awesome Scikit-Learn",
-    layout="wide",
-    initial_sidebar_state="collapsed"  # Ensure the sidebar starts collapsed
-)
-
 # Add horizontal navigation menu
 with st.container():
     selected_page = option_menu(

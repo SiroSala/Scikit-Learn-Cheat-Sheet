@@ -3,12 +3,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 
-st.set_page_config(
-    page_title="Awesome Scikit-Learn",
-    page_icon="🔍",
-    layout="wide"
-)
-
 
 def layout():
     st.title("Train Models")
