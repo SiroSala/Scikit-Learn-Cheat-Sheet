@@ -3,6 +3,14 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+st.set_page_config(
+    page_title="Awesome Scikit-Learn",
+    page_icon="🔍",
+    layout="wide"
+)
+
+
+
 def layout():
     st.title("Explore Data")
     

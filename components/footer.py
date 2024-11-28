@@ -1,5 +1,12 @@
 import streamlit as st
 
+st.set_page_config(
+    page_title="Awesome Scikit-Learn",
+    page_icon="🔍",
+    layout="wide"
+)
+
+
 def display_footer():
     st.markdown(
         """
