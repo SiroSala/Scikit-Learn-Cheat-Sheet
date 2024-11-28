@@ -4,65 +4,61 @@ def load_css():
     st.markdown(
         """
         <style>
-        /* Main Navigation Container */
+        /* Main Navigation Bar */
         .navigator-container {
             width: 100%;
-            background-color: #ffffff; /* White background for modern look */
-            padding: 15px 30px; /* Increased padding for better spacing */
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
             display: flex;
             justify-content: center;
             align-items: center;
-            position: sticky; /* Fix navigation bar at the top */
-            top: 0;
-            z-index: 1000;
+            padding: 10px 0; /* Adjust spacing around navigation */
+            box-shadow: none; /* Remove background shadow */
         }
 
         /* Navigation List */
         .navigation {
             list-style: none;
             display: flex;
+            gap: 20px; /* Space between navigation items */
             margin: 0;
             padding: 0;
-            gap: 25px; /* Increased gap for better link separation */
         }
 
         /* Navigation Links and Buttons */
         .navigation a,
         .navigation button {
             text-decoration: none;
-            font-size: 16px; /* Standard font size */
-            font-weight: 600; /* Bold text for emphasis */
-            color: #374151; /* Neutral gray color for text */
-            padding: 10px 15px; /* Comfortable padding for click/tap targets */
-            border-radius: 6px; /* Slight rounding for modern design */
-            background: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: #374151; /* Neutral gray for modern look */
+            padding: 8px 12px;
             border: none;
+            background: none;
+            border-bottom: 2px solid transparent; /* Indicator for active state */
             cursor: pointer;
-            transition: all 0.3s ease; /* Smooth hover effect */
+            transition: all 0.3s ease;
         }
 
         /* Hover Effects */
         .navigation a:hover,
         .navigation button:hover {
-            background-color: #f3f4f6; /* Light gray hover background */
-            color: #1f2937; /* Darker text color on hover */
+            color: #1f2937; /* Darker gray */
+            border-bottom: 2px solid #1f2937; /* Bottom indicator on hover */
         }
 
         /* Dropdown Menu */
         .dropdown {
             position: absolute;
-            top: 110%; /* Dropdown below the link */
+            top: 100%; /* Align dropdown below parent */
             left: 0;
             display: none;
-            background-color: #ffffff; /* White background for dropdown */
+            background-color: #ffffff; /* Dropdown background */
             border: 1px solid #e5e7eb; /* Light gray border */
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
-            border-radius: 6px; /* Rounded dropdown corners */
+            border-radius: 6px; /* Rounded corners */
             list-style: none;
-            padding: 10px 0;
+            padding: 5px 0;
             z-index: 1000;
-            width: 200px; /* Standard dropdown width */
+            min-width: 150px; /* Standard dropdown width */
         }
 
         .dropdown li {
@@ -71,17 +67,17 @@ def load_css():
 
         .dropdown a {
             display: block;
-            padding: 8px 15px; /* Padding inside dropdown items */
+            padding: 8px 15px; /* Inner padding for dropdown items */
             font-size: 14px; /* Slightly smaller font for dropdown */
             font-weight: 500;
-            color: #374151; /* Neutral gray for dropdown links */
+            color: #374151;
             text-decoration: none;
-            transition: all 0.2s ease; /* Smooth hover effect */
         }
 
+        /* Hover Effects for Dropdown */
         .dropdown a:hover {
-            background-color: #f9fafb; /* Slightly lighter gray hover */
-            color: #111827; /* Dark text on hover */
+            background-color: #f9fafb;
+            color: #111827;
         }
 
         /* Show Dropdown on Hover */
@@ -89,22 +85,22 @@ def load_css():
             display: block;
         }
 
-        /* Responsiveness for Smaller Screens */
+        /* Ensure Navigation is Standardized */
         @media (max-width: 768px) {
             .navigator-container {
-                padding: 10px 20px;
+                flex-wrap: wrap; /* Allow items to wrap for smaller screens */
+                justify-content: flex-start;
             }
             .navigation {
-                flex-wrap: wrap; /* Stack navigation items if necessary */
-                gap: 15px; /* Smaller gap on smaller screens */
+                gap: 10px; /* Reduce spacing on smaller screens */
             }
             .navigation a,
             .navigation button {
-                font-size: 14px; /* Smaller font for smaller screens */
-                padding: 8px 10px; /* Adjust padding for smaller targets */
+                font-size: 14px;
+                padding: 6px 10px;
             }
             .dropdown {
-                width: 180px; /* Slightly smaller dropdown width */
+                min-width: 120px;
             }
         }
         </style>
