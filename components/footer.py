@@ -18,10 +18,16 @@ def render_footer():
                 <a href="https://ahammadmejbah.com/" target="_blank">
                     <img src="https://cdn-icons-png.flaticon.com/512/919/919827.png" alt="Portfolio" width="30" style="transition: transform 0.2s;">
                 </a>
+                <a href="https://www.linkedin.com/in/ahammadmejbah/" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn" width="30" style="transition: transform 0.2s;">
+                </a>
+                <a href="https://ahammadmejbah.com/" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2301/2301122.png" alt="Website" width="30" style="transition: transform 0.2s;">
+                </a>
             </div>
             <br>
             <p style="font-size: 16px; font-weight: 500;">
-                Scikit Learn Cheat Sheet v1.0 | Nov 2024 | 
+                Data Science Cheat Sheet v1.0 | Nov 2024 | 
                 <a href="https://ahammadmejbah.com/" style="color: #000000; text-decoration: none;">Mejbah Ahammad</a>
             </p>
             <p style="font-size: 14px; color: #666666;">
