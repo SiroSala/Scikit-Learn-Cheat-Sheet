@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_lottie import st_lottie
 import requests
-from footer import display_footer  # Import the footer module
+from components.footer import display_footer  # Import the footer module
 
 # Ensure this is the first command
 st.set_page_config(
