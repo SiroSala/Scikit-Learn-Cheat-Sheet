@@ -1,39 +1,15 @@
 import streamlit as st
-from components.navbar import navigation_component
-
-# Initialize session state
-if "page" not in st.session_state:
-    st.session_state["page"] = "home"
+from navigator import navigation_component
 
 def main():
     # Render the navigation component
     navigation_component()
 
-    # Map buttons to pages
-    button_to_page = {
-        "home": "Home",
-        "classification": "Classification",
-        "regression": "Regression",
-        "clustering": "Clustering",
-        "pipelines": "Pipelines",
-        "comparison": "Comparison",
-        "advanced-analysis": "Advanced Analysis",
-        "explainability": "Explainability",
-        "explore": "Explore",
-        "train": "Train",
-        "evaluate": "Evaluate",
-        "deploy": "Deploy",
-        "visualize": "Visualize",
-        "tutorial": "Tutorial",
-    }
+    # Retrieve the current page from query parameters
+    query_params = st.experimental_get_query_params()
+    page = query_params.get("page", ["home"])[0]  # Default to "home" if no page is specified
 
-    # Detect which button was clicked
-    for key in button_to_page.keys():
-        if st.button(button_to_page[key]):
-            st.session_state["page"] = key
-
-    # Render content based on the current page
-    page = st.session_state["page"]
+    # Display content based on the current page
     if page == "home":
         st.title("Welcome to Scikit-Learn Navigator")
         st.write("This is the Home Page.")

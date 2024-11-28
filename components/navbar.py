@@ -23,7 +23,7 @@ def load_css():
         }
 
         /* Navigation Links and Buttons */
-        .navigation button {
+        .navigation a {
             text-decoration: none;
             font-size: 16px;
             font-weight: 500;
@@ -37,7 +37,7 @@ def load_css():
         }
 
         /* Hover Effects */
-        .navigation button:hover {
+        .navigation a:hover {
             color: #1f2937;
             border-bottom: 2px solid #1f2937;
         }
@@ -58,21 +58,22 @@ def load_css():
             min-width: 150px;
         }
 
-        .dropdown button {
+        .dropdown li {
+            padding: 0;
+        }
+
+        .dropdown a {
             display: block;
             padding: 8px 15px;
             font-size: 14px;
             font-weight: 500;
             color: #374151;
             text-decoration: none;
-            background: none;
-            border: none;
-            cursor: pointer;
             text-align: left;
         }
 
         /* Hover Effects for Dropdown */
-        .dropdown button:hover {
+        .dropdown a:hover {
             background-color: #f9fafb;
             color: #111827;
         }
@@ -87,34 +88,35 @@ def load_css():
     )
 
 def render_navigation():
+    # Build the navigation with Streamlit query parameters
     st.markdown(
         """
         <div class="navigator-container">
             <ul class="navigation">
-                <li><button id="home" class="nav-btn">Home</button></li>
+                <li><a href="?page=home">Home</a></li>
                 <li>
-                    <button class="nav-btn">Models ▼</button>
+                    <a href="#">Models ▼</a>
                     <ul class="dropdown">
-                        <li><button id="classification" class="nav-btn">Classification</button></li>
-                        <li><button id="regression" class="nav-btn">Regression</button></li>
-                        <li><button id="clustering" class="nav-btn">Clustering</button></li>
+                        <li><a href="?page=classification">Classification</a></li>
+                        <li><a href="?page=regression">Regression</a></li>
+                        <li><a href="?page=clustering">Clustering</a></li>
                     </ul>
                 </li>
                 <li>
-                    <button class="nav-btn">Advanced ▼</button>
+                    <a href="#">Advanced ▼</a>
                     <ul class="dropdown">
-                        <li><button id="pipelines" class="nav-btn">Pipelines</button></li>
-                        <li><button id="comparison" class="nav-btn">Comparison</button></li>
-                        <li><button id="advanced-analysis" class="nav-btn">Advanced Analysis</button></li>
-                        <li><button id="explainability" class="nav-btn">Explainability</button></li>
+                        <li><a href="?page=pipelines">Pipelines</a></li>
+                        <li><a href="?page=comparison">Comparison</a></li>
+                        <li><a href="?page=advanced-analysis">Advanced Analysis</a></li>
+                        <li><a href="?page=explainability">Explainability</a></li>
                     </ul>
                 </li>
-                <li><button id="explore" class="nav-btn">Explore</button></li>
-                <li><button id="train" class="nav-btn">Train</button></li>
-                <li><button id="evaluate" class="nav-btn">Evaluate</button></li>
-                <li><button id="deploy" class="nav-btn">Deploy</button></li>
-                <li><button id="visualize" class="nav-btn">Visualize</button></li>
-                <li><button id="tutorial" class="nav-btn">Tutorial</button></li>
+                <li><a href="?page=explore">Explore</a></li>
+                <li><a href="?page=train">Train</a></li>
+                <li><a href="?page=evaluate">Evaluate</a></li>
+                <li><a href="?page=deploy">Deploy</a></li>
+                <li><a href="?page=visualize">Visualize</a></li>
+                <li><a href="?page=tutorial">Tutorial</a></li>
             </ul>
         </div>
         """,
