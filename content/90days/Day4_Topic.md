@@ -1,4 +1,3 @@
-```markdown
 <div style="text-align: center;">
   <h1>🎨 Day 4: Data Visualization Mastery with Plotly, Seaborn, and Tableau 📊✨</h1>
   <p>Create Stunning and Interactive Visualizations to Illuminate Your Data!</p>
@@ -297,4 +296,3 @@ Keep up the outstanding work, and stay motivated as you continue your Data Scien
 This structured approach ensures that you enhance your ability to visualize and communicate data effectively, preparing you for more specialized and complex topics in the upcoming days. Continue experimenting with the provided tools and don't hesitate to delve into additional resources to deepen your expertise.
 
 **Happy Learning! 🎉**
-```
