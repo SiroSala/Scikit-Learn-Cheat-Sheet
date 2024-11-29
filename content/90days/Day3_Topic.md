@@ -466,7 +466,7 @@ Keep up the outstanding work, and stay motivated as you continue your Data Scien
 
 ---
 
-<div style="text-align: center;">
+<div style="text-align: left;">
   <p>✨ Keep Learning, Keep Growing! ✨</p>
   <p>🚀 Your Data Science Journey Continues 🚀</p>
   <p>📚 Happy Coding! 🎉</p>
