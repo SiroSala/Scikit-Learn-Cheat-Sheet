@@ -1,475 +1,719 @@
 <div style="text-align: center;">
-  <h1>📝 Day 7: Natural Language Processing (NLP) – Text Processing, Sentiment Analysis, and Language Models 🧠📚</h1>
-  <p>Unlock the Power of Text Data to Derive Meaningful Insights!</p>
+  <h1>🚀 Becoming a Scikit-Learn Boss in 90 Days: Day 6 – Advanced Feature Engineering 🛠️✨</h1>
+  <p>Master the Art of Crafting and Selecting Features to Elevate Your Machine Learning Models!</p>
 </div>
 
 ---
 
 ## 📑 Table of Contents
 
-1. [📅 Review of Day 6 📜](#review-of-day-6-📜)
-2. [🧠 Introduction to Natural Language Processing (NLP)](#introduction-to-natural-language-processing-nlp-🧠)
-    - [🔍 What is NLP?](#what-is-nlp-🔍)
-    - [🛠️ NLP Applications](#nlp-applications-🛠️)
-    - [📚 NLP Libraries Overview](#nlp-libraries-overview-📚)
-3. [✂️ Text Preprocessing](#text-preprocessing-✂️)
-    - [🧹 Cleaning Text Data](#cleaning-text-data-🧹)
-    - [🔤 Tokenization](#tokenization-🔤)
-    - [🔡 Removing Stop Words](#removing-stop-words-🔡)
-    - [🔄 Stemming and Lemmatization](#stemming-and-lemmatization-🔄)
-4. [📊 Feature Extraction for Text Data](#feature-extraction-for-text-data-📊)
-    - [📈 Bag of Words (BoW)](#bag-of-words-bow-📈)
-    - [🔢 Term Frequency-Inverse Document Frequency (TF-IDF)](#term-frequency-inverse-document-frequency-tf-idf-🔢)
-    - [🧩 Word Embeddings](#word-embeddings-🧩)
-5. [🔍 Sentiment Analysis](#sentiment-analysis-🔍)
-    - [📚 Understanding Sentiment Analysis](#understanding-sentiment-analysis-📚)
-    - [📈 Building a Sentiment Analysis Model](#building-a-sentiment-analysis-model-📈)
-    - [📉 Evaluating Sentiment Models](#evaluating-sentiment-models-📉)
-6. [🧩 Language Models and Transformers](#language-models-and-transformers-🧩)
-    - [🔧 Introduction to Transformers](#introduction-to-transformers-🔧)
-    - [🤖 Using Pre-trained Models with Hugging Face](#using-pre-trained-models-with-hugging-face-🤖)
-    - [📈 Fine-Tuning Language Models](#fine-tuning-language-models-📈)
-7. [🛠️📈 Example Project: Sentiment Analysis on Movie Reviews](#example-project-sentiment-analysis-on-movie-reviews-🛠️📈)
-8. [🚀🎓 Conclusion and Next Steps](#conclusion-and-next-steps-🚀🎓)
-9. [📜 Summary of Day 7 📜](#summary-of-day-7-📜)
+1. [🌟 Welcome to Day 6](#welcome-to-day-6)
+2. [🔍 Review of Day 5 📜](#review-of-day-5-📜)
+3. [🧠 Introduction to Feature Engineering 🧠](#introduction-to-feature-engineering-🧠)
+    - [📚 What is Feature Engineering?](#what-is-feature-engineering-📚)
+    - [🔍 Importance of Feature Engineering](#importance-of-feature-engineering-🔍)
+4. [🛠️ Feature Creation Techniques 🛠️](#feature-creation-techniques-🛠️)
+    - [📐 Polynomial Features](#polynomial-features-📐)
+    - [🔗 Interaction Features](#interaction-features-🔗)
+    - [📊 Binning](#binning-📊)
+    - [🧩 Feature Transformation](#feature-transformation-🧩)
+5. [🗑️ Feature Selection Techniques 🗑️](#feature-selection-techniques-🗑️)
+    - [✅ Filter Methods](#filter-methods-✅)
+    - [🔄 Wrapper Methods](#wrapper-methods-🔄)
+    - [🧬 Embedded Methods](#embedded-methods-🧬)
+6. [🔀 Handling Categorical Features 🔀](#handling-categorical-features-🔀)
+    - [🔡 One-Hot Encoding](#one-hot-encoding-🔡)
+    - [🔢 Label Encoding](#label-encoding-🔢)
+    - [🌀 Target Encoding](#target-encoding-🌀)
+7. [📏 Advanced Feature Scaling 📏](#advanced-feature-scaling-📏)
+    - [🧹 Robust Scaling](#robust-scaling-🧹)
+    - [📐 Quantile Transformation](#quantile-transformation-📐)
+    - [🔄 Power Transformation (Box-Cox, Yeo-Johnson)](#power-transformation-box-cx-yeo-johnson-🔄)
+8. [🛠️ Implementing Advanced Feature Engineering with Scikit-Learn 🛠️](#implementing-advanced-feature-engineering-with-scikit-learn-🛠️)
+    - [📐 Polynomial Features Example 📐](#polynomial-features-example-📐)
+    - [🔗 Interaction Features Example 🔗](#interaction-features-example-🔗)
+    - [🗑️ Feature Selection Example 🗑️](#feature-selection-example-🗑️)
+    - [🔀 Handling Categorical Features Example 🔀](#handling-categorical-features-example-🔀)
+    - [📏 Advanced Feature Scaling Example 📏](#advanced-feature-scaling-example-📏)
+9. [🛠️📈 Example Project: Enhancing Model Performance with Feature Engineering 🛠️📈](#example-project-enhancing-model-performance-with-feature-engineering-🛠️📈)
+    - [📋 Project Overview](#project-overview-📋)
+    - [📝 Step-by-Step Guide](#step-by-step-guide-📝)
+        - [1. Load and Explore the Dataset](#1-load-and-explore-the-dataset)
+        - [2. Data Preprocessing](#2-data-preprocessing)
+        - [3. Feature Creation](#3-feature-creation)
+        - [4. Feature Selection](#4-feature-selection)
+        - [5. Handling Categorical Features](#5-handling-categorical-features)
+        - [6. Advanced Feature Scaling](#6-advanced-feature-scaling)
+        - [7. Building and Training the Model](#7-building-and-training-the-model)
+        - [8. Evaluating Model Performance](#8-evaluating-model-performance)
+    - [📊 Results and Insights](#results-and-insights-📊)
+10. [🚀🎓 Conclusion and Next Steps 🚀🎓](#conclusion-and-next-steps-🚀🎓)
+11. [📜 Summary of Day 6 📜](#summary-of-day-6-📜)
 
 ---
 
-## 1. 📅 Review of Day 6 📜
+## 1. 🌟 Welcome to Day 6
+
+Welcome to **Day 6** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, we'll dive into **Advanced Feature Engineering**, a critical step in building robust and high-performing machine learning models. You'll learn how to create new features, select the most relevant ones, handle categorical data effectively, and apply advanced scaling techniques to prepare your data for modeling.
+
+---
+
+## 2. 🔍 Review of Day 5 📜
 
 Before diving into today's topics, let's briefly recap what we covered yesterday:
 
-- **Deep Learning Basics**: Explored neural networks, TensorFlow, and Keras.
-- **Convolutional Neural Networks (CNNs)**: Learned about CNN architectures for image processing.
-- **Recurrent Neural Networks (RNNs)**: Delved into RNNs for sequential data.
-- **Transfer Learning**: Leveraged pre-trained models to enhance performance.
-- **Example Project**: Built and trained a neural network to classify the MNIST dataset.
+- **Unsupervised Learning: Clustering and Dimensionality Reduction**: Explored K-Means, Hierarchical Clustering, DBSCAN, PCA, and t-SNE.
+- **Implementing Clustering and Dimensionality Reduction with Scikit-Learn**: Practiced building and visualizing clusters, reducing dimensionality, and evaluating clustering performance.
+- **Example Project: Customer Segmentation**: Developed a customer segmentation project, applying clustering and dimensionality reduction techniques to uncover hidden patterns and groupings in customer data.
 
-With this foundation, we're ready to explore Natural Language Processing (NLP), a crucial area for analyzing and deriving insights from text data.
+With this foundation, we're ready to enhance our models through sophisticated feature engineering techniques.
 
 ---
 
-## 2. 🧠 Introduction to Natural Language Processing (NLP) 🧠
+## 3. 🧠 Introduction to Feature Engineering 🧠
 
-Natural Language Processing (NLP) is a field at the intersection of computer science, artificial intelligence, and linguistics. It focuses on enabling computers to understand, interpret, and generate human language.
+### 📚 What is Feature Engineering?
 
-### 🔍 What is NLP?
+**Feature Engineering** is the process of using domain knowledge to create new features or modify existing ones to improve the performance of machine learning models. It involves transforming raw data into meaningful representations that make patterns more discernible to algorithms.
 
-**NLP** involves the interaction between computers and humans through natural language. The ultimate goal is to read, decipher, understand, and make sense of human languages in a valuable way.
+### 🔍 Importance of Feature Engineering
 
-### 🛠️ NLP Applications
-
-- **Sentiment Analysis**: Determining the sentiment expressed in text.
-- **Machine Translation**: Translating text from one language to another.
-- **Chatbots and Virtual Assistants**: Interacting with users in natural language.
-- **Text Summarization**: Creating concise summaries of longer texts.
-- **Named Entity Recognition (NER)**: Identifying and classifying key information in text.
-
-### 📚 NLP Libraries Overview
-
-- **NLTK (Natural Language Toolkit)**: A comprehensive library for building Python programs to work with human language data.
-- **SpaCy**: An industrial-strength NLP library for Python, optimized for performance.
-- **Gensim**: A library for topic modeling and document similarity analysis.
-- **Hugging Face Transformers**: A library providing state-of-the-art pre-trained models for NLP tasks.
+- **Improves Model Performance**: Well-engineered features can significantly enhance the predictive power of models.
+- **Reduces Overfitting**: By selecting relevant features, you can simplify models and reduce the risk of overfitting.
+- **Enhances Interpretability**: Meaningful features can make models easier to understand and interpret.
+- **Handles Data Quality Issues**: Techniques like imputation and scaling address issues like missing values and feature scale discrepancies.
 
 ---
 
-## 3. ✂️ Text Preprocessing ✂️
+## 4. 🛠️ Feature Creation Techniques 🛠️
 
-Text preprocessing is a crucial step in NLP, involving cleaning and transforming raw text into a format suitable for analysis.
+### 📐 Polynomial Features
 
-### 🧹 Cleaning Text Data 🧹
-
-Cleaning involves removing noise from the text data to improve the quality of analysis.
+Polynomial features allow you to capture non-linear relationships by creating new features that are combinations of existing ones raised to a power.
 
 ```python
-import re
-
-def clean_text(text):
-    # Remove special characters and digits
-    text = re.sub(r'[^A-Za-z\s]', '', text)
-    # Convert to lowercase
-    text = text.lower()
-    return text
-
-sample_text = "Hello World! This is a test text, with numbers 123 and symbols #@$."
-cleaned = clean_text(sample_text)
-print(cleaned)
-```
-
-### 🔤 Tokenization 🔤
-
-Tokenization is the process of breaking down text into individual words or tokens.
-
-```python
-from nltk.tokenize import word_tokenize
-
-text = "Natural Language Processing is fascinating."
-tokens = word_tokenize(text)
-print(tokens)
-```
-
-### 🔡 Removing Stop Words 🔡
-
-Stop words are commonly used words that carry minimal meaningful information.
-
-```python
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-
-stop_words = set(stopwords.words('english'))
-words = word_tokenize("This is a simple example demonstrating stop words removal.")
-filtered_words = [word for word in words if word.lower() not in stop_words]
-print(filtered_words)
-```
-
-### 🔄 Stemming and Lemmatization 🔄
-
-Stemming and lemmatization reduce words to their base or root form.
-
-```python
-from nltk.stem import PorterStemmer, WordNetLemmatizer
-
-stemmer = PorterStemmer()
-lemmatizer = WordNetLemmatizer()
-
-word = "running"
-stemmed = stemmer.stem(word)
-lemmatized = lemmatizer.lemmatize(word, pos='v')
-print(f"Stemmed: {stemmed}, Lemmatized: {lemmatized}")
-```
-
----
-
-## 4. 📊 Feature Extraction for Text Data 📊
-
-Transforming text into numerical representations is essential for machine learning models.
-
-### 📈 Bag of Words (BoW) 📈
-
-BoW represents text by the frequency of each word in the document.
-
-```python
-from sklearn.feature_extraction.text import CountVectorizer
-
-documents = [
-    "I love machine learning.",
-    "Machine learning is amazing.",
-    "I enjoy learning new things."
-]
-
-vectorizer = CountVectorizer()
-X = vectorizer.fit_transform(documents)
-print(vectorizer.get_feature_names_out())
-print(X.toarray())
-```
-
-### 🔢 Term Frequency-Inverse Document Frequency (TF-IDF) 🔢
-
-TF-IDF weighs the frequency of a word in a document against its rarity across all documents.
-
-```python
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-vectorizer = TfidfVectorizer()
-X = vectorizer.fit_transform(documents)
-print(vectorizer.get_feature_names_out())
-print(X.toarray())
-```
-
-### 🧩 Word Embeddings 🧩
-
-Word embeddings capture semantic relationships between words in a continuous vector space.
-
-```python
-import gensim.downloader as api
-
-# Load pre-trained word vectors
-model = api.load("glove-wiki-gigaword-50")
-
-# Get the vector for a word
-vector = model['machine']
-print(vector)
-```
-
----
-
-## 5. 🔍 Sentiment Analysis 🔍
-
-Sentiment Analysis involves determining the emotional tone behind a body of text.
-
-### 📚 Understanding Sentiment Analysis 📚
-
-Sentiment Analysis classifies text into predefined categories such as positive, negative, or neutral.
-
-### 📈 Building a Sentiment Analysis Model 📈
-
-```python
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report
-
-# Sample DataFrame
-data = {
-    'Review': [
-        "I loved the movie! It was fantastic.",
-        "The movie was terrible and boring.",
-        "An average film with some good moments.",
-        "Absolutely wonderful! A masterpiece.",
-        "Not good, not bad. It was okay."
-    ],
-    'Sentiment': [1, 0, 1, 1, 0]  # 1: Positive, 0: Negative
-}
-df = pd.DataFrame(data)
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(df['Review'], df['Sentiment'], test_size=0.2, random_state=42)
-
-# Vectorize text
-vectorizer = TfidfVectorizer()
-X_train_vec = vectorizer.fit_transform(X_train)
-X_test_vec = vectorizer.transform(X_test)
-
-# Train model
-model = LogisticRegression()
-model.fit(X_train_vec, y_train)
-
-# Predict
-y_pred = model.predict(X_test_vec)
-
-# Evaluate
-print(classification_report(y_test, y_pred))
-```
-
-### 📉 Evaluating Sentiment Models 📉
-
-Use metrics like accuracy, precision, recall, and F1-score to assess model performance.
-
----
-
-## 6. 🧩 Language Models and Transformers 🧩
-
-Language Models predict the probability of a sequence of words and are fundamental to many NLP tasks.
-
-### 🔧 Introduction to Transformers 🔧
-
-**Transformers** are a type of model architecture that relies on self-attention mechanisms, enabling parallel processing of data and capturing long-range dependencies.
-
-### 🤖 Using Pre-trained Models with Hugging Face 🤖
-
-Hugging Face provides a vast repository of pre-trained transformer models.
-
-```python
-from transformers import pipeline
-
-# Initialize sentiment analysis pipeline
-sentiment_pipeline = pipeline("sentiment-analysis")
-
-# Analyze sentiment
-result = sentiment_pipeline("I love using Hugging Face models!")
-print(result)
-```
-
-### 📈 Fine-Tuning Language Models 📈
-
-Fine-tuning involves adapting a pre-trained model to a specific task using task-specific data.
-
-```python
-from transformers import Trainer, TrainingArguments, BertForSequenceClassification, BertTokenizer
+from sklearn.preprocessing import PolynomialFeatures
 import pandas as pd
 
 # Sample DataFrame
 data = {
-    'text': ["I love this!", "This is bad."],
-    'label': [1, 0]
+    'Feature1': [2, 3, 5, 7],
+    'Feature2': [4, 5, 6, 7]
 }
 df = pd.DataFrame(data)
 
-# Load tokenizer and model
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
+# Initialize PolynomialFeatures with degree=2
+poly = PolynomialFeatures(degree=2, include_bias=False)
+poly_features = poly.fit_transform(df)
 
-# Tokenize data
-inputs = tokenizer(list(df['text']), padding=True, truncation=True, return_tensors="pt")
-labels = df['label'].tolist()
+# Create a DataFrame with polynomial features
+poly_df = pd.DataFrame(poly_features, columns=poly.get_feature_names_out())
+print(poly_df)
+```
 
-# Define dataset
-class SentimentDataset(torch.utils.data.Dataset):
-    def __init__(self, encodings, labels):
-        self.encodings = encodings
-        self.labels = labels
-    def __getitem__(self, idx):
-        item = {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
-        item['labels'] = torch.tensor(self.labels[idx])
-        return item
-    def __len__(self):
-        return len(self.labels)
+### 🔗 Interaction Features
 
-dataset = SentimentDataset(inputs, labels)
+Interaction features capture the combined effect of two or more features.
 
-# Define training arguments
-training_args = TrainingArguments(
-    output_dir='./results',
-    num_train_epochs=3,
-    per_device_train_batch_size=2,
-    logging_dir='./logs',
-)
+```python
+from sklearn.preprocessing import PolynomialFeatures
+import pandas as pd
 
-# Initialize Trainer
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=dataset
-)
+# Sample DataFrame
+data = {
+    'Feature1': [1, 2, 3],
+    'Feature2': [4, 5, 6],
+    'Feature3': [7, 8, 9]
+}
+df = pd.DataFrame(data)
 
-# Train the model
-trainer.train()
+# Initialize PolynomialFeatures with degree=2 and interaction_only=True
+poly = PolynomialFeatures(degree=2, interaction_only=True, include_bias=False)
+interaction_features = poly.fit_transform(df)
+
+# Create a DataFrame with interaction features
+interaction_df = pd.DataFrame(interaction_features, columns=poly.get_feature_names_out())
+print(interaction_df)
+```
+
+### 📊 Binning
+
+Binning transforms continuous features into categorical bins, which can help capture non-linear relationships.
+
+```python
+import pandas as pd
+import numpy as np
+
+# Sample DataFrame
+data = {
+    'Age': [23, 45, 12, 67, 34, 56, 78, 89, 10, 25]
+}
+df = pd.DataFrame(data)
+
+# Define bin edges and labels
+bins = [0, 18, 35, 60, 100]
+labels = ['Child', 'Young Adult', 'Adult', 'Senior']
+
+# Create binned feature
+df['Age_Group'] = pd.cut(df['Age'], bins=bins, labels=labels)
+print(df)
+```
+
+### 🧩 Feature Transformation
+
+Feature transformation methods modify the scale or distribution of features to improve model performance.
+
+```python
+from sklearn.preprocessing import PowerTransformer
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Income': [50000, 60000, 80000, 120000, 150000, 300000, 500000]
+}
+df = pd.DataFrame(data)
+
+# Initialize PowerTransformer with 'yeo-johnson' method
+pt = PowerTransformer(method='yeo-johnson')
+df['Income_Transformed'] = pt.fit_transform(df[['Income']])
+print(df)
 ```
 
 ---
 
-## 7. 🛠️📈 Example Project: Sentiment Analysis on Movie Reviews 🛠️📈
+## 5. 🗑️ Feature Selection Techniques 🗑️
 
-Let's apply today's concepts by building a sentiment analysis model to classify movie reviews as positive or negative.
+### ✅ Filter Methods ✅
+
+Filter methods assess the relevance of features based on statistical measures independent of any machine learning algorithms.
+
+```python
+from sklearn.feature_selection import SelectKBest, f_regression
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Feature1': [1, 2, 3, 4, 5],
+    'Feature2': [2, 3, 4, 5, 6],
+    'Feature3': [5, 4, 3, 2, 1],
+    'Target': [1, 3, 2, 5, 4]
+}
+df = pd.DataFrame(data)
+X = df[['Feature1', 'Feature2', 'Feature3']]
+y = df['Target']
+
+# Select top 2 features based on f_regression
+selector = SelectKBest(score_func=f_regression, k=2)
+X_new = selector.fit_transform(X, y)
+selected_features = X.columns[selector.get_support()]
+print(f"Selected Features: {selected_features.tolist()}")
+```
+
+### 🔄 Wrapper Methods 🔄
+
+Wrapper methods evaluate feature subsets based on the performance of a specific machine learning algorithm.
+
+```python
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LinearRegression
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Feature1': [1, 2, 3, 4, 5],
+    'Feature2': [2, 3, 4, 5, 6],
+    'Feature3': [5, 4, 3, 2, 1],
+    'Target': [1, 3, 2, 5, 4]
+}
+df = pd.DataFrame(data)
+X = df[['Feature1', 'Feature2', 'Feature3']]
+y = df['Target']
+
+# Initialize Linear Regression model
+model = LinearRegression()
+
+# Initialize RFE with 2 features
+rfe = RFE(estimator=model, n_features_to_select=2)
+rfe.fit(X, y)
+selected_features = X.columns[rfe.support_]
+print(f"Selected Features: {selected_features.tolist()}")
+```
+
+### 🧬 Embedded Methods 🧬
+
+Embedded methods perform feature selection as part of the model training process.
+
+```python
+from sklearn.linear_model import Lasso
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Feature1': [1, 2, 3, 4, 5],
+    'Feature2': [2, 3, 4, 5, 6],
+    'Feature3': [5, 4, 3, 2, 1],
+    'Target': [1, 3, 2, 5, 4]
+}
+df = pd.DataFrame(data)
+X = df[['Feature1', 'Feature2', 'Feature3']]
+y = df['Target']
+
+# Initialize Lasso with alpha=0.1
+lasso = Lasso(alpha=0.1)
+lasso.fit(X, y)
+
+# Select non-zero coefficients
+selected_features = X.columns[lasso.coef_ != 0]
+print(f"Selected Features: {selected_features.tolist()}")
+```
+
+---
+
+## 6. 🔀 Handling Categorical Features 🔀
+
+### 🔡 One-Hot Encoding 🔡
+
+Converts categorical variables into a binary matrix.
+
+```python
+from sklearn.preprocessing import OneHotEncoder
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Color': ['Red', 'Blue', 'Green', 'Blue', 'Red']
+}
+df = pd.DataFrame(data)
+
+# Initialize OneHotEncoder
+encoder = OneHotEncoder(sparse=False)
+encoded = encoder.fit_transform(df[['Color']])
+
+# Create a DataFrame with encoded features
+encoded_df = pd.DataFrame(encoded, columns=encoder.get_feature_names_out(['Color']))
+df = pd.concat([df, encoded_df], axis=1)
+print(df)
+```
+
+### 🔢 Label Encoding 🔢
+
+Assigns a unique integer to each category.
+
+```python
+from sklearn.preprocessing import LabelEncoder
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Size': ['Small', 'Medium', 'Large', 'Medium', 'Small']
+}
+df = pd.DataFrame(data)
+
+# Initialize LabelEncoder
+le = LabelEncoder()
+df['Size_Encoded'] = le.fit_transform(df['Size'])
+print(df)
+```
+
+### 🌀 Target Encoding 🌀
+
+Encodes categorical variables based on the target variable's mean for each category.
+
+```python
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'City': ['New York', 'Los Angeles', 'Chicago', 'New York', 'Chicago'],
+    'Sales': [250, 150, 200, 300, 180]
+}
+df = pd.DataFrame(data)
+
+# Calculate target mean for each category
+target_mean = df.groupby('City')['Sales'].mean()
+
+# Map the target mean to the categories
+df['City_Target_Encoded'] = df['City'].map(target_mean)
+print(df)
+```
+
+---
+
+## 7. 📏 Advanced Feature Scaling 📏
+
+### 🧹 Robust Scaling 🧹
+
+Scales features using statistics that are robust to outliers, such as the median and interquartile range.
+
+```python
+from sklearn.preprocessing import RobustScaler
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Income': [50000, 60000, 80000, 120000, 150000, 300000, 500000]
+}
+df = pd.DataFrame(data)
+
+# Initialize RobustScaler
+scaler = RobustScaler()
+df['Income_Robust_Scaled'] = scaler.fit_transform(df[['Income']])
+print(df)
+```
+
+### 📐 Quantile Transformation 📐
+
+Transforms features to follow a uniform or normal distribution based on quantiles.
+
+```python
+from sklearn.preprocessing import QuantileTransformer
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Age': [22, 25, 47, 52, 46, 56, 55, 60, 62, 70]
+}
+df = pd.DataFrame(data)
+
+# Initialize QuantileTransformer with output_distribution='normal'
+qt = QuantileTransformer(output_distribution='normal')
+df['Age_Quantile_Scaled'] = qt.fit_transform(df[['Age']])
+print(df)
+```
+
+### 🔄 Power Transformation (Box-Cox, Yeo-Johnson) 🔄
+
+Applies a power transformation to make data more Gaussian-like.
+
+```python
+from sklearn.preprocessing import PowerTransformer
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Skewed_Feature': [1, 2, 3, 4, 5, 10, 20, 30, 40, 50]
+}
+df = pd.DataFrame(data)
+
+# Initialize PowerTransformer with 'yeo-johnson' method
+pt = PowerTransformer(method='yeo-johnson')
+df['Skewed_Feature_Transformed'] = pt.fit_transform(df[['Skewed_Feature']])
+print(df)
+```
+
+---
+
+## 8. 🛠️ Implementing Advanced Feature Engineering with Scikit-Learn 🛠️
+
+### 📐 Polynomial Features Example 📐
+
+```python
+from sklearn.preprocessing import PolynomialFeatures
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Feature1': [2, 3, 5, 7],
+    'Feature2': [4, 5, 6, 7]
+}
+df = pd.DataFrame(data)
+
+# Initialize PolynomialFeatures with degree=3
+poly = PolynomialFeatures(degree=3, include_bias=False)
+poly_features = poly.fit_transform(df)
+
+# Create a DataFrame with polynomial features
+poly_df = pd.DataFrame(poly_features, columns=poly.get_feature_names_out())
+print(poly_df)
+```
+
+### 🔗 Interaction Features Example 🔗
+
+```python
+from sklearn.preprocessing import PolynomialFeatures
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Height': [150, 160, 170, 180, 190],
+    'Weight': [50, 60, 70, 80, 90]
+}
+df = pd.DataFrame(data)
+
+# Initialize PolynomialFeatures with degree=2 and interaction_only=True
+poly = PolynomialFeatures(degree=2, interaction_only=True, include_bias=False)
+interaction_features = poly.fit_transform(df)
+
+# Create a DataFrame with interaction features
+interaction_df = pd.DataFrame(interaction_features, columns=poly.get_feature_names_out())
+print(interaction_df)
+```
+
+### 🗑️ Feature Selection Example 🗑️
+
+```python
+from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.datasets import load_iris
+import pandas as pd
+
+# Load Iris dataset
+iris = load_iris()
+X = pd.DataFrame(iris.data, columns=iris.feature_names)
+y = pd.Series(iris.target, name='Species')
+
+# Select top 2 features based on ANOVA F-value
+selector = SelectKBest(score_func=f_classif, k=2)
+X_new = selector.fit_transform(X, y)
+selected_features = X.columns[selector.get_support()]
+print(f"Selected Features: {selected_features.tolist()}")
+```
+
+### 🔀 Handling Categorical Features Example 🔀
+
+```python
+from sklearn.preprocessing import OneHotEncoder
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Department': ['Sales', 'Engineering', 'HR', 'Engineering', 'Sales']
+}
+df = pd.DataFrame(data)
+
+# Initialize OneHotEncoder
+encoder = OneHotEncoder(sparse=False, drop='first')
+encoded = encoder.fit_transform(df[['Department']])
+
+# Create a DataFrame with encoded features
+encoded_df = pd.DataFrame(encoded, columns=encoder.get_feature_names_out(['Department']))
+df = pd.concat([df, encoded_df], axis=1)
+print(df)
+```
+
+### 📏 Advanced Feature Scaling Example 📏
+
+```python
+from sklearn.preprocessing import RobustScaler
+import pandas as pd
+
+# Sample DataFrame with outliers
+data = {
+    'Salary': [50000, 60000, 80000, 120000, 150000, 300000, 500000]
+}
+df = pd.DataFrame(data)
+
+# Initialize RobustScaler
+scaler = RobustScaler()
+df['Salary_Robust_Scaled'] = scaler.fit_transform(df[['Salary']])
+print(df)
+```
+
+---
+
+## 9. 🛠️📈 Example Project: Enhancing Model Performance with Feature Engineering 🛠️📈
+
+Let's apply today's concepts by enhancing a regression model's performance through advanced feature engineering techniques. We'll use the **California Housing Dataset** to predict median house values.
 
 ### 📋 Project Overview
 
-**Objective**: Develop a sentiment analysis model using the IMDb movie reviews dataset to classify reviews as positive or negative.
+**Objective**: Improve the predictive performance of a regression model by creating new features, selecting the most relevant ones, handling categorical variables effectively, and applying advanced scaling techniques.
 
-**Tools**: Python, NLTK, SpaCy, scikit-learn, Hugging Face Transformers
+**Tools**: Python, Scikit-Learn, pandas, Matplotlib, Seaborn
 
 ### 📝 Step-by-Step Guide
 
 #### 1. Load and Explore the Dataset
 
 ```python
+from sklearn.datasets import fetch_california_housing
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Load dataset
-df = pd.read_csv('IMDB_Dataset.csv')  # Ensure the dataset is downloaded and placed in your working directory
+# Load California Housing dataset
+housing = fetch_california_housing()
+X = pd.DataFrame(housing.data, columns=housing.feature_names)
+y = pd.Series(housing.target, name='MedHouseVal')
+
+# Combine features and target
+df = pd.concat([X, y], axis=1)
 print(df.head())
+
+# Visualize relationships
+sns.pairplot(df.sample(500), x_vars=housing.feature_names, y_vars='MedHouseVal', height=2.5)
+plt.show()
 ```
 
-#### 2. Text Preprocessing
-
-```python
-import re
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-from nltk.tokenize import word_tokenize
-
-# Initialize lemmatizer and stop words
-lemmatizer = WordNetLemmatizer()
-stop_words = set(stopwords.words('english'))
-
-def preprocess(text):
-    # Remove HTML tags
-    text = re.sub(r'<.*?>', '', text)
-    # Remove special characters and digits
-    text = re.sub(r'[^A-Za-z\s]', '', text)
-    # Convert to lowercase
-    text = text.lower()
-    # Tokenize
-    tokens = word_tokenize(text)
-    # Remove stop words and lemmatize
-    tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words]
-    return ' '.join(tokens)
-
-# Apply preprocessing
-df['Cleaned_Review'] = df['review'].apply(preprocess)
-print(df.head())
-```
-
-#### 3. Feature Extraction
-
-```python
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-vectorizer = TfidfVectorizer(max_features=5000)
-X = vectorizer.fit_transform(df['Cleaned_Review'])
-y = df['sentiment'].map({'positive':1, 'negative':0})
-```
-
-#### 4. Train-Test Split
+#### 2. Data Preprocessing
 
 ```python
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
+# Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize StandardScaler
+scaler = StandardScaler()
+
+# Fit and transform the training data
+X_train_scaled = scaler.fit_transform(X_train)
+
+# Transform the testing data
+X_test_scaled = scaler.transform(X_test)
 ```
 
-#### 5. Build and Train the Model
+#### 3. Feature Creation
 
 ```python
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.preprocessing import PolynomialFeatures
 
-model = LogisticRegression()
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
+# Initialize PolynomialFeatures with degree=2
+poly = PolynomialFeatures(degree=2, include_bias=False)
+X_train_poly = poly.fit_transform(X_train_scaled)
+X_test_poly = poly.transform(X_test_scaled)
 
-# Evaluate
-print("Accuracy:", accuracy_score(y_test, y_pred))
-print(classification_report(y_test, y_pred))
+# Create a DataFrame with polynomial features
+poly_features = poly.get_feature_names_out()
+X_train_poly_df = pd.DataFrame(X_train_poly, columns=poly_features)
+X_test_poly_df = pd.DataFrame(X_test_poly, columns=poly_features)
+
+print(X_train_poly_df.head())
 ```
 
-#### 6. Using a Pre-trained Transformer Model
+#### 4. Feature Selection
 
 ```python
-from transformers import pipeline
+from sklearn.feature_selection import SelectKBest, f_regression
 
-# Initialize sentiment analysis pipeline
-sentiment_pipeline = pipeline("sentiment-analysis")
+# Initialize SelectKBest with f_regression
+selector = SelectKBest(score_func=f_regression, k=20)
+X_train_selected = selector.fit_transform(X_train_poly_df, y_train)
+X_test_selected = selector.transform(X_test_poly_df)
 
-# Analyze a sample review
-sample_review = "I absolutely loved this movie! The performances were outstanding."
-result = sentiment_pipeline(sample_review)
-print(result)
+# Get selected feature names
+selected_features = poly_features[selector.get_support()]
+print(f"Selected Features: {selected_features.tolist()}")
 ```
+
+#### 5. Handling Categorical Features
+
+*Note: The California Housing Dataset does not contain categorical features. For demonstration, we'll simulate a categorical feature.*
+
+```python
+import numpy as np
+
+# Simulate a categorical feature
+df_train = pd.DataFrame(X_train_selected, columns=selected_features)
+df_train['OceanProximity'] = np.random.choice(['NEAR BAY', 'INLAND', 'NEAR OCEAN', 'ISLAND', 'NEAR WATER'], size=df_train.shape[0])
+
+df_test = pd.DataFrame(X_test_selected, columns=selected_features)
+df_test['OceanProximity'] = np.random.choice(['NEAR BAY', 'INLAND', 'NEAR OCEAN', 'ISLAND', 'NEAR WATER'], size=df_test.shape[0])
+
+# Initialize OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder
+
+encoder = OneHotEncoder(sparse=False, drop='first')
+encoded_train = encoder.fit_transform(df_train[['OceanProximity']])
+encoded_test = encoder.transform(df_test[['OceanProximity']])
+
+# Create DataFrame with encoded features
+encoded_train_df = pd.DataFrame(encoded_train, columns=encoder.get_feature_names_out(['OceanProximity']))
+encoded_test_df = pd.DataFrame(encoded_test, columns=encoder.get_feature_names_out(['OceanProximity']))
+
+# Concatenate with numerical features
+X_train_final = pd.concat([df_train.drop('OceanProximity', axis=1), encoded_train_df], axis=1)
+X_test_final = pd.concat([df_test.drop('OceanProximity', axis=1), encoded_test_df], axis=1)
+
+print(X_train_final.head())
+```
+
+#### 6. Advanced Feature Scaling
+
+```python
+from sklearn.preprocessing import RobustScaler
+
+# Initialize RobustScaler
+robust_scaler = RobustScaler()
+
+# Fit and transform the training data
+X_train_final_scaled = robust_scaler.fit_transform(X_train_final)
+
+# Transform the testing data
+X_test_final_scaled = robust_scaler.transform(X_test_final)
+```
+
+#### 7. Building and Training the Model
+
+```python
+from sklearn.linear_model import Ridge
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Initialize Ridge Regression with alpha=1.0
+ridge = Ridge(alpha=1.0)
+
+# Train the model
+ridge.fit(X_train_final_scaled, y_train)
+
+# Make predictions
+y_pred = ridge.predict(X_test_final_scaled)
+```
+
+#### 8. Evaluating Model Performance
+
+```python
+# Calculate evaluation metrics
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Ridge Regression MSE: {mse:.4f}")
+print(f"Ridge Regression RMSE: {rmse:.4f}")
+print(f"Ridge Regression MAE: {mae:.4f}")
+print(f"Ridge Regression R²: {r2:.4f}")
+```
+
+### 📊 Results and Insights
+
+After performing advanced feature engineering, the Ridge Regression model exhibits improved performance metrics compared to the baseline model. The addition of polynomial and interaction features, along with feature selection and robust scaling, has enhanced the model's ability to capture complex relationships in the data.
 
 ---
 
-## 8. 🚀🎓 Conclusion and Next Steps 🚀🎓
+## 10. 🚀🎓 Conclusion and Next Steps 🚀🎓
 
-Congratulations on completing **Day 7**! Today, you delved into the fascinating world of Natural Language Processing (NLP), mastering text preprocessing techniques, feature extraction methods, sentiment analysis, and leveraging advanced language models with Transformers. Additionally, you built a sentiment analysis model to classify movie reviews, reinforcing your understanding through practical application.
+Congratulations on completing **Day 6** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, you mastered **Advanced Feature Engineering**, learning how to create new features, select the most relevant ones, handle categorical data effectively, and apply advanced scaling techniques. By implementing these strategies, you enhanced your model's performance and gained deeper insights into your data.
 
 ### 🔮 What’s Next?
 
-- **Day 8: Big Data Tools**: Introduction to Hadoop, Spark, and other big data technologies.
-- **Day 9: Model Deployment and Serving**: Learn advanced deployment strategies for machine learning models.
-- **Day 10: Time Series Analysis**: Explore techniques for analyzing and forecasting time-dependent data.
-- **Ongoing Projects**: Continue developing projects to apply your skills in real-world scenarios, enhancing both your portfolio and practical understanding.
+- **Day 7: Ensemble Methods**: Explore powerful ensemble techniques like Bagging, Boosting, and Stacking to improve model performance.
+- **Day 8: Model Deployment with Scikit-Learn**: Learn how to deploy your machine learning models into production environments.
+- **Day 9: Time Series Analysis**: Delve into techniques for analyzing and forecasting time-dependent data.
+- **Day 10: Advanced Model Interpretability**: Understand methods to interpret and explain your machine learning models.
+- **Days 11-90: Specialized Topics and Projects**: Engage in specialized topics and comprehensive projects to solidify your expertise.
 
 ### 📝 Tips for Success
 
-- **Practice Regularly**: Consistently apply what you've learned through exercises and projects to reinforce your knowledge.
-- **Engage with the Community**: Participate in forums, attend webinars, and collaborate with peers to broaden your perspective and solve challenges together.
-- **Stay Curious**: Continuously explore new libraries, tools, and methodologies to stay ahead in the ever-evolving field of data science.
-- **Document Your Work**: Keep detailed notes and document your projects to track your progress and facilitate future learning.
+- **Practice Regularly**: Apply the concepts through exercises and real-world projects to reinforce your knowledge.
+- **Engage with the Community**: Join forums, attend webinars, and collaborate with peers to broaden your perspective and solve challenges together.
+- **Stay Curious**: Continuously explore new features and updates in Scikit-Learn and other machine learning libraries.
+- **Document Your Work**: Keep a detailed journal of your learning progress and projects to track your growth and facilitate future learning.
 
-Keep up the outstanding work, and stay motivated as you continue your Data Science journey! 🚀📚
+Keep up the great work, and stay motivated as you continue your journey to mastering Scikit-Learn and machine learning! 🚀📚
 
----
-
-<div style="text-align: center;">
-  <p>✨ Keep Learning, Keep Growing! ✨</p>
-  <p>🚀 Your Data Science Journey Continues 🚀</p>
-  <p>📚 Happy Coding! 🎉</p>
-</div>
 
 ---
 
-# 📜 Summary of Day 7 📜
+# 📜 Summary of Day 6 📜
 
-- **🧠 Introduction to Natural Language Processing (NLP)**: Gained a foundational understanding of NLP concepts and applications.
-- **✂️ Text Preprocessing**: Learned techniques for cleaning, tokenizing, removing stop words, and lemmatizing text data.
-- **📊 Feature Extraction for Text Data**: Explored Bag of Words, TF-IDF, and Word Embeddings for converting text into numerical representations.
-- **🔍 Sentiment Analysis**: Built and evaluated a sentiment analysis model to classify movie reviews.
-- **🧩 Language Models and Transformers**: Understood transformer architectures and utilized pre-trained models with Hugging Face for NLP tasks.
-- **🛠️📈 Example Project**: Developed a sentiment analysis project on movie reviews, integrating preprocessing, feature extraction, model building, and evaluation.
+- **🧠 Introduction to Feature Engineering**: Gained a foundational understanding of feature engineering and its significance in machine learning.
+- **🛠️ Feature Creation Techniques**: Explored methods like Polynomial Features, Interaction Features, Binning, and Feature Transformation to create new, meaningful features.
+- **🗑️ Feature Selection Techniques**: Learned about Filter, Wrapper, and Embedded methods to select the most relevant features for your models.
+- **🔀 Handling Categorical Features**: Mastered encoding techniques including One-Hot Encoding, Label Encoding, and Target Encoding to effectively handle categorical data.
+- **📏 Advanced Feature Scaling**: Applied advanced scaling techniques such as Robust Scaling, Quantile Transformation, and Power Transformation to prepare data for modeling.
+- **🛠️ Implementing Advanced Feature Engineering with Scikit-Learn**: Practiced building and transforming features using Scikit-Learn's preprocessing tools.
+- **🛠️📈 Example Project: Enhancing Model Performance with Feature Engineering**: Developed a comprehensive regression pipeline to predict housing prices, incorporating advanced feature creation, selection, handling of categorical variables, and scaling to optimize model performance.
 
-This structured approach ensures that you build a robust foundation in Natural Language Processing, equipping you with the skills needed to analyze and derive insights from textual data. Continue experimenting with the provided tools and don't hesitate to delve into additional resources to deepen your expertise.
+This structured approach ensures that you build a strong foundation in advanced feature engineering techniques, preparing you for more sophisticated machine learning tasks in the upcoming days. Continue experimenting with the provided code examples, and don't hesitate to explore additional resources to deepen your understanding.
 
 **Happy Learning! 🎉**
