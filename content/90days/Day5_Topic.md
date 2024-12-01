@@ -1,352 +1,484 @@
 <div style="text-align: center;">
-  <h1>🗄️ Day 5: Working with Databases – SQL, PostgreSQL, and Python Integration 🐍💾</h1>
-  <p>Efficient Data Storage and Retrieval for Your Data Science Projects!</p>
+  <h1>🚀 Becoming a Scikit-Learn Boss in 90 Days: Day 5 – Unsupervised Learning: Clustering and Dimensionality Reduction 🧩📉</h1>
+  <p>Unlock the Power of Unsupervised Techniques to Discover Hidden Patterns in Your Data!</p>
 </div>
 
 ---
 
 ## 📑 Table of Contents
 
-1. [📅 Review of Day 4](#review-of-day-4)
-2. [🗄️ Working with Databases](#working-with-databases-🗄️)
-    - [🔍 Introduction to SQL](#introduction-to-sql-🔍)
-    - [💾 PostgreSQL Basics](#postgresql-basics-💾)
-    - [🐍 Integrating Python with Databases](#integrating-python-with-databases-🐍)
-        - [📚 Using SQLAlchemy](#using-sqlalchemy-📚)
-        - [📈 Querying with Pandas](#querying-with-pandas-📈)
-3. [🛠️📈 Example Project: Database Integration](#example-project-database-integration-🛠️📈)
-4. [🚀🎓 Conclusion and Next Steps](#conclusion-and-next-steps-🚀🎓)
-5. [📜 Summary of Day 5 📜](#summary-of-day-5-📜)
+1. [🌟 Welcome to Day 5](#welcome-to-day-5)
+2. [🔍 Review of Day 4 📜](#review-of-day-4-📜)
+3. [🧠 Introduction to Unsupervised Learning 🧠](#introduction-to-unsupervised-learning-🧠)
+    - [📚 What is Unsupervised Learning?](#what-is-unsupervised-learning-📚)
+    - [🔍 Types of Unsupervised Learning Problems](#types-of-unsupervised-learning-problems-🔍)
+4. [📊 Clustering Algorithms 📊](#clustering-algorithms-📊)
+    - [🔵 K-Means Clustering](#k-means-clustering-🔵)
+    - [🌳 Hierarchical Clustering](#hierarchical-clustering-🌳)
+    - [🌀 DBSCAN](#dbscan-🌀)
+5. [📉 Dimensionality Reduction Techniques 📉](#dimensionality-reduction-techniques-📉)
+    - [📈 Principal Component Analysis (PCA)](#principal-component-analysis-pca-📈)
+    - [🕵️‍♂️ t-Distributed Stochastic Neighbor Embedding (t-SNE)](#t-distributed-stochastic-neighbor-embedding-tsne-🕵️‍♂️)
+6. [🛠️ Implementing Clustering and Dimensionality Reduction with Scikit-Learn 🛠️](#implementing-clustering-and-dimensionality-reduction-with-scikit-learn-🛠️)
+    - [🔵 K-Means Example 🔵](#k-means-example-🔵)
+    - [🌳 Hierarchical Clustering Example 🌳](#hierarchical-clustering-example-🌳)
+    - [🌀 DBSCAN Example 🌀](#dbscan-example-🌀)
+    - [📈 PCA Example 📈](#pca-example-📈)
+    - [🕵️‍♂️ t-SNE Example 🕵️‍♂️](#tsne-example-🕵️‍♂️)
+7. [📈 Model Evaluation for Unsupervised Learning 📈](#model-evaluation-for-unsupervised-learning-📈)
+    - [🔍 Silhouette Score](#silhouette-score-🔍)
+    - [📏 Davies-Bouldin Index](#davies-bouldin-index-📏)
+    - [📐 Elbow Method](#elbow-method-📐)
+8. [🛠️📈 Example Project: Customer Segmentation 🛠️📈](#example-project-customer-segmentation-🛠️📈)
+    - [📋 Project Overview](#project-overview-📋)
+    - [📝 Step-by-Step Guide](#step-by-step-guide-📝)
+        - [1. Load and Explore the Dataset](#1-load-and-explore-the-dataset)
+        - [2. Data Preprocessing](#2-data-preprocessing)
+        - [3. Clustering with K-Means](#3-clustering-with-k-means)
+        - [4. Clustering with DBSCAN](#4-clustering-with-dbscan)
+        - [5. Dimensionality Reduction with PCA](#5-dimensionality-reduction-with-pca)
+        - [6. Visualization with t-SNE](#6-visualization-with-tsne)
+        - [7. Evaluating Clustering Performance](#7-evaluating-clustering-performance)
+    - [📊 Results and Insights](#results-and-insights-📊)
+9. [🚀🎓 Conclusion and Next Steps 🚀🎓](#conclusion-and-next-steps-🚀🎓)
+10. [📜 Summary of Day 5 📜](#summary-of-day-5-📜)
 
 ---
 
-## 1. 📅 Review of Day 4
+## 1. 🌟 Welcome to Day 5
 
-Before moving forward, let's recap the key concepts we covered on Day 4:
-
-- **Advanced Data Visualization Techniques**: Mastered the use of Plotly for interactive visualizations, explored advanced features of Seaborn, and built interactive dashboards with Plotly Dash.
-- **Introduction to Tableau**: Learned how to connect data, build visualizations, and create comprehensive dashboards using Tableau.
-- **Example Project: Advanced Data Visualization**: Applied advanced visualization techniques to the Iris dataset, creating interactive and insightful visualizations and dashboards.
-
-With this foundation, we're ready to dive into the world of databases, essential for storing and managing large datasets efficiently.
+Welcome to **Day 5** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, we'll dive into **Unsupervised Learning**, focusing on **Clustering** and **Dimensionality Reduction** techniques. These methods are essential for discovering hidden patterns and reducing the complexity of your data, enabling more insightful analyses and efficient modeling.
 
 ---
 
-## 2. 🗄️ Working with Databases
+## 2. 🔍 Review of Day 4 📜
 
-Databases are integral to data storage, management, and retrieval. Understanding how to interact with databases is crucial for any data scientist.
+Before diving into today's topics, let's briefly recap what we covered yesterday:
 
-### 🔍 Introduction to SQL
+- **Model Evaluation and Selection**: Learned about cross-validation, hyperparameter tuning, and strategies to select the best model.
+- **Bias-Variance Tradeoff**: Understood the balance between bias and variance to improve model generalization.
+- **Model Validation Techniques**: Explored Train-Test Split, K-Fold Cross-Validation, Stratified K-Fold, and Leave-One-Out Cross-Validation.
+- **Hyperparameter Tuning**: Mastered Grid Search, Randomized Search, and Bayesian Optimization for tuning model parameters.
+- **Comparing Models**: Compared different regression models using performance metrics and visualizations.
+- **Example Project**: Developed a regression pipeline to predict housing prices, evaluated multiple models, and optimized their performance through cross-validation and hyperparameter tuning.
 
-**SQL (Structured Query Language)** is the standard language for interacting with relational databases. It allows you to perform various operations such as querying, updating, and managing data.
+With this foundation, we're ready to explore unsupervised techniques that will help you uncover hidden structures in your data.
 
-```sql
--- Creating a new table
-CREATE TABLE Employees (
-    EmployeeID INT PRIMARY KEY,
-    Name VARCHAR(50),
-    Age INT,
-    Salary DECIMAL(10, 2)
-);
+---
 
--- Inserting data into the table
-INSERT INTO Employees (EmployeeID, Name, Age, Salary)
-VALUES (1, 'Alice', 30, 70000),
-       (2, 'Bob', 25, 50000),
-       (3, 'Charlie', 35, 80000);
+## 3. 🧠 Introduction to Unsupervised Learning 🧠
 
--- Querying data from the table
-SELECT * FROM Employees;
+### 📚 What is Unsupervised Learning? 📚
 
--- Updating data in the table
-UPDATE Employees
-SET Salary = 75000
-WHERE EmployeeID = 1;
+**Unsupervised Learning** is a type of machine learning where the model is trained on data without explicit labels. The goal is to identify underlying patterns, groupings, or structures within the data. Unlike supervised learning, which predicts outcomes based on labeled data, unsupervised learning discovers the inherent structure of the input data.
 
--- Deleting data from the table
-DELETE FROM Employees
-WHERE EmployeeID = 2;
-```
+### 🔍 Types of Unsupervised Learning Problems 🔍
 
-**Key Concepts:**
+- **Clustering**: Grouping similar data points together based on feature similarities.
+- **Dimensionality Reduction**: Reducing the number of features in a dataset while preserving important information.
+- **Anomaly Detection**: Identifying unusual data points that do not conform to the expected pattern.
+- **Association Rule Learning**: Discovering interesting relations between variables in large databases.
 
-- **CRUD Operations**: Create, Read, Update, Delete.
-- **Joins**: Combine rows from two or more tables based on related columns.
-- **Aggregations**: Perform calculations on data, such as SUM, AVG, COUNT.
+---
 
-### 💾 PostgreSQL Basics
+## 4. 📊 Clustering Algorithms 📊
 
-**PostgreSQL** is a powerful, open-source relational database system. It supports advanced features and is highly extensible.
+Clustering algorithms aim to partition data into distinct groups where data points in the same group are more similar to each other than to those in other groups.
 
-```sql
--- Connecting to PostgreSQL
-\c your_database_name
+### 🔵 K-Means Clustering 🔵
 
--- Creating a new database
-CREATE DATABASE DataScienceDB;
+A popular partitioning method that divides data into K clusters by minimizing the variance within each cluster.
 
--- Creating a new schema
-CREATE SCHEMA Analysis;
+**Key Features:**
 
--- Creating a table within the schema
-CREATE TABLE Analysis.Sales (
-    SaleID SERIAL PRIMARY KEY,
-    Product VARCHAR(50),
-    Quantity INT,
-    Price DECIMAL(10, 2),
-    SaleDate DATE
-);
+- Simple and efficient for large datasets.
+- Assumes spherical cluster shapes.
+- Requires specifying the number of clusters (K) in advance.
 
--- Inserting data into the table
-INSERT INTO Analysis.Sales (Product, Quantity, Price, SaleDate)
-VALUES ('Laptop', 5, 1200.00, '2024-01-15'),
-       ('Smartphone', 10, 800.00, '2024-01-17'),
-       ('Tablet', 7, 500.00, '2024-01-20');
+### 🌳 Hierarchical Clustering 🌳
 
--- Querying data with conditions
-SELECT * FROM Analysis.Sales
-WHERE Quantity > 5;
-```
+Builds a hierarchy of clusters either through agglomerative (bottom-up) or divisive (top-down) approaches.
 
-**Advantages of PostgreSQL:**
+**Key Features:**
 
-- **ACID Compliance**: Ensures reliable transactions.
-- **Extensibility**: Supports custom data types, operators, and functions.
-- **Community Support**: Extensive documentation and active community.
+- Does not require specifying the number of clusters beforehand.
+- Can capture nested clusters.
+- Computationally intensive for large datasets.
 
-### 🐍 Integrating Python with Databases
+### 🌀 DBSCAN 🌀
 
-Python offers several libraries to interact with databases, enabling seamless data manipulation and analysis.
+Density-Based Spatial Clustering of Applications with Noise (DBSCAN) groups together points that are closely packed and marks points in low-density regions as outliers.
 
-#### 📚 Using SQLAlchemy
+**Key Features:**
 
-**SQLAlchemy** is a powerful ORM (Object-Relational Mapping) library that facilitates database interactions in Python.
+- Identifies clusters of arbitrary shapes.
+- Does not require specifying the number of clusters.
+- Handles noise effectively.
+
+---
+
+## 5. 📉 Dimensionality Reduction Techniques 📉
+
+Dimensionality reduction reduces the number of input variables in a dataset, enhancing computational efficiency and mitigating the curse of dimensionality.
+
+### 📈 Principal Component Analysis (PCA) 📈
+
+A linear technique that transforms data into a set of orthogonal components, capturing the maximum variance in the data.
+
+**Key Features:**
+
+- Reduces dimensionality while preserving variance.
+- Helps in visualizing high-dimensional data.
+- Assumes linear relationships between features.
+
+### 🕵️‍♂️ t-Distributed Stochastic Neighbor Embedding (t-SNE) 🕵️‍♂️
+
+A non-linear technique primarily used for data visualization by reducing data to two or three dimensions.
+
+**Key Features:**
+
+- Captures complex relationships and cluster structures.
+- Computationally intensive for large datasets.
+- Primarily used for visualization, not feature reduction for modeling.
+
+---
+
+## 6. 🛠️ Implementing Clustering and Dimensionality Reduction with Scikit-Learn 🛠️
+
+### 🔵 K-Means Example 🔵
 
 ```python
-from sqlalchemy import create_engine, Column, Integer, String, Float, Date
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-# Define the database URL
-DATABASE_URL = "postgresql://username:password@localhost:5432/DataScienceDB"
+# Assuming X is your feature set
+kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans.fit(X)
+labels = kmeans.labels_
 
-# Create an engine
-engine = create_engine(DATABASE_URL)
-
-# Define the base class
-Base = declarative_base()
-
-# Define a model
-class Employee(Base):
-    __tablename__ = 'employees'
-    EmployeeID = Column(Integer, primary_key=True)
-    Name = Column(String)
-    Age = Column(Integer)
-    Salary = Column(Float)
-
-# Create the table
-Base.metadata.create_all(engine)
-
-# Create a session
-Session = sessionmaker(bind=engine)
-session = Session()
-
-# Adding a new employee
-new_employee = Employee(Name='David', Age=28, Salary=60000)
-session.add(new_employee)
-session.commit()
-
-# Querying employees
-employees = session.query(Employee).filter(Employee.Age > 25).all()
-for emp in employees:
-    print(emp.Name, emp.Age, emp.Salary)
+# Visualize the clusters
+sns.scatterplot(x=X.iloc[:, 0], y=X.iloc[:, 1], hue=labels, palette='viridis')
+plt.title('K-Means Clustering')
+plt.show()
 ```
 
-#### 📈 Querying with Pandas
-
-**Pandas** provides convenient functions to execute SQL queries and load data directly into DataFrames.
+### 🌳 Hierarchical Clustering Example 🌳
 
 ```python
-import pandas as pd
-from sqlalchemy import create_engine
+from sklearn.cluster import AgglomerativeClustering
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-# Define the database URL
-DATABASE_URL = "postgresql://username:password@localhost:5432/DataScienceDB"
+# Initialize the model
+hierarchical = AgglomerativeClustering(n_clusters=3)
+labels = hierarchical.fit_predict(X)
 
-# Create an engine
-engine = create_engine(DATABASE_URL)
-
-# Writing a SQL query
-query = "SELECT * FROM Analysis.Sales WHERE Quantity > 5;"
-
-# Loading data into a DataFrame
-df_sales = pd.read_sql(query, engine)
-print(df_sales.head())
-
-# Performing data analysis
-average_price = df_sales['Price'].mean()
-print(f"Average Price: {average_price}")
+# Visualize the clusters
+sns.scatterplot(x=X.iloc[:, 0], y=X.iloc[:, 1], hue=labels, palette='magma')
+plt.title('Hierarchical Clustering')
+plt.show()
 ```
 
-**Advantages:**
+### 🌀 DBSCAN Example 🌀
 
-- **Seamless Integration**: Combine SQL queries with Pandas data manipulation.
-- **Efficiency**: Handle large datasets efficiently with optimized database operations.
-- **Flexibility**: Perform complex analyses by leveraging the strengths of both SQL and Python.
+```python
+from sklearn.cluster import DBSCAN
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Initialize the model
+dbscan = DBSCAN(eps=0.5, min_samples=5)
+labels = dbscan.fit_predict(X)
+
+# Visualize the clusters
+sns.scatterplot(x=X.iloc[:, 0], y=X.iloc[:, 1], hue=labels, palette='coolwarm')
+plt.title('DBSCAN Clustering')
+plt.show()
+```
+
+### 📈 PCA Example 📈
+
+```python
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Initialize PCA to reduce to 2 components
+pca = PCA(n_components=2)
+principal_components = pca.fit_transform(X)
+
+# Create a DataFrame for visualization
+pca_df = pd.DataFrame(data=principal_components, columns=['PC1', 'PC2'])
+pca_df['Cluster'] = labels  # Assuming clustering labels are available
+
+# Visualize the PCA
+sns.scatterplot(x='PC1', y='PC2', hue='Cluster', data=pca_df, palette='Set2')
+plt.title('PCA of Dataset')
+plt.show()
+```
+
+### 🕵️‍♂️ t-SNE Example 🕵️‍♂️
+
+```python
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Initialize t-SNE
+tsne = TSNE(n_components=2, perplexity=30, random_state=42)
+tsne_results = tsne.fit_transform(X)
+
+# Create a DataFrame for visualization
+tsne_df = pd.DataFrame(data=tsne_results, columns=['TSNE1', 'TSNE2'])
+tsne_df['Cluster'] = labels  # Assuming clustering labels are available
+
+# Visualize t-SNE
+sns.scatterplot(x='TSNE1', y='TSNE2', hue='Cluster', data=tsne_df, palette='deep')
+plt.title('t-SNE of Dataset')
+plt.show()
+```
 
 ---
 
-## 3. 🛠️📈 Example Project: Database Integration
+## 7. 📈 Model Evaluation for Unsupervised Learning 📈
 
-Let's apply today's concepts by integrating a PostgreSQL database with Python to manage and analyze sales data.
+Evaluating unsupervised models can be challenging since there are no ground truth labels. However, several metrics help assess the quality of clustering and dimensionality reduction.
+
+### 🔍 Silhouette Score 🔍
+
+Measures how similar an object is to its own cluster compared to other clusters. Values range from -1 to 1, where higher values indicate better clustering.
+
+```python
+from sklearn.metrics import silhouette_score
+
+sil_score = silhouette_score(X, labels)
+print(f"Silhouette Score: {sil_score:.2f}")
+```
+
+### 📏 Davies-Bouldin Index 📏
+
+Calculates the average similarity ratio of each cluster with its most similar cluster. Lower values indicate better clustering.
+
+```python
+from sklearn.metrics import davies_bouldin_score
+
+db_score = davies_bouldin_score(X, labels)
+print(f"Davies-Bouldin Index: {db_score:.2f}")
+```
+
+### 📐 Elbow Method 📐
+
+Helps determine the optimal number of clusters by plotting the sum of squared distances (inertia) against the number of clusters.
+
+```python
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+
+inertia = []
+K = range(1, 10)
+for k in K:
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(X)
+    inertia.append(kmeans.inertia_)
+
+# Plot the elbow
+plt.figure(figsize=(8, 4))
+plt.plot(K, inertia, 'bo-')
+plt.xlabel('Number of Clusters')
+plt.ylabel('Inertia')
+plt.title('Elbow Method for Optimal K')
+plt.show()
+```
+
+---
+
+## 8. 🛠️📈 Example Project: Customer Segmentation 🛠️📈
+
+Let's apply today's concepts by building a **Customer Segmentation** model using clustering and dimensionality reduction techniques. This project will help businesses understand different customer groups to tailor marketing strategies effectively.
 
 ### 📋 Project Overview
 
-**Objective**: Develop a Python application that connects to a PostgreSQL database, performs CRUD operations, and analyzes sales data.
+**Objective**: Segment customers based on their purchasing behavior and demographics to identify distinct customer groups for targeted marketing.
 
-**Tools**: Python, SQLAlchemy, Pandas, PostgreSQL
+**Tools**: Python, Scikit-Learn, pandas, Matplotlib, Seaborn
 
 ### 📝 Step-by-Step Guide
 
-#### 1. Set Up PostgreSQL Database
+#### 1. Load and Explore the Dataset
 
-```sql
--- Creating the Sales table
-CREATE TABLE Analysis.Sales (
-    SaleID SERIAL PRIMARY KEY,
-    Product VARCHAR(50),
-    Quantity INT,
-    Price DECIMAL(10, 2),
-    SaleDate DATE
-);
-
--- Inserting sample data
-INSERT INTO Analysis.Sales (Product, Quantity, Price, SaleDate)
-VALUES 
-('Laptop', 5, 1200.00, '2024-01-15'),
-('Smartphone', 10, 800.00, '2024-01-17'),
-('Tablet', 7, 500.00, '2024-01-20');
-```
-
-#### 2. Connect Python to PostgreSQL Using SQLAlchemy
-
-```python
-from sqlalchemy import create_engine, Column, Integer, String, Float, Date
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
-# Database credentials
-DATABASE_URL = "postgresql://username:password@localhost:5432/DataScienceDB"
-
-# Create engine
-engine = create_engine(DATABASE_URL)
-
-# Define base
-Base = declarative_base()
-
-# Define Sales model
-class Sales(Base):
-    __tablename__ = 'Sales'
-    SaleID = Column(Integer, primary_key=True)
-    Product = Column(String)
-    Quantity = Column(Integer)
-    Price = Column(Float)
-    SaleDate = Column(Date)
-
-# Create table
-Base.metadata.create_all(engine)
-
-# Create session
-Session = sessionmaker(bind=engine)
-session = Session()
-```
-
-#### 3. Perform CRUD Operations
-
-```python
-# Create a new sale
-new_sale = Sales(Product='Monitor', Quantity=3, Price=300.00, SaleDate='2024-01-22')
-session.add(new_sale)
-session.commit()
-
-# Read sales data
-sales = session.query(Sales).all()
-for sale in sales:
-    print(sale.Product, sale.Quantity, sale.Price, sale.SaleDate)
-
-# Update a sale
-sale_to_update = session.query(Sales).filter(Sales.Product == 'Tablet').first()
-sale_to_update.Price = 550.00
-session.commit()
-
-# Delete a sale
-sale_to_delete = session.query(Sales).filter(Sales.Product == 'Laptop').first()
-session.delete(sale_to_delete)
-session.commit()
-```
-
-#### 4. Analyze Sales Data with Pandas
+We'll use the **Mall Customers** dataset, which contains information about customers' annual income and spending scores.
 
 ```python
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Create an engine
-engine = create_engine(DATABASE_URL)
+# Load the dataset
+df = pd.read_csv('Mall_Customers.csv')
+print(df.head())
 
-# Query data into DataFrame
-df_sales = pd.read_sql("SELECT * FROM Analysis.Sales;", engine)
-print(df_sales.head())
+# Visualize the data
+sns.scatterplot(x='Annual Income (k$)', y='Spending Score (1-100)', data=df, hue='Gender', palette='Set1')
+plt.title('Annual Income vs Spending Score')
+plt.show()
+```
 
-# Calculate total revenue
-df_sales['Revenue'] = df_sales['Quantity'] * df_sales['Price']
-total_revenue = df_sales['Revenue'].sum()
-print(f"Total Revenue: {total_revenue}")
+#### 2. Data Preprocessing
 
-# Group by Product
-product_sales = df_sales.groupby('Product')['Revenue'].sum().reset_index()
-print(product_sales)
+```python
+from sklearn.preprocessing import StandardScaler
+
+# Select relevant features
+X = df[['Annual Income (k$)', 'Spending Score (1-100)']].values
+
+# Feature Scaling
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+```
+
+#### 3. Clustering with K-Means
+
+```python
+from sklearn.cluster import KMeans
+
+# Determine optimal K using Elbow Method
+inertia = []
+K = range(1, 10)
+for k in K:
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(X_scaled)
+    inertia.append(kmeans.inertia_)
+
+# Plot the elbow
+plt.figure(figsize=(8, 4))
+plt.plot(K, inertia, 'bo-')
+plt.xlabel('Number of Clusters')
+plt.ylabel('Inertia')
+plt.title('Elbow Method for Optimal K')
+plt.show()
+```
+
+Based on the elbow plot, let's choose K=5.
+
+```python
+# Initialize and train K-Means
+kmeans = KMeans(n_clusters=5, random_state=42)
+kmeans.fit(X_scaled)
+labels_kmeans = kmeans.labels_
+
+# Add cluster labels to the DataFrame
+df['Cluster_KMeans'] = labels_kmeans
+```
+
+#### 4. Clustering with DBSCAN
+
+```python
+from sklearn.cluster import DBSCAN
+
+# Initialize and train DBSCAN
+dbscan = DBSCAN(eps=0.5, min_samples=5)
+labels_dbscan = dbscan.fit_predict(X_scaled)
+
+# Add cluster labels to the DataFrame
+df['Cluster_DBSCAN'] = labels_dbscan
+```
+
+#### 5. Dimensionality Reduction with PCA
+
+```python
+from sklearn.decomposition import PCA
+
+# Initialize PCA
+pca = PCA(n_components=2)
+principal_components = pca.fit_transform(X_scaled)
+
+# Create a DataFrame for PCA
+pca_df = pd.DataFrame(data=principal_components, columns=['PC1', 'PC2'])
+pca_df['Cluster_KMeans'] = labels_kmeans
+
+# Visualize PCA with K-Means clusters
+sns.scatterplot(x='PC1', y='PC2', hue='Cluster_KMeans', data=pca_df, palette='Set2')
+plt.title('PCA of Customer Segments (K-Means)')
+plt.show()
+```
+
+#### 6. Visualization with t-SNE
+
+```python
+from sklearn.manifold import TSNE
+
+# Initialize t-SNE
+tsne = TSNE(n_components=2, perplexity=30, random_state=42)
+tsne_results = tsne.fit_transform(X_scaled)
+
+# Create a DataFrame for t-SNE
+tsne_df = pd.DataFrame(data=tsne_results, columns=['TSNE1', 'TSNE2'])
+tsne_df['Cluster_KMeans'] = labels_kmeans
+
+# Visualize t-SNE with K-Means clusters
+sns.scatterplot(x='TSNE1', y='TSNE2', hue='Cluster_KMeans', data=tsne_df, palette='coolwarm')
+plt.title('t-SNE of Customer Segments (K-Means)')
+plt.show()
+```
+
+#### 7. Evaluating Clustering Performance
+
+```python
+from sklearn.metrics import silhouette_score, davies_bouldin_score
+
+# Silhouette Score for K-Means
+sil_kmeans = silhouette_score(X_scaled, labels_kmeans)
+print(f"Silhouette Score for K-Means: {sil_kmeans:.2f}")
+
+# Silhouette Score for DBSCAN
+sil_dbscan = silhouette_score(X_scaled, labels_dbscan)
+print(f"Silhouette Score for DBSCAN: {sil_dbscan:.2f}")
+
+# Davies-Bouldin Index for K-Means
+db_kmeans = davies_bouldin_score(X_scaled, labels_kmeans)
+print(f"Davies-Bouldin Index for K-Means: {db_kmeans:.2f}")
+
+# Davies-Bouldin Index for DBSCAN
+db_dbscan = davies_bouldin_score(X_scaled, labels_dbscan)
+print(f"Davies-Bouldin Index for DBSCAN: {db_dbscan:.2f}")
 ```
 
 ---
 
-## 4. 🚀🎓 Conclusion and Next Steps
+## 9. 🚀🎓 Conclusion and Next Steps 🚀🎓
 
-Congratulations on completing **Day 5**! Today, you learned how to interact with databases using SQL and PostgreSQL, integrated Python with databases using SQLAlchemy and Pandas, and developed a project that combines these skills to manage and analyze sales data effectively.
+Congratulations on completing **Day 5** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, you explored **Unsupervised Learning**, mastering clustering algorithms like K-Means, Hierarchical Clustering, and DBSCAN, as well as dimensionality reduction techniques such as PCA and t-SNE. You implemented these techniques using Scikit-Learn and applied them to a real-world customer segmentation project, gaining valuable insights into your data.
 
 ### 🔮 What’s Next?
 
-- **Day 6: Deep Learning Basics**: Introduction to neural networks, TensorFlow, and Keras for building deep learning models.
-- **Day 7: Natural Language Processing (NLP)**: Explore techniques for processing and analyzing textual data.
-- **Day 8: Big Data Tools**: Introduction to Hadoop, Spark, and other big data technologies.
-- **Ongoing Projects**: Continue developing projects to apply your skills in real-world scenarios, enhancing both your portfolio and practical understanding.
+- **Day 6: Advanced Feature Engineering**: Master techniques to create and select features that enhance model performance.
+- **Day 7: Ensemble Methods**: Explore ensemble techniques like Bagging, Boosting, and Stacking.
+- **Day 8: Model Deployment with Scikit-Learn**: Learn how to deploy your models into production environments.
+- **Day 9: Time Series Analysis**: Explore techniques for analyzing and forecasting time-dependent data.
+- **Days 10-90: Specialized Topics and Projects**: Engage in specialized topics and comprehensive projects to solidify your expertise.
 
 ### 📝 Tips for Success
 
-- **Practice Regularly**: Consistently apply what you've learned through exercises and projects to reinforce your knowledge.
-- **Engage with the Community**: Participate in forums, attend webinars, and collaborate with peers to broaden your perspective and solve challenges together.
-- **Stay Curious**: Continuously explore new libraries, tools, and methodologies to stay ahead in the ever-evolving field of data science.
-- **Document Your Work**: Keep detailed notes and document your projects to track your progress and facilitate future learning.
+- **Practice Regularly**: Apply the concepts through exercises and real-world projects.
+- **Engage with the Community**: Join forums, attend webinars, and collaborate with peers.
+- **Stay Curious**: Continuously explore new features and updates in Scikit-Learn.
+- **Document Your Work**: Keep a detailed journal of your learning progress and projects.
 
-Keep up the outstanding work, and stay motivated as you continue your Data Science journey! 🚀📚
+Keep up the great work, and stay motivated as you continue your journey to mastering Scikit-Learn and machine learning! 🚀📚
 
----
-
-<div style="text-align: center;">
-  <p>✨ Keep Learning, Keep Growing! ✨</p>
-  <p>🚀 Your Data Science Journey Continues 🚀</p>
-  <p>📚 Happy Coding! 🎉</p>
-</div>
 
 ---
 
 # 📜 Summary of Day 5 📜
 
-- **🗄️ Working with Databases**: Learned how to use SQL and PostgreSQL for data storage and management.
-- **🔍 Introduction to SQL**: Mastered CRUD operations and key SQL concepts.
-- **💾 PostgreSQL Basics**: Set up and interacted with a PostgreSQL database.
-- **🐍 Integrating Python with Databases**: Utilized SQLAlchemy and Pandas to connect Python applications with databases.
-- **🛠️📈 Example Project: Database Integration**: Developed a Python application to manage and analyze sales data using PostgreSQL.
-
-This structured approach ensures that you build a robust foundation in database management and integration, essential for handling large-scale data in your data science projects. Continue experimenting with the provided tools and don't hesitate to delve into additional resources to deepen your expertise.
+- **🧠 Introduction to Unsupervised Learning**: Gained a foundational understanding of unsupervised learning concepts and their applications.
+- **📊 Clustering Algorithms**: Explored K-Means, Hierarchical Clustering, and DBSCAN, understanding their strengths and use-cases.
+- **📉 Dimensionality Reduction Techniques**: Learned about PCA and t-SNE for reducing data dimensionality and enhancing data visualization.
+- **🛠️ Implementing Clustering and Dimensionality Reduction with Scikit-Learn**: Practiced building and visualizing clusters and reducing dimensionality using Scikit-Learn.
+- **📈 Model Evaluation for Unsupervised Learning**: Mastered evaluation metrics including Silhouette Score, Davies-Bouldin Index, and the Elbow Method.
+- **🛠️📈 Example Project: Customer Segmentation**: Developed a customer segmentation project, applying clustering and dimensionality reduction techniques to uncover hidden patterns and groupings in customer data.
+  
+This structured approach ensures that you build a strong foundation in unsupervised learning techniques, preparing you for more advanced machine learning topics in the upcoming days. Continue experimenting with the provided code examples, and don't hesitate to explore additional resources to deepen your understanding.
 
 **Happy Learning! 🎉**
