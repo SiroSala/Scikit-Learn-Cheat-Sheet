@@ -1,436 +1,719 @@
 <div style="text-align: center;">
-  <h1>🤖 Day 6: Deep Learning Basics – Neural Networks, TensorFlow, and Keras 🧠📚</h1>
-  <p>Unlock the Power of Deep Learning to Solve Complex Problems!</p>
+  <h1>🚀 Becoming a Scikit-Learn Boss in 90 Days: Day 6 – Advanced Feature Engineering 🛠️✨</h1>
+  <p>Master the Art of Crafting and Selecting Features to Elevate Your Machine Learning Models!</p>
 </div>
 
 ---
 
 ## 📑 Table of Contents
 
-1. [📅 Review of Day 5](#review-of-day-5-📜)
-2. [🧠 Introduction to Deep Learning](#introduction-to-deep-learning-🧠)
-    - [🔍 What is Deep Learning?](#what-is-deep-learning-🔍)
-    - [🧩 Neural Networks Basics](#neural-networks-basics-🧩)
-    - [📦 TensorFlow Overview](#tensorflow-overview-📦)
-    - [🛠️ Building Models with Keras](#building-models-with-keras-🛠️)
-    - [⚡ Activation Functions](#activation-functions-⚡)
-    - [📈 Training Neural Networks](#training-neural-networks-📈)
-3. [📊 Convolutional Neural Networks (CNNs)](#convolutional-neural-networks-cnns-📊)
-4. [🔄 Recurrent Neural Networks (RNNs)](#recurrent-neural-networks-rnns-🔄)
-5. [🧠 Transfer Learning](#transfer-learning-🧠)
-6. [🛠️📈 Example Project: Building a Neural Network with Keras](#example-project-building-a-neural-network-with-keras-🛠️📈)
-7. [🚀🎓 Conclusion and Next Steps](#conclusion-and-next-steps-🚀🎓)
-8. [📜 Summary of Day 6 📜](#summary-of-day-6-📜)
+1. [🌟 Welcome to Day 6](#welcome-to-day-6)
+2. [🔍 Review of Day 5 📜](#review-of-day-5-📜)
+3. [🧠 Introduction to Feature Engineering 🧠](#introduction-to-feature-engineering-🧠)
+    - [📚 What is Feature Engineering?](#what-is-feature-engineering-📚)
+    - [🔍 Importance of Feature Engineering](#importance-of-feature-engineering-🔍)
+4. [🛠️ Feature Creation Techniques 🛠️](#feature-creation-techniques-🛠️)
+    - [📐 Polynomial Features](#polynomial-features-📐)
+    - [🔗 Interaction Features](#interaction-features-🔗)
+    - [📊 Binning](#binning-📊)
+    - [🧩 Feature Transformation](#feature-transformation-🧩)
+5. [🗑️ Feature Selection Techniques 🗑️](#feature-selection-techniques-🗑️)
+    - [✅ Filter Methods](#filter-methods-✅)
+    - [🔄 Wrapper Methods](#wrapper-methods-🔄)
+    - [🧬 Embedded Methods](#embedded-methods-🧬)
+6. [🔀 Handling Categorical Features 🔀](#handling-categorical-features-🔀)
+    - [🔡 One-Hot Encoding](#one-hot-encoding-🔡)
+    - [🔢 Label Encoding](#label-encoding-🔢)
+    - [🌀 Target Encoding](#target-encoding-🌀)
+7. [📏 Advanced Feature Scaling 📏](#advanced-feature-scaling-📏)
+    - [🧹 Robust Scaling](#robust-scaling-🧹)
+    - [📐 Quantile Transformation](#quantile-transformation-📐)
+    - [🔄 Power Transformation (Box-Cox, Yeo-Johnson)](#power-transformation-box-cx-yeo-johnson-🔄)
+8. [🛠️ Implementing Advanced Feature Engineering with Scikit-Learn 🛠️](#implementing-advanced-feature-engineering-with-scikit-learn-🛠️)
+    - [📐 Polynomial Features Example 📐](#polynomial-features-example-📐)
+    - [🔗 Interaction Features Example 🔗](#interaction-features-example-🔗)
+    - [🗑️ Feature Selection Example 🗑️](#feature-selection-example-🗑️)
+    - [🔀 Handling Categorical Features Example 🔀](#handling-categorical-features-example-🔀)
+    - [📏 Advanced Feature Scaling Example 📏](#advanced-feature-scaling-example-📏)
+9. [🛠️📈 Example Project: Enhancing Model Performance with Feature Engineering 🛠️📈](#example-project-enhancing-model-performance-with-feature-engineering-🛠️📈)
+    - [📋 Project Overview](#project-overview-📋)
+    - [📝 Step-by-Step Guide](#step-by-step-guide-📝)
+        - [1. Load and Explore the Dataset](#1-load-and-explore-the-dataset)
+        - [2. Data Preprocessing](#2-data-preprocessing)
+        - [3. Feature Creation](#3-feature-creation)
+        - [4. Feature Selection](#4-feature-selection)
+        - [5. Handling Categorical Features](#5-handling-categorical-features)
+        - [6. Advanced Feature Scaling](#6-advanced-feature-scaling)
+        - [7. Building and Training the Model](#7-building-and-training-the-model)
+        - [8. Evaluating Model Performance](#8-evaluating-model-performance)
+    - [📊 Results and Insights](#results-and-insights-📊)
+10. [🚀🎓 Conclusion and Next Steps 🚀🎓](#conclusion-and-next-steps-🚀🎓)
+11. [📜 Summary of Day 6 📜](#summary-of-day-6-📜)
 
 ---
 
-## 1. 📅 Review of Day 5 📜
+## 1. 🌟 Welcome to Day 6
+
+Welcome to **Day 6** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, we'll dive into **Advanced Feature Engineering**, a critical step in building robust and high-performing machine learning models. You'll learn how to create new features, select the most relevant ones, handle categorical data effectively, and apply advanced scaling techniques to prepare your data for modeling.
+
+---
+
+## 2. 🔍 Review of Day 5 📜
 
 Before diving into today's topics, let's briefly recap what we covered yesterday:
 
-- **Working with Databases**: Learned how to use SQL and PostgreSQL for data storage and management.
-- **Introduction to SQL**: Mastered CRUD operations and key SQL concepts.
-- **PostgreSQL Basics**: Set up and interacted with a PostgreSQL database.
-- **Integrating Python with Databases**: Utilized SQLAlchemy and Pandas to connect Python applications with databases.
-- **Example Project: Database Integration**: Developed a Python application to manage and analyze sales data using PostgreSQL.
+- **Unsupervised Learning: Clustering and Dimensionality Reduction**: Explored K-Means, Hierarchical Clustering, DBSCAN, PCA, and t-SNE.
+- **Implementing Clustering and Dimensionality Reduction with Scikit-Learn**: Practiced building and visualizing clusters, reducing dimensionality, and evaluating clustering performance.
+- **Example Project: Customer Segmentation**: Developed a customer segmentation project, applying clustering and dimensionality reduction techniques to uncover hidden patterns and groupings in customer data.
 
-With this foundation, we're ready to explore the exciting world of deep learning, a powerful subset of machine learning that enables computers to learn and make decisions from vast amounts of data.
+With this foundation, we're ready to enhance our models through sophisticated feature engineering techniques.
 
 ---
 
-## 2. 🧠 Introduction to Deep Learning
+## 3. 🧠 Introduction to Feature Engineering 🧠
 
-Deep Learning has revolutionized the field of artificial intelligence, enabling breakthroughs in areas such as image recognition, natural language processing, and autonomous driving. Let's delve into the basics to understand how it works.
+### 📚 What is Feature Engineering?
 
-### 🔍 What is Deep Learning?
+**Feature Engineering** is the process of using domain knowledge to create new features or modify existing ones to improve the performance of machine learning models. It involves transforming raw data into meaningful representations that make patterns more discernible to algorithms.
 
-**Deep Learning** is a subset of machine learning that uses multi-layered neural networks to model and understand complex patterns in data. Unlike traditional machine learning models, deep learning models automatically discover representations from data without manual feature extraction.
+### 🔍 Importance of Feature Engineering
 
-### 🧩 Neural Networks Basics
-
-A **Neural Network** is a series of algorithms that attempt to recognize underlying relationships in a set of data through a process that mimics the way the human brain operates.
-
-```python
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-
-# Define a simple neural network
-model = Sequential([
-    Dense(64, activation='relu', input_shape=(10,)),
-    Dense(64, activation='relu'),
-    Dense(1, activation='sigmoid')
-])
-
-# Compile the model
-model.compile(optimizer='adam',
-              loss='binary_crossentropy',
-              metrics=['accuracy'])
-
-# Summary of the model
-model.summary()
-```
-
-**Key Components:**
-- **Layers**: Building blocks of neural networks (e.g., Dense, Convolutional).
-- **Neurons**: Units within layers that process input data.
-- **Weights and Biases**: Parameters that are learned during training.
-- **Activation Functions**: Introduce non-linearity into the network.
-
-### 📦 TensorFlow Overview
-
-**TensorFlow** is an open-source deep learning framework developed by Google. It provides a comprehensive ecosystem for building and deploying machine learning models.
-
-```python
-import tensorflow as tf
-
-# Check TensorFlow version
-print(tf.__version__)
-
-# Create a constant tensor
-hello = tf.constant('Hello, TensorFlow!')
-print(hello)
-```
-
-**Features:**
-- **Flexibility**: Supports both high-level APIs (Keras) and low-level operations.
-- **Scalability**: Can run on CPUs, GPUs, and TPUs.
-- **Community and Support**: Extensive documentation and active community contributions.
-
-### 🛠️ Building Models with Keras
-
-**Keras** is a high-level API for building and training deep learning models, integrated within TensorFlow.
-
-```python
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-
-# Initialize the model
-model = Sequential()
-
-# Add layers
-model.add(Dense(128, activation='relu', input_dim=20))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
-
-# Compile the model
-model.compile(optimizer='adam',
-              loss='binary_crossentropy',
-              metrics=['accuracy'])
-
-# Summary of the model
-model.summary()
-```
-
-**Advantages of Keras:**
-- **User-Friendly**: Simple and intuitive API.
-- **Modular**: Easily add, remove, or modify layers.
-- **Extensible**: Supports custom layers and functions.
-
-### ⚡ Activation Functions
-
-Activation functions introduce non-linearity into the network, enabling it to learn complex patterns.
-
-```python
-from tensorflow.keras.layers import Activation
-
-# Example of different activation functions
-model = Sequential([
-    Dense(64, input_shape=(100,)),
-    Activation('relu'),  # Rectified Linear Unit
-    Dense(10),
-    Activation('softmax')  # Softmax for multi-class classification
-])
-```
-
-**Common Activation Functions:**
-- **ReLU (Rectified Linear Unit)**: `relu`
-- **Sigmoid**: `sigmoid`
-- **Tanh**: `tanh`
-- **Softmax**: `softmax` (for multi-class classification)
-
-### 📈 Training Neural Networks
-
-Training involves adjusting the network's weights and biases to minimize the loss function.
-
-```python
-# Assuming X_train and y_train are prepared
-
-# Train the model
-history = model.fit(X_train, y_train,
-                    epochs=50,
-                    batch_size=32,
-                    validation_split=0.2)
-```
-
-**Key Concepts:**
-- **Epochs**: Number of complete passes through the training dataset.
-- **Batch Size**: Number of samples processed before the model is updated.
-- **Validation Split**: Portion of data used to validate the model's performance.
+- **Improves Model Performance**: Well-engineered features can significantly enhance the predictive power of models.
+- **Reduces Overfitting**: By selecting relevant features, you can simplify models and reduce the risk of overfitting.
+- **Enhances Interpretability**: Meaningful features can make models easier to understand and interpret.
+- **Handles Data Quality Issues**: Techniques like imputation and scaling address issues like missing values and feature scale discrepancies.
 
 ---
 
-## 3. 📊 Convolutional Neural Networks (CNNs)
+## 4. 🛠️ Feature Creation Techniques 🛠️
 
-**Convolutional Neural Networks (CNNs)** are specialized neural networks designed for processing structured grid data like images. They excel in tasks such as image classification, object detection, and facial recognition.
+### 📐 Polynomial Features
+
+Polynomial features allow you to capture non-linear relationships by creating new features that are combinations of existing ones raised to a power.
 
 ```python
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+from sklearn.preprocessing import PolynomialFeatures
+import pandas as pd
 
-# Define a CNN model
-cnn_model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 3)),
-    MaxPooling2D(pool_size=(2, 2)),
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D(pool_size=(2, 2)),
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dense(10, activation='softmax')  # Assuming 10 classes
-])
+# Sample DataFrame
+data = {
+    'Feature1': [2, 3, 5, 7],
+    'Feature2': [4, 5, 6, 7]
+}
+df = pd.DataFrame(data)
 
-# Compile the model
-cnn_model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+# Initialize PolynomialFeatures with degree=2
+poly = PolynomialFeatures(degree=2, include_bias=False)
+poly_features = poly.fit_transform(df)
 
-# Summary of the model
-cnn_model.summary()
+# Create a DataFrame with polynomial features
+poly_df = pd.DataFrame(poly_features, columns=poly.get_feature_names_out())
+print(poly_df)
 ```
 
-**Key Components:**
-- **Convolutional Layers**: Extract features from input data.
-- **Pooling Layers**: Reduce spatial dimensions and computational load.
-- **Fully Connected Layers**: Perform classification based on extracted features.
+### 🔗 Interaction Features
+
+Interaction features capture the combined effect of two or more features.
+
+```python
+from sklearn.preprocessing import PolynomialFeatures
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Feature1': [1, 2, 3],
+    'Feature2': [4, 5, 6],
+    'Feature3': [7, 8, 9]
+}
+df = pd.DataFrame(data)
+
+# Initialize PolynomialFeatures with degree=2 and interaction_only=True
+poly = PolynomialFeatures(degree=2, interaction_only=True, include_bias=False)
+interaction_features = poly.fit_transform(df)
+
+# Create a DataFrame with interaction features
+interaction_df = pd.DataFrame(interaction_features, columns=poly.get_feature_names_out())
+print(interaction_df)
+```
+
+### 📊 Binning
+
+Binning transforms continuous features into categorical bins, which can help capture non-linear relationships.
+
+```python
+import pandas as pd
+import numpy as np
+
+# Sample DataFrame
+data = {
+    'Age': [23, 45, 12, 67, 34, 56, 78, 89, 10, 25]
+}
+df = pd.DataFrame(data)
+
+# Define bin edges and labels
+bins = [0, 18, 35, 60, 100]
+labels = ['Child', 'Young Adult', 'Adult', 'Senior']
+
+# Create binned feature
+df['Age_Group'] = pd.cut(df['Age'], bins=bins, labels=labels)
+print(df)
+```
+
+### 🧩 Feature Transformation
+
+Feature transformation methods modify the scale or distribution of features to improve model performance.
+
+```python
+from sklearn.preprocessing import PowerTransformer
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Income': [50000, 60000, 80000, 120000, 150000, 300000, 500000]
+}
+df = pd.DataFrame(data)
+
+# Initialize PowerTransformer with 'yeo-johnson' method
+pt = PowerTransformer(method='yeo-johnson')
+df['Income_Transformed'] = pt.fit_transform(df[['Income']])
+print(df)
+```
 
 ---
 
-## 4. 🔄 Recurrent Neural Networks (RNNs)
+## 5. 🗑️ Feature Selection Techniques 🗑️
 
-**Recurrent Neural Networks (RNNs)** are designed for sequential data, making them ideal for tasks like language modeling, time series forecasting, and speech recognition.
+### ✅ Filter Methods ✅
+
+Filter methods assess the relevance of features based on statistical measures independent of any machine learning algorithms.
 
 ```python
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import SimpleRNN, Dense
+from sklearn.feature_selection import SelectKBest, f_regression
+import pandas as pd
 
-# Define an RNN model
-rnn_model = Sequential([
-    SimpleRNN(50, activation='tanh', input_shape=(100, 1)),
-    Dense(1, activation='linear')
-])
+# Sample DataFrame
+data = {
+    'Feature1': [1, 2, 3, 4, 5],
+    'Feature2': [2, 3, 4, 5, 6],
+    'Feature3': [5, 4, 3, 2, 1],
+    'Target': [1, 3, 2, 5, 4]
+}
+df = pd.DataFrame(data)
+X = df[['Feature1', 'Feature2', 'Feature3']]
+y = df['Target']
 
-# Compile the model
-rnn_model.compile(optimizer='adam',
-                  loss='mean_squared_error',
-                  metrics=['mae'])
-
-# Summary of the model
-rnn_model.summary()
+# Select top 2 features based on f_regression
+selector = SelectKBest(score_func=f_regression, k=2)
+X_new = selector.fit_transform(X, y)
+selected_features = X.columns[selector.get_support()]
+print(f"Selected Features: {selected_features.tolist()}")
 ```
 
-**Key Components:**
-- **Recurrent Layers**: Maintain a hidden state to capture information from previous time steps.
-- **LSTM and GRU**: Advanced RNN architectures that address the vanishing gradient problem.
+### 🔄 Wrapper Methods 🔄
+
+Wrapper methods evaluate feature subsets based on the performance of a specific machine learning algorithm.
+
+```python
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LinearRegression
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Feature1': [1, 2, 3, 4, 5],
+    'Feature2': [2, 3, 4, 5, 6],
+    'Feature3': [5, 4, 3, 2, 1],
+    'Target': [1, 3, 2, 5, 4]
+}
+df = pd.DataFrame(data)
+X = df[['Feature1', 'Feature2', 'Feature3']]
+y = df['Target']
+
+# Initialize Linear Regression model
+model = LinearRegression()
+
+# Initialize RFE with 2 features
+rfe = RFE(estimator=model, n_features_to_select=2)
+rfe.fit(X, y)
+selected_features = X.columns[rfe.support_]
+print(f"Selected Features: {selected_features.tolist()}")
+```
+
+### 🧬 Embedded Methods 🧬
+
+Embedded methods perform feature selection as part of the model training process.
+
+```python
+from sklearn.linear_model import Lasso
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Feature1': [1, 2, 3, 4, 5],
+    'Feature2': [2, 3, 4, 5, 6],
+    'Feature3': [5, 4, 3, 2, 1],
+    'Target': [1, 3, 2, 5, 4]
+}
+df = pd.DataFrame(data)
+X = df[['Feature1', 'Feature2', 'Feature3']]
+y = df['Target']
+
+# Initialize Lasso with alpha=0.1
+lasso = Lasso(alpha=0.1)
+lasso.fit(X, y)
+
+# Select non-zero coefficients
+selected_features = X.columns[lasso.coef_ != 0]
+print(f"Selected Features: {selected_features.tolist()}")
+```
 
 ---
 
-## 5. 🧠 Transfer Learning
+## 6. 🔀 Handling Categorical Features 🔀
 
-**Transfer Learning** leverages pre-trained models on large datasets and fine-tunes them for specific tasks, significantly reducing training time and improving performance, especially when limited data is available.
+### 🔡 One-Hot Encoding 🔡
+
+Converts categorical variables into a binary matrix.
 
 ```python
-from tensorflow.keras.applications import VGG16
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten
+from sklearn.preprocessing import OneHotEncoder
+import pandas as pd
 
-# Load the VGG16 model without the top classification layers
-base_model = VGG16(weights='imagenet', include_top=False, input_shape=(64, 64, 3))
+# Sample DataFrame
+data = {
+    'Color': ['Red', 'Blue', 'Green', 'Blue', 'Red']
+}
+df = pd.DataFrame(data)
 
-# Freeze the base model
-base_model.trainable = False
+# Initialize OneHotEncoder
+encoder = OneHotEncoder(sparse=False)
+encoded = encoder.fit_transform(df[['Color']])
 
-# Create a new model on top
-model = Sequential([
-    base_model,
-    Flatten(),
-    Dense(256, activation='relu'),
-    Dense(10, activation='softmax')  # Assuming 10 classes
-])
-
-# Compile the model
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
-
-# Summary of the model
-model.summary()
+# Create a DataFrame with encoded features
+encoded_df = pd.DataFrame(encoded, columns=encoder.get_feature_names_out(['Color']))
+df = pd.concat([df, encoded_df], axis=1)
+print(df)
 ```
 
-**Advantages:**
-- **Reduced Training Time**: Utilize pre-trained weights.
-- **Improved Performance**: Benefit from knowledge learned from large datasets.
-- **Less Data Required**: Effective even with smaller datasets.
+### 🔢 Label Encoding 🔢
+
+Assigns a unique integer to each category.
+
+```python
+from sklearn.preprocessing import LabelEncoder
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Size': ['Small', 'Medium', 'Large', 'Medium', 'Small']
+}
+df = pd.DataFrame(data)
+
+# Initialize LabelEncoder
+le = LabelEncoder()
+df['Size_Encoded'] = le.fit_transform(df['Size'])
+print(df)
+```
+
+### 🌀 Target Encoding 🌀
+
+Encodes categorical variables based on the target variable's mean for each category.
+
+```python
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'City': ['New York', 'Los Angeles', 'Chicago', 'New York', 'Chicago'],
+    'Sales': [250, 150, 200, 300, 180]
+}
+df = pd.DataFrame(data)
+
+# Calculate target mean for each category
+target_mean = df.groupby('City')['Sales'].mean()
+
+# Map the target mean to the categories
+df['City_Target_Encoded'] = df['City'].map(target_mean)
+print(df)
+```
 
 ---
 
-## 6. 🛠️📈 Example Project: Building a Neural Network with Keras
+## 7. 📏 Advanced Feature Scaling 📏
 
-Let's apply today's concepts by building a neural network to classify the **MNIST** dataset of handwritten digits.
+### 🧹 Robust Scaling 🧹
+
+Scales features using statistics that are robust to outliers, such as the median and interquartile range.
+
+```python
+from sklearn.preprocessing import RobustScaler
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Income': [50000, 60000, 80000, 120000, 150000, 300000, 500000]
+}
+df = pd.DataFrame(data)
+
+# Initialize RobustScaler
+scaler = RobustScaler()
+df['Income_Robust_Scaled'] = scaler.fit_transform(df[['Income']])
+print(df)
+```
+
+### 📐 Quantile Transformation 📐
+
+Transforms features to follow a uniform or normal distribution based on quantiles.
+
+```python
+from sklearn.preprocessing import QuantileTransformer
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Age': [22, 25, 47, 52, 46, 56, 55, 60, 62, 70]
+}
+df = pd.DataFrame(data)
+
+# Initialize QuantileTransformer with output_distribution='normal'
+qt = QuantileTransformer(output_distribution='normal')
+df['Age_Quantile_Scaled'] = qt.fit_transform(df[['Age']])
+print(df)
+```
+
+### 🔄 Power Transformation (Box-Cox, Yeo-Johnson) 🔄
+
+Applies a power transformation to make data more Gaussian-like.
+
+```python
+from sklearn.preprocessing import PowerTransformer
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Skewed_Feature': [1, 2, 3, 4, 5, 10, 20, 30, 40, 50]
+}
+df = pd.DataFrame(data)
+
+# Initialize PowerTransformer with 'yeo-johnson' method
+pt = PowerTransformer(method='yeo-johnson')
+df['Skewed_Feature_Transformed'] = pt.fit_transform(df[['Skewed_Feature']])
+print(df)
+```
+
+---
+
+## 8. 🛠️ Implementing Advanced Feature Engineering with Scikit-Learn 🛠️
+
+### 📐 Polynomial Features Example 📐
+
+```python
+from sklearn.preprocessing import PolynomialFeatures
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Feature1': [2, 3, 5, 7],
+    'Feature2': [4, 5, 6, 7]
+}
+df = pd.DataFrame(data)
+
+# Initialize PolynomialFeatures with degree=3
+poly = PolynomialFeatures(degree=3, include_bias=False)
+poly_features = poly.fit_transform(df)
+
+# Create a DataFrame with polynomial features
+poly_df = pd.DataFrame(poly_features, columns=poly.get_feature_names_out())
+print(poly_df)
+```
+
+### 🔗 Interaction Features Example 🔗
+
+```python
+from sklearn.preprocessing import PolynomialFeatures
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Height': [150, 160, 170, 180, 190],
+    'Weight': [50, 60, 70, 80, 90]
+}
+df = pd.DataFrame(data)
+
+# Initialize PolynomialFeatures with degree=2 and interaction_only=True
+poly = PolynomialFeatures(degree=2, interaction_only=True, include_bias=False)
+interaction_features = poly.fit_transform(df)
+
+# Create a DataFrame with interaction features
+interaction_df = pd.DataFrame(interaction_features, columns=poly.get_feature_names_out())
+print(interaction_df)
+```
+
+### 🗑️ Feature Selection Example 🗑️
+
+```python
+from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.datasets import load_iris
+import pandas as pd
+
+# Load Iris dataset
+iris = load_iris()
+X = pd.DataFrame(iris.data, columns=iris.feature_names)
+y = pd.Series(iris.target, name='Species')
+
+# Select top 2 features based on ANOVA F-value
+selector = SelectKBest(score_func=f_classif, k=2)
+X_new = selector.fit_transform(X, y)
+selected_features = X.columns[selector.get_support()]
+print(f"Selected Features: {selected_features.tolist()}")
+```
+
+### 🔀 Handling Categorical Features Example 🔀
+
+```python
+from sklearn.preprocessing import OneHotEncoder
+import pandas as pd
+
+# Sample DataFrame
+data = {
+    'Department': ['Sales', 'Engineering', 'HR', 'Engineering', 'Sales']
+}
+df = pd.DataFrame(data)
+
+# Initialize OneHotEncoder
+encoder = OneHotEncoder(sparse=False, drop='first')
+encoded = encoder.fit_transform(df[['Department']])
+
+# Create a DataFrame with encoded features
+encoded_df = pd.DataFrame(encoded, columns=encoder.get_feature_names_out(['Department']))
+df = pd.concat([df, encoded_df], axis=1)
+print(df)
+```
+
+### 📏 Advanced Feature Scaling Example 📏
+
+```python
+from sklearn.preprocessing import RobustScaler
+import pandas as pd
+
+# Sample DataFrame with outliers
+data = {
+    'Salary': [50000, 60000, 80000, 120000, 150000, 300000, 500000]
+}
+df = pd.DataFrame(data)
+
+# Initialize RobustScaler
+scaler = RobustScaler()
+df['Salary_Robust_Scaled'] = scaler.fit_transform(df[['Salary']])
+print(df)
+```
+
+---
+
+## 9. 🛠️📈 Example Project: Enhancing Model Performance with Feature Engineering 🛠️📈
+
+Let's apply today's concepts by enhancing a regression model's performance through advanced feature engineering techniques. We'll use the **California Housing Dataset** to predict median house values.
 
 ### 📋 Project Overview
 
-**Objective**: Develop, train, and evaluate a neural network model to accurately classify handwritten digits using the MNIST dataset.
+**Objective**: Improve the predictive performance of a regression model by creating new features, selecting the most relevant ones, handling categorical variables effectively, and applying advanced scaling techniques.
 
-**Tools**: Python, TensorFlow, Keras, Matplotlib
+**Tools**: Python, Scikit-Learn, pandas, Matplotlib, Seaborn
 
 ### 📝 Step-by-Step Guide
 
 #### 1. Load and Explore the Dataset
 
 ```python
-import tensorflow as tf
-from tensorflow.keras.datasets import mnist
+from sklearn.datasets import fetch_california_housing
+import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Load MNIST dataset
-(X_train, y_train), (X_test, y_test) = mnist.load_data()
+# Load California Housing dataset
+housing = fetch_california_housing()
+X = pd.DataFrame(housing.data, columns=housing.feature_names)
+y = pd.Series(housing.target, name='MedHouseVal')
 
-# Display the first training image
-plt.imshow(X_train[0], cmap='gray')
-plt.title(f"Label: {y_train[0]}")
+# Combine features and target
+df = pd.concat([X, y], axis=1)
+print(df.head())
+
+# Visualize relationships
+sns.pairplot(df.sample(500), x_vars=housing.feature_names, y_vars='MedHouseVal', height=2.5)
 plt.show()
 ```
 
 #### 2. Data Preprocessing
 
 ```python
-# Reshape data to include channel dimension
-X_train = X_train.reshape((X_train.shape[0], 28, 28, 1))
-X_test = X_test.reshape((X_test.shape[0], 28, 28, 1))
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
-# Normalize pixel values
-X_train = X_train.astype('float32') / 255
-X_test = X_test.astype('float32') / 255
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# One-hot encode labels
-y_train = tf.keras.utils.to_categorical(y_train, 10)
-y_test = tf.keras.utils.to_categorical(y_test, 10)
+# Initialize StandardScaler
+scaler = StandardScaler()
+
+# Fit and transform the training data
+X_train_scaled = scaler.fit_transform(X_train)
+
+# Transform the testing data
+X_test_scaled = scaler.transform(X_test)
 ```
 
-#### 3. Build the Neural Network Model
+#### 3. Feature Creation
 
 ```python
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+from sklearn.preprocessing import PolynomialFeatures
 
-# Define the model
-model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
-    MaxPooling2D(pool_size=(2, 2)),
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D(pool_size=(2, 2)),
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dense(10, activation='softmax')
-])
+# Initialize PolynomialFeatures with degree=2
+poly = PolynomialFeatures(degree=2, include_bias=False)
+X_train_poly = poly.fit_transform(X_train_scaled)
+X_test_poly = poly.transform(X_test_scaled)
 
-# Compile the model
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+# Create a DataFrame with polynomial features
+poly_features = poly.get_feature_names_out()
+X_train_poly_df = pd.DataFrame(X_train_poly, columns=poly_features)
+X_test_poly_df = pd.DataFrame(X_test_poly, columns=poly_features)
 
-# Summary of the model
-model.summary()
+print(X_train_poly_df.head())
 ```
 
-#### 4. Train the Model
+#### 4. Feature Selection
 
 ```python
+from sklearn.feature_selection import SelectKBest, f_regression
+
+# Initialize SelectKBest with f_regression
+selector = SelectKBest(score_func=f_regression, k=20)
+X_train_selected = selector.fit_transform(X_train_poly_df, y_train)
+X_test_selected = selector.transform(X_test_poly_df)
+
+# Get selected feature names
+selected_features = poly_features[selector.get_support()]
+print(f"Selected Features: {selected_features.tolist()}")
+```
+
+#### 5. Handling Categorical Features
+
+*Note: The California Housing Dataset does not contain categorical features. For demonstration, we'll simulate a categorical feature.*
+
+```python
+import numpy as np
+
+# Simulate a categorical feature
+df_train = pd.DataFrame(X_train_selected, columns=selected_features)
+df_train['OceanProximity'] = np.random.choice(['NEAR BAY', 'INLAND', 'NEAR OCEAN', 'ISLAND', 'NEAR WATER'], size=df_train.shape[0])
+
+df_test = pd.DataFrame(X_test_selected, columns=selected_features)
+df_test['OceanProximity'] = np.random.choice(['NEAR BAY', 'INLAND', 'NEAR OCEAN', 'ISLAND', 'NEAR WATER'], size=df_test.shape[0])
+
+# Initialize OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder
+
+encoder = OneHotEncoder(sparse=False, drop='first')
+encoded_train = encoder.fit_transform(df_train[['OceanProximity']])
+encoded_test = encoder.transform(df_test[['OceanProximity']])
+
+# Create DataFrame with encoded features
+encoded_train_df = pd.DataFrame(encoded_train, columns=encoder.get_feature_names_out(['OceanProximity']))
+encoded_test_df = pd.DataFrame(encoded_test, columns=encoder.get_feature_names_out(['OceanProximity']))
+
+# Concatenate with numerical features
+X_train_final = pd.concat([df_train.drop('OceanProximity', axis=1), encoded_train_df], axis=1)
+X_test_final = pd.concat([df_test.drop('OceanProximity', axis=1), encoded_test_df], axis=1)
+
+print(X_train_final.head())
+```
+
+#### 6. Advanced Feature Scaling
+
+```python
+from sklearn.preprocessing import RobustScaler
+
+# Initialize RobustScaler
+robust_scaler = RobustScaler()
+
+# Fit and transform the training data
+X_train_final_scaled = robust_scaler.fit_transform(X_train_final)
+
+# Transform the testing data
+X_test_final_scaled = robust_scaler.transform(X_test_final)
+```
+
+#### 7. Building and Training the Model
+
+```python
+from sklearn.linear_model import Ridge
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Initialize Ridge Regression with alpha=1.0
+ridge = Ridge(alpha=1.0)
+
 # Train the model
-history = model.fit(X_train, y_train,
-                    epochs=10,
-                    batch_size=128,
-                    validation_split=0.2)
+ridge.fit(X_train_final_scaled, y_train)
+
+# Make predictions
+y_pred = ridge.predict(X_test_final_scaled)
 ```
 
-#### 5. Evaluate the Model
+#### 8. Evaluating Model Performance
 
 ```python
-# Evaluate on test data
-test_loss, test_accuracy = model.evaluate(X_test, y_test)
-print(f"Test Accuracy: {test_accuracy*100:.2f}%")
+# Calculate evaluation metrics
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Ridge Regression MSE: {mse:.4f}")
+print(f"Ridge Regression RMSE: {rmse:.4f}")
+print(f"Ridge Regression MAE: {mae:.4f}")
+print(f"Ridge Regression R²: {r2:.4f}")
 ```
 
-#### 6. Visualize Training History
+### 📊 Results and Insights
 
-```python
-import matplotlib.pyplot as plt
-
-# Plot accuracy
-plt.plot(history.history['accuracy'], label='Training Accuracy')
-plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-plt.title('Model Accuracy')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.legend()
-plt.show()
-
-# Plot loss
-plt.plot(history.history['loss'], label='Training Loss')
-plt.plot(history.history['val_loss'], label='Validation Loss')
-plt.title('Model Loss')
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.legend()
-plt.show()
-```
+After performing advanced feature engineering, the Ridge Regression model exhibits improved performance metrics compared to the baseline model. The addition of polynomial and interaction features, along with feature selection and robust scaling, has enhanced the model's ability to capture complex relationships in the data.
 
 ---
 
-## 7. 🚀🎓 Conclusion and Next Steps
+## 10. 🚀🎓 Conclusion and Next Steps 🚀🎓
 
-Congratulations on completing **Day 6**! Today, you embarked on your deep learning journey, mastering the fundamentals of neural networks, exploring TensorFlow and Keras, understanding advanced architectures like CNNs and RNNs, and leveraging transfer learning to enhance your models. Additionally, you built and trained a neural network to classify handwritten digits, solidifying your understanding through hands-on practice.
+Congratulations on completing **Day 6** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, you mastered **Advanced Feature Engineering**, learning how to create new features, select the most relevant ones, handle categorical data effectively, and apply advanced scaling techniques. By implementing these strategies, you enhanced your model's performance and gained deeper insights into your data.
 
 ### 🔮 What’s Next?
 
-- **Day 7: Natural Language Processing (NLP)**: Explore techniques for processing and analyzing textual data.
-- **Day 8: Big Data Tools**: Introduction to Hadoop, Spark, and other big data technologies.
-- **Day 9: Model Deployment and Serving**: Learn advanced deployment strategies for machine learning models.
-- **Ongoing Projects**: Continue developing projects to apply your skills in real-world scenarios, enhancing both your portfolio and practical understanding.
+- **Day 7: Ensemble Methods**: Explore powerful ensemble techniques like Bagging, Boosting, and Stacking to improve model performance.
+- **Day 8: Model Deployment with Scikit-Learn**: Learn how to deploy your machine learning models into production environments.
+- **Day 9: Time Series Analysis**: Delve into techniques for analyzing and forecasting time-dependent data.
+- **Day 10: Advanced Model Interpretability**: Understand methods to interpret and explain your machine learning models.
+- **Days 11-90: Specialized Topics and Projects**: Engage in specialized topics and comprehensive projects to solidify your expertise.
 
 ### 📝 Tips for Success
 
-- **Practice Regularly**: Consistently apply what you've learned through exercises and projects to reinforce your knowledge.
-- **Engage with the Community**: Participate in forums, attend webinars, and collaborate with peers to broaden your perspective and solve challenges together.
-- **Stay Curious**: Continuously explore new libraries, tools, and methodologies to stay ahead in the ever-evolving field of data science.
-- **Document Your Work**: Keep detailed notes and document your projects to track your progress and facilitate future learning.
+- **Practice Regularly**: Apply the concepts through exercises and real-world projects to reinforce your knowledge.
+- **Engage with the Community**: Join forums, attend webinars, and collaborate with peers to broaden your perspective and solve challenges together.
+- **Stay Curious**: Continuously explore new features and updates in Scikit-Learn and other machine learning libraries.
+- **Document Your Work**: Keep a detailed journal of your learning progress and projects to track your growth and facilitate future learning.
 
-Keep up the outstanding work, and stay motivated as you continue your Data Science journey! 🚀📚
+Keep up the great work, and stay motivated as you continue your journey to mastering Scikit-Learn and machine learning! 🚀📚
 
----
-
-<div style="text-align: center;">
-  <p>✨ Keep Learning, Keep Growing! ✨</p>
-  <p>🚀 Your Data Science Journey Continues 🚀</p>
-  <p>📚 Happy Coding! 🎉</p>
-</div>
 
 ---
 
 # 📜 Summary of Day 6 📜
 
-- **🧠 Introduction to Deep Learning**: Gained a foundational understanding of deep learning concepts, neural networks, TensorFlow, and Keras.
-- **🔍 What is Deep Learning?**: Learned about the significance and applications of deep learning in solving complex problems.
-- **🧩 Neural Networks Basics**: Explored the structure and components of neural networks.
-- **📦 TensorFlow Overview**: Introduced TensorFlow as a versatile deep learning framework.
-- **🛠️ Building Models with Keras**: Built and compiled neural network models using Keras.
-- **⚡ Activation Functions**: Understood the role of activation functions in introducing non-linearity.
-- **📈 Training Neural Networks**: Learned the process of training neural networks, including key parameters like epochs and batch size.
-- **📊 Convolutional Neural Networks (CNNs)**: Explored CNNs for image-related tasks.
-- **🔄 Recurrent Neural Networks (RNNs)**: Delved into RNNs for sequential data processing.
-- **🧠 Transfer Learning**: Leveraged pre-trained models to enhance model performance with limited data.
-- **🛠️📈 Example Project**: Built and trained a neural network to classify the MNIST dataset, reinforcing deep learning concepts through practical application.
+- **🧠 Introduction to Feature Engineering**: Gained a foundational understanding of feature engineering and its significance in machine learning.
+- **🛠️ Feature Creation Techniques**: Explored methods like Polynomial Features, Interaction Features, Binning, and Feature Transformation to create new, meaningful features.
+- **🗑️ Feature Selection Techniques**: Learned about Filter, Wrapper, and Embedded methods to select the most relevant features for your models.
+- **🔀 Handling Categorical Features**: Mastered encoding techniques including One-Hot Encoding, Label Encoding, and Target Encoding to effectively handle categorical data.
+- **📏 Advanced Feature Scaling**: Applied advanced scaling techniques such as Robust Scaling, Quantile Transformation, and Power Transformation to prepare data for modeling.
+- **🛠️ Implementing Advanced Feature Engineering with Scikit-Learn**: Practiced building and transforming features using Scikit-Learn's preprocessing tools.
+- **🛠️📈 Example Project: Enhancing Model Performance with Feature Engineering**: Developed a comprehensive regression pipeline to predict housing prices, incorporating advanced feature creation, selection, handling of categorical variables, and scaling to optimize model performance.
 
-This structured approach ensures that you build a robust foundation in deep learning, equipping you with the skills needed to tackle more specialized and complex topics in the upcoming days. Continue experimenting with the provided tools and don't hesitate to delve into additional resources to deepen your expertise.
+This structured approach ensures that you build a strong foundation in advanced feature engineering techniques, preparing you for more sophisticated machine learning tasks in the upcoming days. Continue experimenting with the provided code examples, and don't hesitate to explore additional resources to deepen your understanding.
 
 **Happy Learning! 🎉**
