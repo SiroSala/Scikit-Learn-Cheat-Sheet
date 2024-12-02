@@ -1,9 +1,6 @@
 <div style="text-align: center;">
   <h1 style="color:#FF5722;">🚀 Becoming a Scikit-Learn Boss in 90 Days: Day 16 – Image Classification with Scikit-Learn 📸🧠</h1>
   <p style="font-size:18px;">Transform Your Computer Vision Skills by Building Powerful Image Classification Models!</p>
-  
-  <!-- Animated Header Image -->
-  <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Image Classification" width="600">
 </div>
 
 ---
@@ -525,16 +522,6 @@ Keep up the excellent work, and stay motivated as you continue your journey to m
 
 ---
 
-<div style="text-align: center;">
-  <p style="font-size:20px;">✨ Keep Learning, Keep Growing! ✨</p>
-  <p style="font-size:20px;">🚀 Your Data Science Journey Continues 🚀</p>
-  <p style="font-size:20px;">📚 Happy Coding! 🎉</p>
-  
-  <!-- Animated Footer Image -->
-  <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Happy Coding" width="300">
-</div>
-
----
 
 # 📜 Summary of Day 16 📜
 
