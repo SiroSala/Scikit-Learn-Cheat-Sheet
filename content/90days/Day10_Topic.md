@@ -1,340 +1,267 @@
 <div style="text-align: center;">
-  <h1>🚀 Becoming a Scikit-Learn Boss in 90 Days: Day 9 – Time Series Analysis 📅📈</h1>
-  <p>Master the Techniques to Analyze and Forecast Time-Dependent Data!</p>
+  <h1>🚀 Becoming a Scikit-Learn Boss in 90 Days: Day 10 – Advanced Model Interpretability 🧩🔍</h1>
+  <p>Unlock the Secrets Behind Your Machine Learning Models for Deeper Insights!</p>
 </div>
 
 ---
 
 ## 📑 Table of Contents
 
-1. [🌟 Welcome to Day 9](#welcome-to-day-9)
-2. [🔍 Review of Day 8 📜](#review-of-day-8-📜)
-3. [🧠 Introduction to Time Series Analysis 🧠](#introduction-to-time-series-analysis-🧠)
-    - [📚 What is Time Series Analysis?](#what-is-time-series-analysis-📚)
-    - [🔍 Importance of Time Series Analysis](#importance-of-time-series-analysis-🔍)
-4. [📊 Time Series Forecasting Techniques 📊](#time-series-forecasting-techniques-📊)
-    - [🔄 Moving Averages](#moving-averages-🔄)
-    - [📈 Exponential Smoothing](#exponential-smoothing-📈)
-    - [📉 Autoregressive (AR) Models](#autoregressive-ar-models-📉)
-    - [🔗 Autoregressive Integrated Moving Average (ARIMA)](#autoregressive-integrated-moving-average-arima-🔗)
-    - [🧰 Machine Learning Approaches](#machine-learning-approaches-🧰)
-        - [📐 Regression-Based Models](#regression-based-models-📐)
-        - [🌟 Support Vector Regression (SVR)](#support-vector-regression-svr-🌟)
-        - [🛠️ Random Forest Regression](#random-forest-regression-🛠️)
-5. [🛠️ Implementing Time Series Analysis with Scikit-Learn 🛠️](#implementing-time-series-analysis-with-scikit-learn-🛠️)
-    - [🔄 Preparing Time Series Data](#preparing-time-series-data-🔄)
-    - [📐 Feature Engineering for Time Series](#feature-engineering-for-time-series-📐)
-    - [📈 Forecasting with Regression Models](#forecasting-with-regression-models-📈)
-    - [🌟 Support Vector Regression Example 🌟](#support-vector-regression-example-🌟)
-    - [🛠️ Random Forest Regression Example 🛠️](#random-forest-regression-example-🛠️)
-6. [📈 Model Evaluation for Time Series 📈](#model-evaluation-for-time-series-📈)
-    - [📉 Mean Absolute Error (MAE) 📉]
-    - [📏 Mean Squared Error (MSE) 📏]
-    - [📐 Root Mean Squared Error (RMSE) 📐]
-    - [📈 Mean Absolute Percentage Error (MAPE) 📈]
-    - [🔄 Cross-Validation for Time Series](#cross-validation-for-time-series)
-7. [🛠️📈 Example Project: Sales Forecasting 🛠️📈](#example-project-sales-forecasting-🛠️📈)
+1. [🌟 Welcome to Day 10](#welcome-to-day-10)
+2. [🔍 Review of Day 9 📜](#review-of-day-9-📜)
+3. [🧠 Introduction to Advanced Model Interpretability 🧠](#introduction-to-advanced-model-interpretability-🧠)
+    - [📚 What is Model Interpretability?](#what-is-model-interpretability-📚)
+    - [🔍 Importance of Model Interpretability](#importance-of-model-interpretability-🔍)
+4. [🔍 Methods for Model Interpretability 🔍](#methods-for-model-interpretability-🔍)
+    - [🌐 Global vs. Local Interpretability](#global-vs-local-interpretability-🌐)
+    - [📊 Feature Importance](#feature-importance-📊)
+    - [📈 Partial Dependence Plots (PDP)](#partial-dependence-plots-pdp-📈)
+    - [🧮 SHAP (SHapley Additive exPlanations)](#shap-shapley-additive-explanations-🧮)
+    - [🪄 LIME (Local Interpretable Model-agnostic Explanations)](#lime-local-interpretable-model-agnostic-explanations-🪄)
+5. [🛠️ Implementing Model Interpretability with Scikit-Learn 🛠️](#implementing-model-interpretability-with-scikit-learn-🛠️)
+    - [📊 Feature Importance with Tree-Based Models](#feature-importance-with-tree-based-models-📊)
+    - [📈 Partial Dependence Plots Example](#partial-dependence-plots-example-📈)
+    - [🧮 Using SHAP with Scikit-Learn](#using-shap-with-scikit-learn-🧮)
+    - [🪄 Using LIME with Scikit-Learn](#using-lime-with-scikit-learn-🪄)
+6. [🛠️📈 Example Project: Interpreting a Random Forest Model 🛠️📈](#example-project-interpreting-a-random-forest-model-🛠️📈)
     - [📋 Project Overview](#project-overview-📋)
     - [📝 Step-by-Step Guide](#step-by-step-guide-📝)
         - [1. Load and Explore the Dataset](#1-load-and-explore-the-dataset)
         - [2. Data Preprocessing](#2-data-preprocessing)
-        - [3. Feature Engineering](#3-feature-engineering)
-        - [4. Building Forecasting Models](#4-building-forecasting-models)
-        - [5. Evaluating Model Performance](#5-evaluating-model-performance)
-        - [6. Selecting the Best Model](#6-selecting-the-best-model)
-        - [7. Making Future Predictions](#7-making-future-predictions)
+        - [3. Building and Training the Model](#3-building-and-training-the-model)
+        - [4. Feature Importance Analysis](#4-feature-importance-analysis)
+        - [5. Partial Dependence Plots](#5-partial-dependence-plots)
+        - [6. SHAP Analysis](#6-shap-analysis)
+        - [7. LIME Analysis](#7-lime-analysis)
     - [📊 Results and Insights](#results-and-insights-📊)
-8. [🚀🎓 Conclusion and Next Steps 🚀🎓](#conclusion-and-next-steps-🚀🎓)
-9. [📜 Summary of Day 9 📜](#summary-of-day-9-📜)
+7. [🚀🎓 Conclusion and Next Steps 🚀🎓](#conclusion-and-next-steps-🚀🎓)
+8. [📜 Summary of Day 10 📜](#summary-of-day-10-📜)
 
 ---
 
-## 1. 🌟 Welcome to Day 9
+## 1. 🌟 Welcome to Day 10
 
-Welcome to **Day 9** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, we'll delve into **Time Series Analysis**, a crucial area for analyzing and forecasting data points collected or recorded at specific time intervals. You'll learn about various time series forecasting techniques, implement them using Scikit-Learn, and apply these methods to real-world datasets to make accurate predictions.
+Welcome to **Day 10** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, we'll delve into **Advanced Model Interpretability**, a crucial aspect of machine learning that allows you to understand, trust, and effectively communicate your model's predictions. By mastering interpretability techniques, you can gain deeper insights into your models, ensure fairness, and enhance model performance.
 
 ---
 
-## 2. 🔍 Review of Day 8 📜
+## 2. 🔍 Review of Day 9 📜
 
 Before diving into today's topics, let's briefly recap what we covered yesterday:
 
-- **Model Deployment**: Learned how to serialize machine learning models using Joblib and Pickle, create RESTful APIs with Flask and FastAPI, and deploy models using advanced tools like MLflow.
-- **Steps to Deploy a Model**: Covered the entire deployment pipeline from training and serialization to setting up APIs and monitoring.
-- **Example Project**: Successfully deployed a Random Forest Regressor model as a Flask API to predict housing prices, demonstrating real-world applicability.
+- **Time Series Analysis**: Explored techniques for analyzing and forecasting time-dependent data, including Moving Averages, Exponential Smoothing, AR Models, ARIMA, and Machine Learning approaches like SVR and Random Forest Regression.
+- **Implementing Time Series Analysis with Scikit-Learn**: Learned how to prepare time series data, engineer relevant features, build forecasting models using regression-based techniques, and evaluate their performance.
+- **Example Project: Sales Forecasting**: Developed a comprehensive sales forecasting pipeline, implemented multiple forecasting models, evaluated their performance, and selected the best model for future predictions.
 
-With this foundation, we're ready to explore the fascinating world of time series analysis, enhancing our ability to work with sequential data and make informed forecasts.
-
----
-
-## 3. 🧠 Introduction to Time Series Analysis 🧠
-
-### 📚 What is Time Series Analysis? 📚
-
-**Time Series Analysis** involves statistical techniques to model and predict future values based on previously observed values. It is widely used in various domains such as finance, economics, weather forecasting, sales forecasting, and more.
-
-**Key Characteristics of Time Series Data:**
-
-- **Temporal Ordering**: Data points are ordered in time.
-- **Seasonality**: Patterns that repeat at regular intervals (e.g., monthly sales).
-- **Trend**: Long-term increase or decrease in the data.
-- **Stationarity**: Statistical properties like mean and variance remain constant over time.
-
-### 🔍 Importance of Time Series Analysis 🔍
-
-- **Forecasting**: Predict future values (e.g., stock prices, demand forecasting).
-- **Anomaly Detection**: Identify unusual patterns or outliers.
-- **Seasonal Adjustment**: Remove seasonal effects to better understand underlying trends.
-- **Economic Planning**: Aid in making informed business and policy decisions.
+With this foundation, we're ready to enhance our understanding of model behavior through interpretability techniques.
 
 ---
 
-## 4. 📊 Time Series Forecasting Techniques 📊
+## 3. 🧠 Introduction to Advanced Model Interpretability 🧠
 
-### 🔄 Moving Averages 🔄
+### 📚 What is Model Interpretability?
 
-A technique to smooth out short-term fluctuations and highlight longer-term trends or cycles.
+**Model Interpretability** refers to the degree to which a human can understand the cause of a decision made by a machine learning model. It involves elucidating how input features influence the model's predictions, enabling transparency and trust in the model's outcomes.
 
-**Types:**
+### 🔍 Importance of Model Interpretability
 
-- **Simple Moving Average (SMA)**: Calculates the average of a fixed number of past observations.
-- **Weighted Moving Average (WMA)**: Assigns different weights to past observations, giving more importance to recent data.
-
-### 📈 Exponential Smoothing 📈
-
-Applies exponentially decreasing weights to past observations, giving more importance to recent data points.
-
-**Types:**
-
-- **Single Exponential Smoothing**: Suitable for data with no trend or seasonality.
-- **Double Exponential Smoothing**: Accounts for trends in the data.
-- **Triple Exponential Smoothing (Holt-Winters)**: Handles both trend and seasonality.
-
-### 📉 Autoregressive (AR) Models 📉
-
-Models that use the dependent relationship between an observation and a number of lagged observations.
-
-**AR(p)**: Autoregressive model of order p, where p is the number of lagged observations.
-
-### 🔗 Autoregressive Integrated Moving Average (ARIMA) 🔗
-
-Combines autoregressive and moving average components, with differencing to make the time series stationary.
-
-**Components:**
-
-- **AR (p)**: Autoregressive part.
-- **I (d)**: Differencing to achieve stationarity.
-- **MA (q)**: Moving average part.
-
-### 🧰 Machine Learning Approaches 🧰
-
-#### 📐 Regression-Based Models 📐
-
-Transform time series forecasting into a regression problem by using lagged values and other time-based features as predictors.
-
-#### 🌟 Support Vector Regression (SVR) 🌟
-
-Uses Support Vector Machines for regression tasks, capable of modeling non-linear relationships.
-
-#### 🛠️ Random Forest Regression 🛠️
-
-An ensemble method that builds multiple decision trees and averages their predictions, robust to overfitting.
+- **Trust and Transparency**: Understand how models make decisions, fostering trust among stakeholders.
+- **Debugging and Improving Models**: Identify and rectify issues like bias or overfitting by analyzing feature contributions.
+- **Regulatory Compliance**: Meet legal requirements for explainability in sectors like finance and healthcare.
+- **Enhanced Decision-Making**: Gain insights into feature relationships and data patterns to inform business strategies.
 
 ---
 
-## 5. 🛠️ Implementing Time Series Analysis with Scikit-Learn 🛠️
+## 4. 🔍 Methods for Model Interpretability 🔍
 
-### 🔄 Preparing Time Series Data 🔄
+### 🌐 Global vs. Local Interpretability
 
-1. **Stationarity Check**: Use tests like Augmented Dickey-Fuller (ADF) to check for stationarity.
-2. **Differencing**: Apply differencing to remove trends and make the series stationary.
-3. **Lag Features**: Create lagged features to capture temporal dependencies.
+- **Global Interpretability**: Understanding the overall behavior and structure of the model across the entire dataset.
+- **Local Interpretability**: Explaining individual predictions and understanding why a model made a specific decision for a single instance.
+
+### 📊 Feature Importance
+
+Determines which features have the most significant impact on the model's predictions. Commonly used with tree-based models like Random Forests and Gradient Boosting.
 
 ```python
 import pandas as pd
 import numpy as np
-from statsmodels.tsa.stattools import adfuller
-
-# Sample Time Series Data
-data = {
-    'Date': pd.date_range(start='2020-01-01', periods=100, freq='D'),
-    'Value': np.random.randn(100).cumsum() + 50
-}
-df = pd.DataFrame(data)
-df.set_index('Date', inplace=True)
-
-# Plot the Time Series
-df['Value'].plot(title='Sample Time Series')
-plt.show()
-
-# Augmented Dickey-Fuller Test
-result = adfuller(df['Value'])
-print(f'ADF Statistic: {result[0]}')
-print(f'p-value: {result[1]}')
-```
-
-### 📐 Feature Engineering for Time Series 📐
-
-Create features such as lagged values, rolling statistics, and time-based features.
-
-```python
-# Create Lag Features
-df['Lag1'] = df['Value'].shift(1)
-df['Lag2'] = df['Value'].shift(2)
-
-# Create Rolling Mean
-df['Rolling_Mean_3'] = df['Value'].rolling(window=3).mean()
-
-# Create Time-Based Features
-df['Day'] = df.index.day
-df['Month'] = df.index.month
-df['Weekday'] = df.index.weekday
-
-# Drop NaN Values
-df.dropna(inplace=True)
-print(df.head())
-```
-
-### 📈 Forecasting with Regression Models 📈
-
-Use regression models by treating the problem as predicting the next value based on previous features.
-
-```python
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-
-# Define Features and Target
-X = df[['Lag1', 'Lag2', 'Rolling_Mean_3', 'Day', 'Month', 'Weekday']]
-y = df['Value']
-
-# Split the Data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
-
-# Initialize and Train the Model
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-# Make Predictions
-y_pred = model.predict(X_test)
-
-# Evaluate the Model
-mse = mean_squared_error(y_test, y_pred)
-print(f"Mean Squared Error: {mse:.2f}")
-```
-
-### 🌟 Support Vector Regression Example 🌟
-
-```python
-from sklearn.svm import SVR
-
-# Initialize SVR with RBF Kernel
-svr = SVR(kernel='rbf', C=100, gamma=0.1, epsilon=.1)
-
-# Train the Model
-svr.fit(X_train, y_train)
-
-# Make Predictions
-y_pred_svr = svr.predict(X_test)
-
-# Evaluate the Model
-mse_svr = mean_squared_error(y_test, y_pred_svr)
-print(f"SVR Mean Squared Error: {mse_svr:.2f}")
-```
-
-### 🛠️ Random Forest Regression Example 🛠️
-
-```python
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.datasets import load_boston
+import matplotlib.pyplot as plt
 
-# Initialize Random Forest Regressor
-rf = RandomForestRegressor(n_estimators=100, random_state=42)
+# Load Dataset
+boston = load_boston()
+X = pd.DataFrame(boston.data, columns=boston.feature_names)
+y = pd.Series(boston.target, name='MEDV')
 
-# Train the Model
-rf.fit(X_train, y_train)
+# Train Model
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X, y)
 
-# Make Predictions
-y_pred_rf = rf.predict(X_test)
+# Feature Importance
+importances = model.feature_importances_
+feature_names = X.columns
+feature_importance_df = pd.DataFrame({'Feature': feature_names, 'Importance': importances})
+feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
 
-# Evaluate the Model
-mse_rf = mean_squared_error(y_test, y_pred_rf)
-print(f"Random Forest Mean Squared Error: {mse_rf:.2f}")
+# Plot Feature Importance
+plt.figure(figsize=(10,6))
+plt.barh(feature_importance_df['Feature'], feature_importance_df['Importance'])
+plt.gca().invert_yaxis()
+plt.xlabel('Importance')
+plt.title('Feature Importance')
+plt.show()
+```
+
+### 📈 Partial Dependence Plots (PDP)
+
+Visualize the relationship between a feature and the predicted outcome, marginalizing over the values of all other features.
+
+```python
+from sklearn.inspection import plot_partial_dependence
+
+# Plot Partial Dependence for 'RM' feature
+features = ['RM']
+fig, ax = plt.subplots(figsize=(8,6))
+plot_partial_dependence(model, X, features, ax=ax)
+plt.show()
+```
+
+### 🧮 SHAP (SHapley Additive exPlanations)
+
+A unified framework to interpret predictions by assigning each feature an importance value for a particular prediction.
+
+```python
+import shap
+
+# Initialize SHAP Explainer
+explainer = shap.TreeExplainer(model)
+shap_values = explainer.shap_values(X)
+
+# Summary Plot
+shap.summary_plot(shap_values, X)
+```
+
+### 🪄 LIME (Local Interpretable Model-agnostic Explanations)
+
+Explains individual predictions by approximating the model locally with an interpretable surrogate model.
+
+```python
+import lime
+import lime.lime_tabular
+
+# Initialize LIME Explainer
+explainer = lime.lime_tabular.LimeTabularExplainer(
+    training_data=np.array(X),
+    feature_names=X.columns,
+    mode='regression'
+)
+
+# Explain a single prediction
+i = 0
+exp = explainer.explain_instance(X.iloc[i], model.predict, num_features=5)
+exp.show_in_notebook(show_table=True)
 ```
 
 ---
 
-## 6. 📈 Model Evaluation for Time Series 📈
+## 5. 🛠️ Implementing Model Interpretability with Scikit-Learn 🛠️
 
-### 📉 Mean Absolute Error (MAE) 📉
+### 📊 Feature Importance with Tree-Based Models
 
-Measures the average magnitude of the errors in a set of predictions, without considering their direction.
-
-```python
-from sklearn.metrics import mean_absolute_error
-
-mae = mean_absolute_error(y_test, y_pred)
-print(f"Mean Absolute Error: {mae:.2f}")
-```
-
-### 📏 Mean Squared Error (MSE) 📏
-
-Measures the average of the squares of the errors, giving higher weight to larger errors.
+Tree-based models inherently provide feature importance scores, which can be accessed via the `.feature_importances_` attribute.
 
 ```python
-from sklearn.metrics import mean_squared_error
-
-mse = mean_squared_error(y_test, y_pred)
-print(f"Mean Squared Error: {mse:.2f}")
-```
-
-### 📐 Root Mean Squared Error (RMSE) 📐
-
-The square root of MSE, representing the standard deviation of the residuals.
-
-```python
+import pandas as pd
 import numpy as np
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.datasets import load_boston
+import matplotlib.pyplot as plt
 
-rmse = np.sqrt(mse)
-print(f"Root Mean Squared Error: {rmse:.2f}")
+# Load Dataset
+boston = load_boston()
+X = pd.DataFrame(boston.data, columns=boston.feature_names)
+y = pd.Series(boston.target, name='MEDV')
+
+# Train Model
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X, y)
+
+# Feature Importance
+importances = model.feature_importances_
+feature_names = X.columns
+feature_importance_df = pd.DataFrame({'Feature': feature_names, 'Importance': importances})
+feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
+
+# Plot Feature Importance
+plt.figure(figsize=(10,6))
+plt.barh(feature_importance_df['Feature'], feature_importance_df['Importance'])
+plt.gca().invert_yaxis()
+plt.xlabel('Importance')
+plt.title('Feature Importance')
+plt.show()
 ```
 
-### 📈 Mean Absolute Percentage Error (MAPE) 📈
+### 📈 Partial Dependence Plots Example
 
-Measures the accuracy as a percentage, useful for understanding the error relative to the actual values.
+Partial Dependence Plots help visualize the effect of a feature on the predicted outcome.
 
 ```python
-def mean_absolute_percentage_error(y_true, y_pred): 
-    return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+from sklearn.inspection import plot_partial_dependence
 
-mape = mean_absolute_percentage_error(y_test, y_pred)
-print(f"Mean Absolute Percentage Error: {mape:.2f}%")
+# Plot Partial Dependence for 'RM' feature
+features = ['RM']
+fig, ax = plt.subplots(figsize=(8,6))
+plot_partial_dependence(model, X, features, ax=ax)
+plt.show()
 ```
 
-### 🔄 Cross-Validation for Time Series 🔄
+### 🧮 Using SHAP with Scikit-Learn
 
-Use `TimeSeriesSplit` to perform cross-validation without shuffling the data, preserving the temporal order.
+SHAP values provide a comprehensive understanding of feature contributions.
 
 ```python
-from sklearn.model_selection import TimeSeriesSplit, cross_val_score
+import shap
 
-# Initialize TimeSeriesSplit
-tscv = TimeSeriesSplit(n_splits=5)
+# Initialize SHAP Explainer
+explainer = shap.TreeExplainer(model)
+shap_values = explainer.shap_values(X)
 
-# Perform Cross-Validation with Linear Regression
-scores = cross_val_score(LinearRegression(), X, y, cv=tscv, scoring='neg_mean_squared_error')
-print(f"Cross-Validation MSE Scores: {-scores}")
-print(f"Average MSE: {-scores.mean():.2f}")
+# Summary Plot
+shap.summary_plot(shap_values, X)
+```
+
+### 🪄 Using LIME with Scikit-Learn
+
+LIME offers local interpretability for individual predictions.
+
+```python
+import lime
+import lime.lime_tabular
+
+# Initialize LIME Explainer
+explainer = lime.lime_tabular.LimeTabularExplainer(
+    training_data=np.array(X),
+    feature_names=X.columns,
+    mode='regression'
+)
+
+# Explain a single prediction
+i = 0
+exp = explainer.explain_instance(X.iloc[i], model.predict, num_features=5)
+exp.show_in_notebook(show_table=True)
 ```
 
 ---
 
-## 7. 🛠️📈 Example Project: Sales Forecasting 🛠️📈
+## 6. 🛠️📈 Example Project: Interpreting a Random Forest Model 🛠️📈
 
 ### 📋 Project Overview
 
-**Objective**: Develop a machine learning pipeline to forecast daily sales based on historical sales data and related features.
+**Objective**: Develop and interpret a Random Forest Regressor model to predict housing prices using the Boston Housing dataset. Apply various interpretability techniques to understand feature contributions and model behavior.
 
-**Tools**: Python, Scikit-Learn, pandas, NumPy, Matplotlib, Seaborn
+**Tools**: Python, Scikit-Learn, SHAP, LIME, pandas, NumPy, Matplotlib, Seaborn
 
 ### 📝 Step-by-Step Guide
 
@@ -342,21 +269,22 @@ print(f"Average MSE: {-scores.mean():.2f}")
 
 ```python
 import pandas as pd
+import numpy as np
+from sklearn.datasets import load_boston
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Load Sales Dataset
-df = pd.read_csv('daily_sales.csv', parse_dates=['Date'])
-df.set_index('Date', inplace=True)
-print(df.head())
+# Load Dataset
+boston = load_boston()
+X = pd.DataFrame(boston.data, columns=boston.feature_names)
+y = pd.Series(boston.target, name='MEDV')
 
-# Plot Sales Over Time
-df['Sales'].plot(title='Daily Sales Over Time')
-plt.show()
+# Explore Dataset
+print(X.head())
+print(y.head())
 
-# Check for Seasonality and Trend
-sns.lineplot(x=df.index, y='Sales', data=df)
-plt.title('Sales Trend')
+# Pairplot for Visual Insights
+sns.pairplot(pd.concat([X, y], axis=1), diag_kind='kde')
 plt.show()
 ```
 
@@ -366,142 +294,110 @@ plt.show()
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-# Handle Missing Values if any
-df.fillna(method='ffill', inplace=True)
-
-# Create Lag Features
-df['Lag1'] = df['Sales'].shift(1)
-df['Lag2'] = df['Sales'].shift(2)
-
-# Create Rolling Features
-df['Rolling_Mean_7'] = df['Sales'].rolling(window=7).mean()
-df['Rolling_STD_7'] = df['Sales'].rolling(window=7).std()
-
-# Create Time-Based Features
-df['Day'] = df.index.day
-df['Month'] = df.index.month
-df['Weekday'] = df.index.weekday
-
-# Drop NaN Values
-df.dropna(inplace=True)
-print(df.head())
-```
-
-#### 3. Feature Engineering
-
-```python
-from sklearn.preprocessing import PolynomialFeatures
-
-# Initialize PolynomialFeatures with degree=2
-poly = PolynomialFeatures(degree=2, include_bias=False)
-poly_features = poly.fit_transform(df[['Lag1', 'Lag2', 'Rolling_Mean_7', 'Rolling_STD_7']])
-
-# Create a DataFrame with polynomial features
-poly_df = pd.DataFrame(poly_features, columns=poly.get_feature_names_out())
-df = pd.concat([df, poly_df], axis=1)
-print(df.head())
-```
-
-#### 4. Building Forecasting Models
-
-```python
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.svm import SVR
-
-# Define Features and Target
-X = df.drop('Sales', axis=1)
-y = df['Sales']
-
+# Handle Missing Values if any (Boston dataset has none)
 # Split the Data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Initialize Models
-lr = LinearRegression()
+# Feature Scaling
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+```
+
+#### 3. Building and Training the Model
+
+```python
+from sklearn.ensemble import RandomForestRegressor
+
+# Initialize Random Forest Regressor
 rf = RandomForestRegressor(n_estimators=100, random_state=42)
-svr = SVR(kernel='rbf')
-
-# Train Models
-lr.fit(X_train, y_train)
-rf.fit(X_train, y_train)
-svr.fit(X_train, y_train)
+rf.fit(X_train_scaled, y_train)
 ```
 
-#### 5. Evaluating Model Performance
+#### 4. Feature Importance Analysis
 
 ```python
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import matplotlib.pyplot as plt
 
-# Make Predictions
-y_pred_lr = lr.predict(X_test)
-y_pred_rf = rf.predict(X_test)
-y_pred_svr = svr.predict(X_test)
+# Feature Importance
+importances = rf.feature_importances_
+feature_names = X.columns
+feature_importance_df = pd.DataFrame({'Feature': feature_names, 'Importance': importances})
+feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
 
-# Calculate Metrics
-def evaluate_model(y_true, y_pred, model_name):
-    mse = mean_squared_error(y_true, y_pred)
-    rmse = np.sqrt(mse)
-    mae = mean_absolute_error(y_true, y_pred)
-    r2 = r2_score(y_true, y_pred)
-    mape = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-    print(f"{model_name} Performance:")
-    print(f"  MSE: {mse:.2f}")
-    print(f"  RMSE: {rmse:.2f}")
-    print(f"  MAE: {mae:.2f}")
-    print(f"  R²: {r2:.2f}")
-    print(f"  MAPE: {mape:.2f}%\n")
-
-evaluate_model(y_test, y_pred_lr, "Linear Regression")
-evaluate_model(y_test, y_pred_rf, "Random Forest Regressor")
-evaluate_model(y_test, y_pred_svr, "Support Vector Regressor")
+# Plot Feature Importance
+plt.figure(figsize=(10,6))
+sns.barplot(x='Importance', y='Feature', data=feature_importance_df, palette='viridis')
+plt.title('Feature Importance')
+plt.show()
 ```
 
-#### 6. Selecting the Best Model
-
-Based on the evaluation metrics, choose the model with the best performance (e.g., lowest MSE and RMSE, highest R²).
-
-#### 7. Making Future Predictions
+#### 5. Partial Dependence Plots
 
 ```python
-# Assume we have new data for the next day
-new_data = {
-    'Lag1': [y_test.iloc[-1]],
-    'Lag2': [y_test.iloc[-2]],
-    'Rolling_Mean_7': [df['Rolling_Mean_7'].iloc[-1]],
-    'Rolling_STD_7': [df['Rolling_STD_7'].iloc[-1]],
-    'Day': [df.index[-1].day + 1],
-    'Month': [df.index[-1].month],
-    'Weekday': [(df.index[-1].weekday() + 1) % 7]
-}
+from sklearn.inspection import plot_partial_dependence
 
-new_df = pd.DataFrame(new_data)
+# Plot Partial Dependence for top 2 features
+top_features = feature_importance_df['Feature'].head(2).tolist()
+plot_partial_dependence(rf, X_train_scaled, top_features, feature_names=top_features)
+plt.show()
+```
 
-# Create Polynomial Features
-new_poly = poly.transform(new_df[['Lag1', 'Lag2', 'Rolling_Mean_7', 'Rolling_STD_7']])
-new_poly_df = pd.DataFrame(new_poly, columns=poly.get_feature_names_out())
-new_df = pd.concat([new_df, new_poly_df], axis=1)
+#### 6. SHAP Analysis
 
-# Make Prediction with the Best Model (e.g., Random Forest)
-best_model = rf
-future_prediction = best_model.predict(new_df)
-print(f"Future Sales Prediction: {future_prediction[0]:.2f}")
+```python
+import shap
+
+# Initialize SHAP Explainer
+explainer = shap.TreeExplainer(rf)
+shap_values = explainer.shap_values(X_train_scaled)
+
+# Summary Plot
+shap.summary_plot(shap_values, X_train, plot_type="bar")
+```
+
+#### 7. LIME Analysis
+
+```python
+import lime
+import lime.lime_tabular
+
+# Initialize LIME Explainer
+explainer_lime = lime.lime_tabular.LimeTabularExplainer(
+    training_data=X_train_scaled,
+    feature_names=X.columns,
+    mode='regression'
+)
+
+# Explain a single prediction
+i = 0
+exp = explainer_lime.explain_instance(X_test_scaled[i], rf.predict, num_features=5)
+exp.show_in_notebook(show_table=True)
 ```
 
 ### 📊 Results and Insights
 
-After implementing advanced feature engineering and evaluating multiple models, the **Random Forest Regressor** outperformed the other models with the lowest MSE and highest R² score. This indicates its robustness and ability to capture complex relationships in the sales data, making it the best choice for forecasting future sales.
+- **Feature Importance**: The `RM` (average number of rooms per dwelling) and `LSTAT` (% lower status of the population) features were identified as the most significant predictors of housing prices.
+- **Partial Dependence Plots**: Illustrated how increases in `RM` are associated with higher housing prices, while higher `LSTAT` values correlate with lower prices.
+- **SHAP Analysis**: Provided a global view of feature contributions, confirming the importance of `RM` and `LSTAT`. Individual SHAP values offered insights into specific predictions.
+- **LIME Analysis**: Explained individual predictions by highlighting which features most influenced a particular housing price estimate, enhancing local interpretability.
+
+These interpretability techniques not only validate the model's decisions but also offer actionable insights for stakeholders to understand the driving factors behind housing prices.
 
 ---
 
-## 8. 🚀🎓 Conclusion and Next Steps 🚀🎓
+## 7. 🚀🎓 Conclusion and Next Steps 🚀🎓
 
-Congratulations on completing **Day 9** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, you mastered **Time Series Analysis**, learning how to preprocess time-dependent data, engineer relevant features, implement forecasting models using regression-based approaches, and evaluate their performance. By working through the sales forecasting example project, you gained hands-on experience in predicting future sales based on historical data.
+Congratulations on completing **Day 10** of "Becoming a Scikit-Learn Boss in 90 Days"! Today, you mastered **Advanced Model Interpretability**, learning how to decipher the inner workings of your machine learning models. By implementing techniques like Feature Importance, Partial Dependence Plots, SHAP, and LIME, you gained valuable insights into how your models make predictions, ensuring transparency and trustworthiness.
 
 ### 🔮 What’s Next?
 
-- **Day 10: Advanced Model Interpretability**: Understand methods to interpret and explain your machine learning models.
-- **Days 11-90: Specialized Topics and Projects**: Engage in specialized topics such as Natural Language Processing, Computer Vision, deep learning integration, and comprehensive projects to solidify your expertise.
-- **Continuous Learning**: Explore advanced libraries and tools that complement Scikit-Learn, such as TensorFlow, Keras, and PyTorch for deep learning applications.
+- **Days 11-90: Specialized Topics and Projects**: Dive into advanced areas such as Natural Language Processing, Computer Vision, Deep Learning integration, and more comprehensive projects to solidify your expertise.
+- **Advanced Topics**:
+  - **Day 11-15**: Natural Language Processing with Scikit-Learn
+  - **Day 16-20**: Computer Vision using Scikit-Learn and Integration with Deep Learning Libraries
+  - **Day 21-25**: Deep Learning Fundamentals and Integration with Scikit-Learn Pipelines
+- **Ongoing Projects**: Continue developing projects to apply your skills in real-world scenarios, enhancing both your portfolio and practical understanding.
 
 ### 📝 Tips for Success
 
@@ -515,14 +411,11 @@ Keep up the great work, and stay motivated as you continue your journey to maste
 ---
 
 
-# 📜 Summary of Day 9 📜
+# 📜 Summary of Day 10 📜
 
-- **🧠 Introduction to Time Series Analysis**: Gained a foundational understanding of time series data and its unique characteristics.
-- **📊 Time Series Forecasting Techniques**: Explored various forecasting methods including Moving Averages, Exponential Smoothing, AR Models, ARIMA, and Machine Learning approaches like SVR and Random Forest Regression.
-- **🛠️ Implementing Time Series Analysis with Scikit-Learn**: Learned how to prepare time series data, engineer relevant features, and build forecasting models using regression-based techniques.
-- **📈 Model Evaluation for Time Series**: Mastered evaluation metrics such as MAE, MSE, RMSE, MAPE, and appropriate cross-validation techniques for time series data.
-- **🛠️📈 Example Project: Sales Forecasting**: Developed a comprehensive sales forecasting pipeline, implemented multiple forecasting models, evaluated their performance, and selected the best model for future predictions.
+- **🧠 Introduction to Advanced Model Interpretability**: Gained a comprehensive understanding of model interpretability and its significance in machine learning.
+- **🔍 Methods for Model Interpretability**: Explored Global vs. Local Interpretability, Feature Importance, Partial Dependence Plots (PDP), SHAP, and LIME as key interpretability techniques.
+- **🛠️ Implementing Model Interpretability with Scikit-Learn**: Learned how to apply interpretability methods using Scikit-Learn and associated libraries, enhancing both global and local model insights.
+- **🛠️📈 Example Project: Interpreting a Random Forest Model**: Developed a Random Forest Regressor for the Boston Housing dataset, applied feature importance analysis, Partial Dependence Plots, SHAP, and LIME to interpret model behavior, and derived actionable insights.
   
-This structured approach ensures that you build a strong foundation in time series analysis, preparing you for more advanced machine learning topics in the upcoming days. Continue experimenting with the provided code examples, and don't hesitate to explore additional resources to deepen your understanding.
-
-**Happy Learning! 🎉**
+This structured approach ensures that you build a strong foundation in model interpretability, enabling you to create transparent, trustworthy, and effective machine learning solutions. Continue experimenting with the provided code examples, and don't hesitate to explore additional resources to deepen your understanding.
