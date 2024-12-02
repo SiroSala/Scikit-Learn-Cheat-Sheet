@@ -473,13 +473,6 @@ Keep up the excellent work, and stay motivated as you continue your journey to m
 
 ---
 
-<div style="text-align: center;">
-  <!-- Animated Footer Image -->
-  <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Happy Coding" width="300">
-</div>
-
----
-
 # 📜 Summary of Day 24 📜
 
 - **🧠 Introduction to Reinforcement Learning Basics**: Gained a foundational understanding of RL, including key concepts like agents, environments, states, actions, rewards, policies, and value functions.
