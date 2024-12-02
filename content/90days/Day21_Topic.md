@@ -1,9 +1,6 @@
 <div style="text-align: center;">
   <h1 style="color:#673AB7;">🚀 Becoming a Scikit-Learn Boss in 90 Days: Day 21 – Deep Learning Fundamentals and Integration with Scikit-Learn Pipelines 🤖🔗</h1>
   <p style="font-size:18px;">Enhance Your Machine Learning Pipelines by Seamlessly Integrating Deep Learning Models!</p>
-  
-  <!-- Animated Header Image -->
-  <img src="https://media.giphy.com/media/26BRzozg4TCBXv6QU/giphy.gif" alt="Deep Learning Integration" width="600">
 </div>
 
 ---
@@ -579,12 +576,6 @@ Congratulations on completing **Day 21** of "Becoming a Scikit-Learn Boss in 90 
 
 Keep up the excellent work, and stay motivated as you continue your journey to mastering Scikit-Learn and becoming a proficient machine learning practitioner! 🚀📚
 
----
-
-<div style="text-align: center;">
-  <!-- Animated Footer Image -->
-  <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Happy Coding" width="300">
-</div>
 
 ---
 
