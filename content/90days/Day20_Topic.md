@@ -1,9 +1,6 @@
 <div style="text-align: center;">
   <h1 style="color:#FF9800;">🚀 Becoming a Scikit-Learn Boss in 90 Days: Day 20 – Comprehensive Computer Vision Projects 🖥️📸</h1>
   <p style="font-size:18px;">Apply Your Skills to Real-World Computer Vision Challenges and Build Robust, End-to-End Solutions!</p>
-  
-  <!-- Animated Header Image -->
-  <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Computer Vision Projects" width="600">
 </div>
 
 ---
