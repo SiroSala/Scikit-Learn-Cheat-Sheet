@@ -569,16 +569,6 @@ Keep up the excellent work, and stay motivated as you continue your journey to m
 
 ---
 
-<div style="text-align: center;">
-  <p style="font-size:20px;">✨ Keep Learning, Keep Growing! ✨</p>
-  <p style="font-size:20px;">🚀 Your Data Science Journey Continues 🚀</p>
-  <p style="font-size:20px;">📚 Happy Coding! 🎉</p>
-  
-  <!-- Animated Footer Image -->
-  <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Happy Coding" width="300">
-</div>
-
----
 
 # 📜 Summary of Day 15 📜
 
